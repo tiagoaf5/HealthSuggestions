@@ -1,1 +1,3 @@
-# extension
+# Chrome's extension
+
+Desenvolvimento de uma extensão no Chrome para sugestão de interrogações em motores de pesquisa. O trabalho proposto consiste no desenvolvimento de uma extensão para o navegador Chrome que, com base na interrogação submetida pelo utilizador a um dos principais motores de pesquisa, sugira interrogações alternativas. O algoritmo de sugestão de interrogações já se encontra definido e deverá basear-se num vocabulário existente. Cada sugestão de interrogações deve ser uma ligação que irá direcionar o utilizador para uma nova pesquisa no motor de pesquisa em questão. As ações do utilizador devem ser registadas (IP, interrogação anterior e sugestões utilizadas).
