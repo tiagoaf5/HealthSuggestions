@@ -1,0 +1,73 @@
+@import url(http://reset5.googlecode.com/hg/reset.min.css);
+
+body#myExtension {
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+
+#frame {
+    margin: 0px;
+    border: solid 2px rgb(52,101,164);
+    /*width: 350px;
+    height: 250px;
+    position: fixed;
+    bottom: 2px;
+    right: 50px;
+    z-index: 1010101;*/
+}
+
+.header {
+    border-bottom: solid 2px #3465A4;
+    background-color: #729FCF;
+    /*width: 350px;*/
+    width: 100%;
+    height: 50px;
+   /* */
+    display: inline-block;
+}
+
+.search-engine {
+    padding-left: 0px;
+    margin-left: 10px;
+    display: inline;
+}
+.search-engine li {
+    height: 50px;
+    margin: 1px;
+    display: inline;
+}
+
+.header-content {
+    margin-top: 10px;
+}
+.minimize {
+    float: right;
+    margin-right: 5px;
+    border: solid 2px rgb(52,101,164);
+    height: 20px;
+    width: 20px;
+    text-align: center;
+    /*padding-top:-5px;*/
+}
+
+.minimize>a {
+    text-decoration: none;
+    color: black;
+    font-family: sans-serif;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.body {
+    background-color: rgb(238,238,238);
+    height: 198px;
+    width: auto;
+}
+
+.body-content {
+    padding: 15px;
+}
+.blue {
+    color: rgb(51,153,255);
+}
