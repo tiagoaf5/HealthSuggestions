@@ -23,6 +23,7 @@
   "permissions": [
     "tabs",
     "storage",
+    "webNavigation",
     "http://*/*",
     "https://*/*"
   ],
@@ -33,8 +34,8 @@
         "https://*/*"
       ],
       "js": [
-        "src/inject/inject.js",
-        "js/jQuery/jquery-2.1.3.js"
+        "js/jQuery/jquery-2.1.3.js",
+        "src/inject/inject.js"
       ],
       "css": [
 

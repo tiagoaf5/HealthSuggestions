@@ -1,12 +1,19 @@
-@import url(http://reset5.googlecode.com/hg/reset.min.css);
-
 body#myExtension {
     font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent;margin:0;padding:0;
 }
 
 
 #frame {
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    font-size: medium;
     margin: 0px;
+    padding:0;
+    outline:0;
+    font-size:100%;
+    vertical-align:baseline;
+    background:transparent;
+
     border: solid 2px rgb(52,101,164);
     /*width: 350px;
     height: 250px;
