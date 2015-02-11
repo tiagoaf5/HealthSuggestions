@@ -7,6 +7,10 @@
 
 var SEARCH = "search";
 
+
+/**
+ * handles incoming messages from content script
+ */
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         console.log(sender.tab ?
@@ -114,8 +118,6 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
 chrome.tabs.onRemoved.addListener(
     function(tabId) {
         chrome.storage.local.remove(SEARCH + tabId);
-
-
     });
 
 function notifyTabOfState(id) {
@@ -125,39 +127,3 @@ function notifyTabOfState(id) {
         'action': 'tabstate'
     });
 }
-/*
-
- //example of using a message handler from the inject scripts
- chrome.runtime.onMessage.addListener(
- function(request, sender, sendResponse) {
-
- console.log("benfica");
- sendResponse({farewell: "goodbye"});
- if(!request.action)
- {
- console.warn('invalid command: ',request);
- return;
- }
-
- console.log('new message: '+request.action, request);
-
- switch (request.action) {
- case 'getTabId':
- sendResponse(sender.tab.id);
- break;
- default:
- console.warn('Unknown request: ',request);
- }
-
- //chrome.pageAction.show(sender.tab.id);
- //sendResponse();
- });*/
-/*
- chrome.runtime.onMessage.addListener(
- function(request, sender, sendResponse) {
- console.log(sender.tab ?
- "from a content script:" + sender.tab.url :
- "from the extension");
- if (request.greeting == "hello")
- sendResponse({farewell: "goodbye"});
- });*/
