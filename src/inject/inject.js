@@ -1,6 +1,8 @@
 var widgetClass = "widgetClass";
 var queryGoogleId = "#gbqfq";
 var queryBingId = "#sb_form_q";
+var queryYahooId = "#yschsp";
+
 /**
  * handler when the page is fully loaded
  */
@@ -12,7 +14,7 @@ $(document).ready(function() {
         console.log("It's google here!");
         loadWidget();
         chrome.runtime.sendMessage({action: "createEntry"});
-        $("."+widgetClass).css("display", "inline-block");
+        setWidgetVisible();
 
         //wait a bit, sometimes the search bar content isn't immediately available
         setTimeout(function(){
@@ -29,14 +31,29 @@ $(document).ready(function() {
             chrome.runtime.sendMessage({action: "updateData", data: query});
         });
     }
+    //if it's bing
     else if (/^https?:\/\/www.bing\.\w{1,3}(\/.*)?/.test(url)) {
         console.log("It's bing here!");
         loadWidget();
         chrome.runtime.sendMessage({action: "createEntry"});
-        $("."+widgetClass).css("display", "inline-block");
+        setWidgetVisible();
 
         setTimeout(function(){
             var query = $(queryBingId).val();
+            $("#query").text(query);
+            chrome.runtime.sendMessage({action: "updateData", data: query});
+        }, 400);
+
+    }
+    //if it's yahoo
+    else if (/^https?:\/\/search.yahoo.com\/search(.*)/.test(url)) {
+        console.log("It's yahoo here!");
+        loadWidget();
+        chrome.runtime.sendMessage({action: "createEntry"});
+        setWidgetVisible();
+
+        setTimeout(function(){
+            var query = $(queryYahooId).val();
             $("#query").text(query);
             chrome.runtime.sendMessage({action: "updateData", data: query});
         }, 400);
@@ -66,7 +83,7 @@ chrome.extension.onMessage.addListener(
 
                 console.log("appending widget");
                 loadWidget();
-                $("."+widgetClass).css("display", "inline-block");
+                setWidgetVisible();
 
                 chrome.runtime.sendMessage({action: 'loadData'});
                 break;
@@ -98,4 +115,8 @@ function loadWidget() {
     widget.load(chrome.runtime.getURL('src/inject/layout.html'));
     $(document.body).append(widget);
     //$("#query").text($(queryGoogleId).val());
+}
+
+function setWidgetVisible() {
+    $("." + widgetClass).css("display", "inline-block");
 }
