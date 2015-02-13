@@ -112,6 +112,14 @@ function loadWidget() {
     $(document.body).append(widget);
     //$("#query").text($(queryGoogleId).val());
 }
+
+function minimize() {
+    console.log("minimize");
+    $("#frame").animate({
+        height: '40px',
+        top: $(window).height() - 50
+    }, 200);
+}
 /*
 function setWidgetVisible() {
     $("." + widgetClass).css("display", "inline-block");
