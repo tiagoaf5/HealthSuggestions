@@ -14,7 +14,6 @@ $(document).ready(function() {
         console.log("It's google here!");
         loadWidget();
         chrome.runtime.sendMessage({action: "createEntry"});
-        setWidgetVisible();
 
         //wait a bit, sometimes the search bar content isn't immediately available
         setTimeout(function(){
@@ -36,7 +35,6 @@ $(document).ready(function() {
         console.log("It's bing here!");
         loadWidget();
         chrome.runtime.sendMessage({action: "createEntry"});
-        setWidgetVisible();
 
         setTimeout(function(){
             var query = $(queryBingId).val();
@@ -50,7 +48,6 @@ $(document).ready(function() {
         console.log("It's yahoo here!");
         loadWidget();
         chrome.runtime.sendMessage({action: "createEntry"});
-        setWidgetVisible();
 
         setTimeout(function(){
             var query = $(queryYahooId).val();
@@ -83,7 +80,6 @@ chrome.extension.onMessage.addListener(
 
                 console.log("appending widget");
                 loadWidget();
-                setWidgetVisible();
 
                 chrome.runtime.sendMessage({action: 'loadData'});
                 break;
@@ -108,15 +104,16 @@ function loadWidget() {
         "z-index": "1010101",
         "border": "none ! important",
         "bottom": "0px",
-        "right": "15px",
-        "display": "none"});
+        "right": "15px"/*,
+        "display": "none"*/});
     widget.addClass(widgetClass);
 
     widget.load(chrome.runtime.getURL('src/inject/layout.html'));
     $(document.body).append(widget);
     //$("#query").text($(queryGoogleId).val());
 }
-
+/*
 function setWidgetVisible() {
     $("." + widgetClass).css("display", "inline-block");
 }
+*/

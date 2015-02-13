@@ -23,7 +23,7 @@ body#myExtension {
     z-index: 1010101;*/
 }
 
-.header {
+#frame .header {
     border-bottom: solid 2px #3465A4;
     background-color: #729FCF;
     /*width: 350px;*/
@@ -33,48 +33,72 @@ body#myExtension {
     display: inline-block;
 }
 
-.search-engine {
+#frame .search-engine {
     padding-left: 0px;
     margin-left: 10px;
     display: inline;
 }
-.search-engine li {
+#frame .search-engine li {
     height: 50px;
-    margin: 1px;
+    /*margin: 1px;*/
     display: inline;
+    padding: .35em .25em .05em;
 }
 
-.header-content {
+#frame .search-engine a {
+    text-decoration: none;
+    color: #424242;
+    text-shadow: 1px 1px #7b7c7b;
+}
+
+#frame .header-content {
     margin-top: 10px;
 }
-.minimize {
+#frame .window-action {
     float: right;
     margin-right: 5px;
-    border: solid 2px rgb(52,101,164);
+   /* border: solid 2px rgb(52,101,164);
     height: 20px;
     width: 20px;
-    text-align: center;
+    text-align: center;*/
     /*padding-top:-5px;*/
 }
 
-.minimize>a {
+#frame .window-action >a {
     text-decoration: none;
-    color: black;
+    color: #424242;
     font-family: sans-serif;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
 }
 
-.body {
+#frame .icon-border {
+    border-color: #3465A4;
+}
+
+#frame .body {
     background-color: rgb(238,238,238);
     height: 198px;
     width: auto;
 }
 
-.body-content {
+#frame .body-content {
     padding: 15px;
 }
-.blue {
+#frame .blue {
     color: rgb(51,153,255);
 }
+
+#frame .icon-google {
+    color: #3f85f4;
+}
+#frame .icon-bing {
+    color: #ffb900;
+}
+#frame .icon-yahoo {
+    color: #640f6d;
+}
+
+
+

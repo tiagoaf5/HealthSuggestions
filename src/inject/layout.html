@@ -3,19 +3,20 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title></title>
-    <link rel="stylesheet" href="" media="screen">
+    <link id="font" rel="stylesheet" href="css/font.css" media="screen">
+    <link id="style" rel="stylesheet" href="css/layout.css" media="screen">
 </head>
 <body id="myExtension">
-<div id="frame">
+<div id="frame" class="reset-this">
     <div class="header">
         <div class="header-content">
             <ul class="search-engine">
-                <li><a href="#"><img src="" id="search-google"></a></li>
-                <li><a href="#"><img src="" id="search-bing"></a></li>
-                <li><a href="#"><img src="" id="search-yahoo"></a></li>
+                <li><a href="#"><i class="icon-google icon-2x"></i></a></li>
+                <li><a href="#"><i class="icon-bing icon-2x"></i></a></li>
+                <li><a href="#"><i class="icon-yahoo icon-2x "></i></a></li>
             </ul>
-            <span class="minimize"><a href="#">x</a></span>
-            <span class="minimize"><a href="#">_</a></span>
+            <span class="window-action"><a href="#"><i class="icon icon-remove icon-border"></i> </a></span>
+            <span class="window-action"><a href="#"><i class="icon icon-arrows-compress icon-border"></i> </a></span>
         </div>
     </div>
     <div class="body">
@@ -28,7 +29,8 @@
     $("#search-google").attr("src", chrome.runtime.getURL("icons/google.ico"));
     $("#search-bing").attr("src", chrome.runtime.getURL("icons/bing.png"));
     $("#search-yahoo").attr("src", chrome.runtime.getURL("icons/yahoo.png"));
-    $('link[href=""]').attr('href',chrome.runtime.getURL("src/inject/layout.css"));
+    $('#style').attr('href',chrome.runtime.getURL("src/inject/css/layout.css"));
+    $('#font').attr('href',chrome.runtime.getURL("src/inject/css/font.css"));
 </script>
 </body>
 </html>
