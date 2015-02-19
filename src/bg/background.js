@@ -6,6 +6,7 @@
  */
 
 var SEARCH = "search";
+var MINIMIZED = "minimized";
 
 
 /**

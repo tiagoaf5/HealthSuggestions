@@ -1,7 +1,11 @@
 var widgetClass = "widgetClass";
-var queryGoogleId = "#gbqfq";
+var queryGoogleId = "#lst-ib";//"#gbqfq";
 var queryBingId = "#sb_form_q";
 var queryYahooId = "#yschsp";
+
+var G_GOOGLE_BASE_URL = "https://www.google.com/search?q=";
+var G_BING_BASE_URL = "https://www.bing.com/search?q=";
+var G_YAHOO_BASE_URL = "https://search.yahoo.com/search?p=";
 
 /**
  * handler when the page is fully loaded
@@ -19,7 +23,9 @@ $(document).ready(function() {
         setTimeout(function(){
             var query = $(queryGoogleId).val();
             $("#query").text(query);
+            updateEnginesUrls(query);
             chrome.runtime.sendMessage({action: "updateData", data: query});
+
         }, 400);
 
         //handle search changes
@@ -27,6 +33,7 @@ $(document).ready(function() {
             var query = $(queryGoogleId).val();
             console.info(query);
             $("#query").text(query);
+            updateEnginesUrls(query);
             chrome.runtime.sendMessage({action: "updateData", data: query});
         });
     }
@@ -39,6 +46,7 @@ $(document).ready(function() {
         setTimeout(function(){
             var query = $(queryBingId).val();
             $("#query").text(query);
+            updateEnginesUrls(query);
             chrome.runtime.sendMessage({action: "updateData", data: query});
         }, 400);
 
@@ -52,6 +60,7 @@ $(document).ready(function() {
         setTimeout(function(){
             var query = $(queryYahooId).val();
             $("#query").text(query);
+            updateEnginesUrls(query);
             chrome.runtime.sendMessage({action: "updateData", data: query});
         }, 400);
 
@@ -119,6 +128,25 @@ function minimize() {
         height: '40px',
         top: $(window).height() - 50
     }, 200);
+}
+
+function updateEnginesUrls(query) {
+    if (query) {
+        var splittedQuery = query.split(" ");
+        var google = G_GOOGLE_BASE_URL + splittedQuery[0];
+        var bing = G_BING_BASE_URL + splittedQuery[0];
+        var yahoo = G_YAHOO_BASE_URL + splittedQuery[0];
+
+        for(var i = 1; i < splittedQuery.length; i++) {
+            google += "+" + splittedQuery[i];
+            bing += "+" + splittedQuery[i];
+            yahoo += "+" + splittedQuery[i];
+        }
+
+        $("#icon-google").parent().attr("href", google);
+        $("#icon-bing").parent().attr("href", bing);
+        $("#icon-yahoo").parent().attr("href", yahoo);
+    }
 }
 /*
 function setWidgetVisible() {
