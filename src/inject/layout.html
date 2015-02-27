@@ -185,25 +185,7 @@
     $('#font').attr('href',chrome.runtime.getURL("src/inject/css/font.css"));
     $(document).ready(function(){
         //TODO: Save state
-        $("#window-action-minimize").on("click", function(){
-            var i = $(this);
-            var isMaximized = i.hasClass("icon-arrows-compress");
-
-            console.log("minimize" + isMaximized);
-            $(".widgetClass").animate({
-                bottom: isMaximized ? '-200px' : '0px'
-            }, 400, function () {
-                if(isMaximized) {
-                    i.removeClass("icon-arrows-compress");
-                    i.addClass("icon-arrows-expand");
-                }
-                else {
-                    i.removeClass("icon-arrows-expand");
-                    i.addClass("icon-arrows-compress");
-                }
-            });
-
-        });
+        $("#window-action-minimize").on("click", minimize);
     });
 
 </script>

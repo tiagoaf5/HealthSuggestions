@@ -40,6 +40,7 @@ chrome.runtime.onMessage.addListener(
                 console.info("Creating entry...");
                 var obj = {};
                 obj[SEARCH + sender.tab.id] = null;
+                obj[MINIMIZED + sender.tab.id] = false;
                 chrome.storage.local.set(obj);
                 break;
             case 'ready':
@@ -54,21 +55,29 @@ chrome.runtime.onMessage.addListener(
 
                 });
                 break;
-            case 'updateData':
+            case 'updateQuery':
+                console.info("Updating entry...");
+                var obj = {};
+                obj[SEARCH + sender.tab.id] = request.query;
+                chrome.storage.local.set(obj);
+                break;
+            case 'updateMinimized':
                 console.info("Creating entry...");
                 var obj = {};
-                obj[SEARCH + sender.tab.id] = request.data;
+                obj[MINIMIZED + sender.tab.id] = request.minimized;
                 chrome.storage.local.set(obj);
                 break;
             case 'loadData':
                 var obj = {};
                 obj[SEARCH + sender.tab.id] = null;
+                obj[MINIMIZED + sender.tab.id] = null;
 
                 chrome.storage.local.get(obj, function(result) {
                     //Checks if this tab was used to do a search
                     console.log("loadData result: " + JSON.stringify(result));
                     if (result[SEARCH+sender.tab.id])
-                        chrome.tabs.sendMessage(sender.tab.id, {action: "setData", query: result[SEARCH+sender.tab.id]});
+                        chrome.tabs.sendMessage(sender.tab.id, {action: "setData", query: result[SEARCH+sender.tab.id],
+                            minimized: result[MINIMIZED + sender.tab.id] ? true : false});
                     else
                         console.log("loadData error");
 
@@ -119,6 +128,7 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
 chrome.tabs.onRemoved.addListener(
     function(tabId) {
         chrome.storage.local.remove(SEARCH + tabId);
+        chrome.storage.local.remove(MINIMIZED + tabId);
     });
 
 function notifyTabOfState(id) {

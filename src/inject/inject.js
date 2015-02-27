@@ -7,6 +7,7 @@ var G_GOOGLE_BASE_URL = "https://www.google.com/search?q=";
 var G_BING_BASE_URL = "https://www.bing.com/search?q=";
 var G_YAHOO_BASE_URL = "https://search.yahoo.com/search?p=";
 
+
 /**
  * handler when the page is fully loaded
  */
@@ -20,21 +21,22 @@ $(document).ready(function() {
         chrome.runtime.sendMessage({action: "createEntry"});
 
         //wait a bit, sometimes the search bar content isn't immediately available
-        setTimeout(function(){
-            var query = $(queryGoogleId).val();
-            $("#query").text(query);
-            updateEnginesUrls(query);
-            chrome.runtime.sendMessage({action: "updateData", data: query});
-
-        }, 400);
+        var xxx = 0;
+        (function myLoop () {
+            setTimeout(function () {
+                var query = $(queryGoogleId).val();
+                console.log("query " + xxx + ":" + query);
+                if(!query)
+                    myLoop();
+                else
+                    updateSearchQuery(query);
+            }, 400)
+        })();
 
         //handle search changes
         $(queryGoogleId).on("change", function() {
             var query = $(queryGoogleId).val();
-            console.info(query);
-            $("#query").text(query);
-            updateEnginesUrls(query);
-            chrome.runtime.sendMessage({action: "updateData", data: query});
+            updateSearchQuery(query);
         });
     }
     //if it's bing
@@ -45,9 +47,7 @@ $(document).ready(function() {
 
         setTimeout(function(){
             var query = $(queryBingId).val();
-            $("#query").text(query);
-            updateEnginesUrls(query);
-            chrome.runtime.sendMessage({action: "updateData", data: query});
+            updateSearchQuery(query);
         }, 400);
 
     }
@@ -59,9 +59,8 @@ $(document).ready(function() {
 
         setTimeout(function(){
             var query = $(queryYahooId).val();
-            $("#query").text(query);
-            updateEnginesUrls(query);
-            chrome.runtime.sendMessage({action: "updateData", data: query});
+            console.log("query: " + query);
+            updateSearchQuery(query);
         }, 400);
 
     }
@@ -93,8 +92,14 @@ chrome.extension.onMessage.addListener(
                 chrome.runtime.sendMessage({action: 'loadData'});
                 break;
             case 'setData':
-                console.log("receiving result...: " + JSON.stringify(request.query));
-                $("#query").text(request.query);
+                console.log("receiving result...: " + JSON.stringify(request));
+                if (request.minimized) {
+                    $(".widgetClass").css("bottom", "-200px");
+                    $("#window-action-minimize").removeClass("icon-arrows-compress");
+                    $("#window-action-minimize").addClass("icon-arrows-expand");
+                }
+                updateSearchQuery(request.query, false);
+
             default :
                 break;
         }
@@ -114,7 +119,7 @@ function loadWidget() {
         "border": "none ! important",
         "bottom": "0px",
         "right": "15px"/*,
-        "display": "none"*/});
+         "display": "none"*/});
     widget.addClass(widgetClass);
 
     widget.load(chrome.runtime.getURL('src/inject/layout.html'));
@@ -123,11 +128,38 @@ function loadWidget() {
 }
 
 function minimize() {
-    console.log("minimize");
-    $("#frame").animate({
-        height: '40px',
-        top: $(window).height() - 50
-    }, 200);
+    var i = $(this);
+    var isMaximized = i.hasClass("icon-arrows-compress");
+
+    console.log("minimize" + isMaximized);
+    $(".widgetClass").animate({
+        bottom: isMaximized ? '-200px' : '0px'
+    }, 400, function () {
+        if(isMaximized) {
+            i.removeClass("icon-arrows-compress");
+            i.addClass("icon-arrows-expand");
+            chrome.runtime.sendMessage({action: "updateMinimized", minimized: true});
+        }
+        else {
+            i.removeClass("icon-arrows-expand");
+            i.addClass("icon-arrows-compress");
+            chrome.runtime.sendMessage({action: "updateMinimized", minimized: false});
+        }
+    });
+
+
+}
+/**
+ * Updates query text and engine's urls
+ * @param query
+ */
+function updateSearchQuery(query, updateData) {
+    updateData = (typeof updateData === "undefined") ? true : updateData;
+    $("#query").text(query);
+    updateEnginesUrls(query);
+
+    if (updateData)
+        chrome.runtime.sendMessage({action: "updateQuery", query: query});
 }
 
 function updateEnginesUrls(query) {
@@ -149,7 +181,7 @@ function updateEnginesUrls(query) {
     }
 }
 /*
-function setWidgetVisible() {
-    $("." + widgetClass).css("display", "inline-block");
-}
-*/
+ function setWidgetVisible() {
+ $("." + widgetClass).css("display", "inline-block");
+ }
+ */
