@@ -98,9 +98,9 @@ chrome.extension.onMessage.addListener(
             case 'setData':
                 console.log("receiving result...: " + JSON.stringify(request));
                 if (request.minimized) {
-                    $(".widgetClass").css("bottom", "-200px");
-                    $("#window-action-minimize").removeClass("icon-arrows-compress");
-                    $("#window-action-minimize").addClass("icon-arrows-expand");
+                    $(".widgetClass").css("bottom", "-190px");
+                    getWidgetContent().find("#window-action-minimize").removeClass("icon-arrows-compress");
+                    getWidgetContent().find("#window-action-minimize").addClass("icon-arrows-expand");
                 }
                 updateSearchQuery(request.query, false);
 
@@ -110,7 +110,7 @@ chrome.extension.onMessage.addListener(
     });
 
 /**
- * inserts widget hidden in the page
+ * inserts widget in the page
  */
 function loadWidget() {
     var widget = $("<div>");
@@ -177,11 +177,11 @@ function loadWidget() {
     $header.html(
         '<div class="header-content">' +
         '<ul class="search-engine">' +
-        '<li><a class="search-engine-item" href="#"><i id="icon-google" class="icon-google icon-2x"></i></a></li>' +
-        '<li><a class="search-engine-item" href="#"><i id="icon-bing" class="icon-bing icon-2x"></i></a></li>' +
-        '<li><a class="search-engine-item" href="#"><i id="icon-yahoo" class="icon-social-yahoo icon-2x"></i></a></li></ul>' +
+        '<li><a class="search-engine-item" href="#" target="_top"><i id="icon-google" class="icon-google icon-2x"></i></a></li>' +
+        '<li><a class="search-engine-item" href="#" target="_top"><i id="icon-bing" class="icon-bing icon-2x"></i></a></li>' +
+        '<li><a class="search-engine-item" href="#" target="_top"><i id="icon-yahoo" class="icon-social-yahoo icon-2x"></i></a></li></ul>' +
         '<span class="window-action"><i id="window-action-close" class="icon icon-remove icon-border"></i></span>' +
-        '<span class="window-action"><i id="window-action-minimize" onclick="minimize()" class="icon icon-arrows-compress icon-border"></i></span></div>');
+        '<span class="window-action"><i id="window-action-minimize" class="icon icon-arrows-compress icon-border"></i></span></div>');
 
 
     var $body = $("<div>");
@@ -199,15 +199,22 @@ function loadWidget() {
 
     $contentFrame.contents().find('body').attr('id','myExtension');
     $contentFrame.contents().find('body').append($contents);
+
+    //action onclick
+    $(".widgetContentClass").contents().find("#window-action-minimize").on("click", minimize);
 }
 
+
+/**
+ * Function that handles user click on minimize/maximize button
+ */
 function minimize() {
     var i = $(this);
     var isMaximized = i.hasClass("icon-arrows-compress");
 
     console.log("minimize" + isMaximized);
     $(".widgetClass").animate({
-        bottom: isMaximized ? '-200px' : '0px'
+        bottom: isMaximized ? '-190px' : '0px'
     }, 400, function () {
         if(isMaximized) {
             i.removeClass("icon-arrows-compress");
@@ -252,124 +259,10 @@ function updateEnginesUrls(query) {
             yahoo += "+" + splittedQuery[i];
         }
 
-        $("#icon-google").parent().attr("href", google);
-        $("#icon-bing").parent().attr("href", bing);
-        $("#icon-yahoo").parent().attr("href", yahoo);
+        var contents = getWidgetContent();
+
+        contents.find("#icon-google").parent().attr("href", google);
+        contents.find("#icon-bing").parent().attr("href", bing);
+        contents.find("#icon-yahoo").parent().attr("href", yahoo);
     }
 }
-
-function getPreview() {
-
-    $previewContainer = getPreviewContainer();
-
-    if ($previewContainer.length == 0) {
-        //console.log('generate new preview');
-        $previewContainer = $('<div>')
-            .addClass(previewContainerClass)
-            .attr('style',
-            "position: fixed !important; \
-            top: "+getWidgetPosition()+
-            "min-height: 300px; \
-            right: 0px; \
-            z-index: 1010101; \
-            display: inline-block; \
-            width: 0px; \
-            margin: 0px ! important; \
-            border: none ! important; \
-            overflow: hidden; \
-            "); //display: none;
-        $(document.body).append($previewContainer);
-
-        var $contentFrame = $('<iframe>')
-            .addClass('pp_iframe')
-            .attr('style',"top: 0px;\
-				right: 0px;\
-				width: 100%;\
-				height: 100%;\
-				margin: 0px ! important;\
-				border: none ! important;\
-				overflow: hidden  ! important;\
-				background-color: transparent  ! important;\
-				padding: 0  ! important;");
-
-        $contentFrame.attr('src', 'about:blank');
-        $contentFrame.attr("scrolling","no");
-
-        var myContent = '<!DOCTYPE html>'
-            + '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head><title>search widget iframe</title>'
-            + '<link rel="stylesheet" href="'+chrome.extension.getURL('preview.css')+'"> </head>'
-            + '<body></body></html>';
-
-        try {
-            //$contentFrame.contents().find('html').html(myContent);
-            $previewContainer.append($contentFrame);
-
-            var iFrameDoc = $contentFrame[0].contentDocument || $contentFrame[0].contentWindow.document;
-            iFrameDoc.write(myContent);
-            iFrameDoc.close();
-
-        }
-        catch(e)
-        {
-            console.log('getPreview(): problem with contentframe for widget', $contentFrame);
-            return false;
-        }
-        var $contents = $('<div>');
-
-        //var $link = $('<link>');
-        //$link.attr('rel', 'stylesheet');
-        //$link.attr('href', chrome.extension.getURL('preview.css'));
-        //$contentFrame.contents().find('head').append($link);
-
-        $contentFrame.contents().find('body').addClass('pp_iframe_body');
-        $contentFrame.contents().find('body').append($contents);
-
-        $contents.addClass('pp_contents')
-            .on('mousedown', function(event) {
-                if(!dragging)
-                {
-                    dragging=true;
-                    actualDragged=false;
-                    startDraggingY['outside']=false;
-                    startDraggingY['iframe']=event.pageY;
-                    totalPosY = getPreviewContainer().offset().top - $(window).scrollTop();
-                    //console.log('drag is here');
-                }
-            })
-            .on('mousemove', function(event,bla) {
-                if(dragging)
-                {
-                    newPosY = event.pageY - startDraggingY['iframe'];
-                    if(newPosY > 2 || newPosY < -2)
-                        actualDragged=true;
-                    //console.log('iframe move',newPosY);
-                    totalPosY += newPosY;
-                    //console.log(totalPosY);
-                    getPreviewContainer().css("top",totalPosY+"px");
-                }
-            })
-            .on('mouseup', function() {
-                if(dragging)
-                {
-                    dragging=false;
-
-                    var top = getPreviewContainer().offset().top - $(window).scrollTop();
-                    //console.log("iframe - draggable stop", top);
-                    if(actualDragged)
-                        saveWidgetPosition(top);
-                }
-            })
-            .on('mouseleave', function() {
-                if(dragging)
-                {
-                    dragging=false;
-
-                    var top = getPreviewContainer().offset().top - $(window).scrollTop();
-                    //console.log("iframe - draggable stop (mouse focus lost)", top);
-                    if(actualDragged)
-                        saveWidgetPosition(top);
-                }
-            });
-    }
-    return $previewContainer;
-};
