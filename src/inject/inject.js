@@ -1,4 +1,7 @@
 var widgetClass = "widgetClass";
+var widgetContentClass = "widgetContentClass";
+
+
 var queryGoogleId = "#lst-ib";//"#gbqfq";
 var queryBingId = "#sb_form_q";
 var queryYahooId = "#yschsp";
@@ -6,6 +9,7 @@ var queryYahooId = "#yschsp";
 var G_GOOGLE_BASE_URL = "https://www.google.com/search?q=";
 var G_BING_BASE_URL = "https://www.bing.com/search?q=";
 var G_YAHOO_BASE_URL = "https://search.yahoo.com/search?p=";
+
 
 
 /**
@@ -122,9 +126,79 @@ function loadWidget() {
          "display": "none"*/});
     widget.addClass(widgetClass);
 
-    widget.load(chrome.runtime.getURL('src/inject/layout.html'));
+    //widget.load(chrome.runtime.getURL('src/inject/layout.html'));
     $(document.body).append(widget);
-    //$("#query").text($(queryGoogleId).val());
+
+
+    var $contentFrame = $('<iframe>')
+        .addClass(widgetContentClass)
+        .attr('style',"top: 0px;\
+				right: 0px;\
+				width: 100%;\
+				height: 100%;\
+				margin: 0px ! important;\
+				border: none ! important;\
+				overflow: hidden  ! important;\
+				background-color: transparent  ! important;\
+				padding: 0  ! important;");
+
+    $contentFrame.attr('src', 'about:blank');
+    $contentFrame.attr("scrolling","no");
+
+    var myContent = '<!DOCTYPE html>'
+        + '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head><title>Health Suggestions iframe</title>'
+        + '<link rel="stylesheet" href="'+chrome.extension.getURL('src/inject/css/layout.css')+'"> ' +
+        '<link id="font" rel="stylesheet" href="'+chrome.extension.getURL('src/inject/css/font.css')+'" media="screen">'+
+        '</head>'
+        + '<body></body></html>';
+
+    try {
+        //$contentFrame.contents().find('html').html(myContent);
+        widget.append($contentFrame);
+
+        var iFrameDoc = $contentFrame[0].contentDocument || $contentFrame[0].contentWindow.document;
+        iFrameDoc.write(myContent);
+        iFrameDoc.close();
+
+    }
+    catch(e)
+    {
+        console.log('getPreview(): problem with contentframe for widget', $contentFrame);
+        return false;
+    }
+
+
+    var $contents = $('<div>');
+    $contents.attr("id", "frame");
+    $contents.addClass("frame");
+
+    var $header = $("<div>");
+    $header.addClass("header");
+    $header.html(
+        '<div class="header-content">' +
+        '<ul class="search-engine">' +
+        '<li><a class="search-engine-item" href="#"><i id="icon-google" class="icon-google icon-2x"></i></a></li>' +
+        '<li><a class="search-engine-item" href="#"><i id="icon-bing" class="icon-bing icon-2x"></i></a></li>' +
+        '<li><a class="search-engine-item" href="#"><i id="icon-yahoo" class="icon-social-yahoo icon-2x"></i></a></li></ul>' +
+        '<span class="window-action"><i id="window-action-close" class="icon icon-remove icon-border"></i></span>' +
+        '<span class="window-action"><i id="window-action-minimize" onclick="minimize()" class="icon icon-arrows-compress icon-border"></i></span></div>');
+
+
+    var $body = $("<div>");
+    $body.addClass("body");
+
+    $body.html(
+        '<div class="body-content">' +
+        '<span>Pesquisa original: </span><span id="query" class="blue"></span>' +
+        '</div>');
+
+
+    $contents.append($header);
+    $contents.append($body);
+
+
+    $contentFrame.contents().find('body').attr('id','myExtension');
+    $contentFrame.contents().find('body').append($contents);
 }
 
 function minimize() {
@@ -155,7 +229,10 @@ function minimize() {
  */
 function updateSearchQuery(query, updateData) {
     updateData = (typeof updateData === "undefined") ? true : updateData;
-    $("#query").text(query);
+
+    //$("#query").text(query);
+
+    getWidgetContent().find('#query').text(query);
     updateEnginesUrls(query);
 
     if (updateData)
@@ -180,8 +257,119 @@ function updateEnginesUrls(query) {
         $("#icon-yahoo").parent().attr("href", yahoo);
     }
 }
-/*
- function setWidgetVisible() {
- $("." + widgetClass).css("display", "inline-block");
- }
- */
+
+function getPreview() {
+
+    $previewContainer = getPreviewContainer();
+
+    if ($previewContainer.length == 0) {
+        //console.log('generate new preview');
+        $previewContainer = $('<div>')
+            .addClass(previewContainerClass)
+            .attr('style',
+            "position: fixed !important; \
+            top: "+getWidgetPosition()+
+            "min-height: 300px; \
+            right: 0px; \
+            z-index: 1010101; \
+            display: inline-block; \
+            width: 0px; \
+            margin: 0px ! important; \
+            border: none ! important; \
+            overflow: hidden; \
+            "); //display: none;
+        $(document.body).append($previewContainer);
+
+        var $contentFrame = $('<iframe>')
+            .addClass('pp_iframe')
+            .attr('style',"top: 0px;\
+				right: 0px;\
+				width: 100%;\
+				height: 100%;\
+				margin: 0px ! important;\
+				border: none ! important;\
+				overflow: hidden  ! important;\
+				background-color: transparent  ! important;\
+				padding: 0  ! important;");
+
+        $contentFrame.attr('src', 'about:blank');
+        $contentFrame.attr("scrolling","no");
+
+        var myContent = '<!DOCTYPE html>'
+            + '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head><title>search widget iframe</title>'
+            + '<link rel="stylesheet" href="'+chrome.extension.getURL('preview.css')+'"> </head>'
+            + '<body></body></html>';
+
+        try {
+            //$contentFrame.contents().find('html').html(myContent);
+            $previewContainer.append($contentFrame);
+
+            var iFrameDoc = $contentFrame[0].contentDocument || $contentFrame[0].contentWindow.document;
+            iFrameDoc.write(myContent);
+            iFrameDoc.close();
+
+        }
+        catch(e)
+        {
+            console.log('getPreview(): problem with contentframe for widget', $contentFrame);
+            return false;
+        }
+        var $contents = $('<div>');
+
+        //var $link = $('<link>');
+        //$link.attr('rel', 'stylesheet');
+        //$link.attr('href', chrome.extension.getURL('preview.css'));
+        //$contentFrame.contents().find('head').append($link);
+
+        $contentFrame.contents().find('body').addClass('pp_iframe_body');
+        $contentFrame.contents().find('body').append($contents);
+
+        $contents.addClass('pp_contents')
+            .on('mousedown', function(event) {
+                if(!dragging)
+                {
+                    dragging=true;
+                    actualDragged=false;
+                    startDraggingY['outside']=false;
+                    startDraggingY['iframe']=event.pageY;
+                    totalPosY = getPreviewContainer().offset().top - $(window).scrollTop();
+                    //console.log('drag is here');
+                }
+            })
+            .on('mousemove', function(event,bla) {
+                if(dragging)
+                {
+                    newPosY = event.pageY - startDraggingY['iframe'];
+                    if(newPosY > 2 || newPosY < -2)
+                        actualDragged=true;
+                    //console.log('iframe move',newPosY);
+                    totalPosY += newPosY;
+                    //console.log(totalPosY);
+                    getPreviewContainer().css("top",totalPosY+"px");
+                }
+            })
+            .on('mouseup', function() {
+                if(dragging)
+                {
+                    dragging=false;
+
+                    var top = getPreviewContainer().offset().top - $(window).scrollTop();
+                    //console.log("iframe - draggable stop", top);
+                    if(actualDragged)
+                        saveWidgetPosition(top);
+                }
+            })
+            .on('mouseleave', function() {
+                if(dragging)
+                {
+                    dragging=false;
+
+                    var top = getPreviewContainer().offset().top - $(window).scrollTop();
+                    //console.log("iframe - draggable stop (mouse focus lost)", top);
+                    if(actualDragged)
+                        saveWidgetPosition(top);
+                }
+            });
+    }
+    return $previewContainer;
+};

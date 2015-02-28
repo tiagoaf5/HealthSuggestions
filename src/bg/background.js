@@ -131,6 +131,7 @@ chrome.tabs.onRemoved.addListener(
         chrome.storage.local.remove(MINIMIZED + tabId);
     });
 
+//TODO: FIX THIS
 function notifyTabOfState(id) {
     //console.log('notifyTabOfState message to ',id, active,on);
     console.log("Sending message...");
