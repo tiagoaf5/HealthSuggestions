@@ -7,6 +7,27 @@
 
 var SEARCH = "search";
 var MINIMIZED = "minimized";
+//var db;
+
+chrome.runtime.onInstalled.addListener(function(details){
+    if(details.reason == "install"){
+        console.log("This is a first install!");
+
+        console.log("creating database...");
+        DB.createDatabase();
+        console.log("done creating database...");
+
+        console.log("populating database...");
+        DB.populateDatabase();
+    }else if(details.reason == "update"){
+        var thisVersion = chrome.runtime.getManifest().version;
+        console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
+
+        DB.openDatabase();
+    }
+
+
+});
 
 
 /**
@@ -37,6 +58,7 @@ chrome.runtime.onMessage.addListener(
                  sendResponse();
 
                  chrome.storage.local.set({'value': theValue}*/
+
                 console.info("Creating entry...");
                 var obj = {};
                 obj[SEARCH + sender.tab.id] = null;
@@ -44,6 +66,12 @@ chrome.runtime.onMessage.addListener(
                 chrome.storage.local.set(obj);
                 break;
             case 'ready':
+
+                chrome.storage.local.get(null, function(items) {
+
+                    console.log("items: " + JSON.stringify(items));
+                });
+
                 var obj = {};
                 obj[SEARCH + sender.tab.id] = null;
 
@@ -54,6 +82,10 @@ chrome.runtime.onMessage.addListener(
                         notifyTabOfState(sender.tab.id);
 
                 });
+
+                //DB.executeSql("SELECT COUNT(*) FROM CHVConcept",[]);
+
+
                 break;
             case 'updateQuery':
                 console.info("Updating entry...");
@@ -127,8 +159,10 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
 
 chrome.tabs.onRemoved.addListener(
     function(tabId) {
+        console.log("Removing tabID: " + tabId + "....");
         chrome.storage.local.remove(SEARCH + tabId);
         chrome.storage.local.remove(MINIMIZED + tabId);
+        //chrome.storage.local.clear();
     });
 
 //TODO: FIX THIS

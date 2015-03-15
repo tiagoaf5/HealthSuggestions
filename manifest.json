@@ -24,6 +24,7 @@
     "tabs",
     "storage",
     "webNavigation",
+    "unlimitedStorage",
     "http://*/*",
     "https://*/*"
   ],
