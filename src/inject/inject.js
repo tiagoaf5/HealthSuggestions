@@ -103,7 +103,10 @@ chrome.extension.onMessage.addListener(
                     getWidgetContent().find("#window-action-minimize").addClass("icon-arrows-expand");
                 }
                 updateSearchQuery(request.query, false);
-
+                break;
+            case 'updateSuggestions':
+                setSuggestions(request["suggestions"]);
+                break;
             default :
                 break;
         }
@@ -190,6 +193,7 @@ function loadWidget() {
     $body.html(
         '<div class="body-content">' +
         '<span>Pesquisa original: </span><span id="query" class="blue"></span>' +
+        '<ul id="suggestions"></ul>' +
         '</div>');
 
 
@@ -240,10 +244,13 @@ function updateSearchQuery(query, updateData) {
     //$("#query").text(query);
 
     getWidgetContent().find('#query').text(query);
+    //setSuggestions(["babo", "nabo", "fake"]);
     updateEnginesUrls(query);
 
-    if (updateData)
+    if (updateData) {
         chrome.runtime.sendMessage({action: "updateQuery", query: query});
+        chrome.runtime.sendMessage({action: "getSuggestions", query: query});
+    }
 }
 
 function updateEnginesUrls(query) {
@@ -265,4 +272,15 @@ function updateEnginesUrls(query) {
         contents.find("#icon-bing").parent().attr("href", bing);
         contents.find("#icon-yahoo").parent().attr("href", yahoo);
     }
+}
+
+function setSuggestions(suggestions) {
+    for(var i = 0; i < suggestions.length; i++) {
+        var li = $("<li>");
+        li.addClass("suggestion");
+        li.html(suggestions[i]);
+
+        getWidgetContent().find('#suggestions').append(li);
+    }
+
 }

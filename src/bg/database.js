@@ -143,6 +143,81 @@ var DB =  new function() {
             });
         });
     }
+
+    db.getStringList = function(terms) {
+        var object = {};
+        db.database.readTransaction(function (tx) {
+
+            for (var i = 0; i < terms.length; i++) {
+                tx.executeSql("SELECT * FROM CHVIndexPT WHERE term = ?", [terms[i]], function (tx, results) {
+
+                    if (results.rows.length) {
+                        var result = results.rows.item(0);
+                        var idf = result.idf;
+
+                        var stringlist = (result.stringlist).split(";");
+
+
+                        for (var j = 0; j < stringlist.length; j++) {
+                            if(stringlist[j] != "") {
+                                object[stringlist[j]] =  object.hasOwnProperty(stringlist[j]) ?  object[stringlist[j]] + idf : idf;
+                            }
+                        }
+
+                    }
+
+                });
+            }
+
+        }, /*error*/ function (transaction, error) {
+            console.log("transaction: " +  transaction + "  error: " + error);
+        }, /*success*/ function (transaction, results) {
+            console.log("transaction: " +  transaction + "  results: " + results);
+            console.log("FINAL OBJECT: " + JSON.stringify(object));
+            var max = 0;
+            for (var key in object) {
+                if (object.hasOwnProperty(key)) {
+                    max = max > object[key] ? max : object[key];
+                }
+            }
+
+            console.log("MAX: " + max);
+            var array = [];
+
+            for (var key in object) {
+                if (object.hasOwnProperty(key)) {
+                    if (object[key] == max)
+                        array.push(key);
+                }
+            }
+
+            console.log("MAX ARRAY: " + array);
+
+            var cui;
+            db.database.readTransaction(function (tx) {
+                tx.executeSql("SELECT * FROM CHVString WHERE id = ?", [array[0]], function (tx, results) {
+                    if (results.rows.length) {
+                        var result = results.rows.item(0);
+                        console.log("CUI: " + JSON.stringify(result));
+                        cui = result["cui"];
+                        console.log("cui: " + cui);
+                    }
+                });
+            }, /*Error*/ function (transaction, error) {
+                console.log("transaction: " +  transaction + "  error: " + error);
+            },/*Success*/ function (transaction, results) {
+                console.log("transaction: " +  transaction + "  results: " + results);
+                db.database.readTransaction(function (tx) {
+                    tx.executeSql("SELECT * FROM CHVConcept WHERE CUI = ?", [cui], function (tx, results) {
+                        if (results.rows.length) {
+                            var result = results.rows.item(0);
+                            console.log("CHVConcept: " + JSON.stringify(result));
+                        }
+                    })
+                });
+            });
+        });
+    }
 };
 
 

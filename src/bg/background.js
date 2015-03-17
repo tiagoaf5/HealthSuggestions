@@ -67,10 +67,12 @@ chrome.runtime.onMessage.addListener(
                 break;
             case 'ready':
 
-                chrome.storage.local.get(null, function(items) {
+
+                //TEST to check what is saved in storage
+                /*chrome.storage.local.get(null, function(items) {
 
                     console.log("items: " + JSON.stringify(items));
-                });
+                });*/
 
                 var obj = {};
                 obj[SEARCH + sender.tab.id] = null;
@@ -115,7 +117,21 @@ chrome.runtime.onMessage.addListener(
 
                 });
                 break;
+            case 'getSuggestions':
 
+                var info = 'getSuggestions: ';
+                console.log(info + request.query);
+                var words = request.query.split(" ");
+
+                var stringlist = DB.getStringList(words);
+
+
+                    //DB.executeSql("SELECT * FROM CHVIndexPT WHERE term = ?", [words[i]]);
+
+                    //console.log("OBJECT: " + JSON.stringify(object));
+
+
+                break;
             default:
                 console.warn('Unknown request: ', request);
 
@@ -172,4 +188,8 @@ function notifyTabOfState(id) {
     chrome.tabs.sendMessage(id, {
         'action': 'tabstate'
     });
+}
+
+function updateSuggestions(suggestions) {
+
 }
