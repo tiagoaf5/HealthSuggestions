@@ -25,6 +25,7 @@ chrome.runtime.onInstalled.addListener(function(details){
 
         DB.openDatabase();
     }
+    chrome.tabs.create({url: "http://www.bing.pt"});
 
 
 });
@@ -71,8 +72,8 @@ chrome.runtime.onMessage.addListener(
                 //TEST to check what is saved in storage
                 /*chrome.storage.local.get(null, function(items) {
 
-                    console.log("items: " + JSON.stringify(items));
-                });*/
+                 console.log("items: " + JSON.stringify(items));
+                 });*/
 
                 var obj = {};
                 obj[SEARCH + sender.tab.id] = null;
@@ -121,14 +122,17 @@ chrome.runtime.onMessage.addListener(
 
                 var info = 'getSuggestions: ';
                 console.log(info + request.query);
-                var words = request.query.split(" ");
+                var query = removeDiacritics(request.query); //need to remove any accentuation
+                var words = query.split(" ");
 
-                var stringlist = DB.getStringList(words);
+                DB.getStringList(words, function (sugg) {
+                    chrome.tabs.sendMessage(sender.tab.id, {action: "updateSuggestions", suggestions: sugg});
+                });
 
 
-                    //DB.executeSql("SELECT * FROM CHVIndexPT WHERE term = ?", [words[i]]);
+                //DB.executeSql("SELECT * FROM CHVIndexPT WHERE term = ?", [words[i]]);
 
-                    //console.log("OBJECT: " + JSON.stringify(object));
+                //console.log("OBJECT: " + JSON.stringify(object));
 
 
                 break;
@@ -188,8 +192,4 @@ function notifyTabOfState(id) {
     chrome.tabs.sendMessage(id, {
         'action': 'tabstate'
     });
-}
-
-function updateSuggestions(suggestions) {
-
 }

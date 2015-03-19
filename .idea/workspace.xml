@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1983a30e-645b-4cd4-af54-814b80608d9f" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/bg/background.html" afterPath="$PROJECT_DIR$/src/bg/background.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/bg/background.js" afterPath="$PROJECT_DIR$/src/bg/background.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/bg/database.js" afterPath="$PROJECT_DIR$/src/bg/database.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/inject/inject.js" afterPath="$PROJECT_DIR$/src/inject/inject.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/inject/layout.html" afterPath="$PROJECT_DIR$/src/inject/layout.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/inject/utilities.js" afterPath="$PROJECT_DIR$/src/inject/utilities.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ext.iws" />
@@ -34,8 +34,8 @@
       <file leaf-file-name="inject.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/inject/inject.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1368" max-vertical-offset="4860">
-              <caret line="107" column="54" selection-start-line="107" selection-start-column="54" selection-end-line="107" selection-end-column="54" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1503" max-vertical-offset="4860">
+              <caret line="107" column="51" selection-start-line="107" selection-start-column="40" selection-end-line="107" selection-end-column="51" />
               <folding>
                 <element signature="n#!!block;n#minimize#0" expanded="false" />
               </folding>
@@ -46,8 +46,8 @@
       <file leaf-file-name="utilities.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/inject/utilities.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="144" max-vertical-offset="252">
-              <caret line="10" column="1" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="270">
+              <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
               <folding>
                 <element signature="n#!!doc;n#getWidget#0" expanded="false" />
               </folding>
@@ -55,14 +55,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="background.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="background.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/bg/background.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.79545456" vertical-offset="2984" max-vertical-offset="3600">
-              <caret line="193" column="0" selection-start-line="193" selection-start-column="0" selection-end-line="193" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3618">
+              <caret line="20" column="25" selection-start-line="20" selection-start-column="25" selection-end-line="20" selection-end-column="25" />
               <folding>
-                <marker date="1426608650566" expanded="true" signature="2724:2755" placeholder="SELECT COUNT..CHVConcept..." />
-                <marker date="1426608650566" expanded="true" signature="4337:4376" placeholder="SELECT * FRO..CHVIndexPT..." />
+                <marker date="1426766756032" expanded="true" signature="2775:2806" placeholder="SELECT COUNT..CHVConcept..." />
+                <marker date="1426766756032" expanded="true" signature="4601:4640" placeholder="SELECT * FRO..CHVIndexPT..." />
               </folding>
             </state>
           </provider>
@@ -71,25 +71,25 @@
       <file leaf-file-name="database.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/bg/database.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2241" max-vertical-offset="4212">
-              <caret line="148" column="51" selection-start-line="148" selection-start-column="51" selection-end-line="148" selection-end-column="51" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="2211" max-vertical-offset="4338">
+              <caret line="52" column="7" selection-start-line="52" selection-start-column="7" selection-end-line="52" selection-end-column="7" />
               <folding>
                 <element signature="e#0#40#0" expanded="false" />
-                <marker date="1426606640003" expanded="true" signature="409:442" placeholder="DROP TABLE I..." />
-                <marker date="1426606640003" expanded="true" signature="473:506" placeholder="DROP TABLE I..." />
-                <marker date="1426606640003" expanded="true" signature="537:569" placeholder="DROP TABLE I..." />
-                <marker date="1426606640003" expanded="true" signature="1048:1087" placeholder="CREATE TABLE..CHVIndexPT..." />
-                <marker date="1426606640003" expanded="true" signature="1048:1141" placeholder="CREATE TABLE..CHVIndexPT..." />
-                <marker date="1426606640003" expanded="true" signature="1345:1383" placeholder="CREATE TABLE..CHVString..." />
-                <marker date="1426606640003" expanded="true" signature="1345:1430" placeholder="CREATE TABLE..CHVString..." />
-                <marker date="1426606640003" expanded="true" signature="2442:2473" placeholder="SELECT * FRO..CHVConcept..." />
-                <marker date="1426606640003" expanded="true" signature="3204:3270" placeholder="INSERT INTO ..." />
-                <marker date="1426606640003" expanded="true" signature="3460:3491" placeholder="SELECT count..CHVIndexPT..." />
-                <marker date="1426606640003" expanded="true" signature="4220:4297" placeholder="INSERT INTO ..." />
-                <marker date="1426606640003" expanded="true" signature="4486:4516" placeholder="SELECT count..CHVString..." />
-                <marker date="1426606640003" expanded="true" signature="5487:5526" placeholder="SELECT * FRO..CHVIndexPT..." />
-                <marker date="1426606640003" expanded="true" signature="7149:7185" placeholder="SELECT * FRO..CHVString..." />
-                <marker date="1426606640003" expanded="true" signature="7923:7961" placeholder="SELECT * FRO..CHVConcept..." />
+                <marker date="1426765962864" expanded="true" signature="409:442" placeholder="DROP TABLE I..." />
+                <marker date="1426765962864" expanded="true" signature="473:506" placeholder="DROP TABLE I..." />
+                <marker date="1426765962864" expanded="true" signature="537:569" placeholder="DROP TABLE I..." />
+                <marker date="1426765962864" expanded="true" signature="1048:1087" placeholder="CREATE TABLE..CHVIndexPT..." />
+                <marker date="1426765962864" expanded="true" signature="1048:1141" placeholder="CREATE TABLE..CHVIndexPT..." />
+                <marker date="1426765962864" expanded="true" signature="1345:1383" placeholder="CREATE TABLE..CHVString..." />
+                <marker date="1426765962864" expanded="true" signature="1345:1430" placeholder="CREATE TABLE..CHVString..." />
+                <marker date="1426765962864" expanded="true" signature="2498:2529" placeholder="SELECT * FRO..CHVConcept..." />
+                <marker date="1426765962864" expanded="true" signature="3260:3326" placeholder="INSERT INTO ..." />
+                <marker date="1426765962864" expanded="true" signature="3516:3547" placeholder="SELECT count..CHVIndexPT..." />
+                <marker date="1426765962864" expanded="true" signature="4276:4353" placeholder="INSERT INTO ..." />
+                <marker date="1426765962864" expanded="true" signature="4542:4572" placeholder="SELECT count..CHVString..." />
+                <marker date="1426765962864" expanded="true" signature="5611:5650" placeholder="SELECT * FRO..CHVIndexPT..." />
+                <marker date="1426765962864" expanded="true" signature="7273:7309" placeholder="SELECT * FRO..CHVString..." />
+                <marker date="1426765962864" expanded="true" signature="7995:8033" placeholder="SELECT * FRO..CHVConcept..." />
               </folding>
             </state>
           </provider>
@@ -98,9 +98,21 @@
       <file leaf-file-name="background.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/bg/background.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.6666665" vertical-offset="0" max-vertical-offset="234">
-              <caret line="7" column="7" selection-start-line="7" selection-start-column="7" selection-end-line="7" selection-end-column="7" />
+            <state vertical-scroll-proportion="-2.6666667" vertical-offset="0" max-vertical-offset="252">
+              <caret line="4" column="52" selection-start-line="4" selection-start-column="52" selection-end-line="4" selection-end-column="52" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="utilities.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/bg/utilities.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="2.9850745" vertical-offset="0" max-vertical-offset="1980">
+              <caret line="102" column="25" selection-start-line="102" selection-start-column="9" selection-end-line="102" selection-end-column="25" />
+              <folding>
+                <element signature="e#0#40#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -108,7 +120,7 @@
       <file leaf-file-name="layout.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/inject/layout.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-15.148149" vertical-offset="77" max-vertical-offset="900">
+            <state vertical-scroll-proportion="0.0" vertical-offset="77" max-vertical-offset="900">
               <caret line="176" column="0" selection-start-line="176" selection-start-column="0" selection-end-line="176" selection-end-column="0" />
               <folding>
                 <element signature="e#115#5321#0" expanded="false" />
@@ -142,16 +154,17 @@
       <list>
         <option value="$PROJECT_DIR$/src/inject/layout.css" />
         <option value="$PROJECT_DIR$/src/inject/css/font.css" />
-        <option value="$PROJECT_DIR$/src/inject/utilities.js" />
         <option value="$PROJECT_DIR$/src/inject/css/layout.css" />
         <option value="$PROJECT_DIR$/src/inject/widget.js" />
         <option value="$PROJECT_DIR$/src/bg/test.json" />
-        <option value="$PROJECT_DIR$/src/bg/background.html" />
         <option value="$PROJECT_DIR$/manifest.json" />
         <option value="$PROJECT_DIR$/src/bg/CHVConcept.json" />
-        <option value="$PROJECT_DIR$/src/bg/database.js" />
         <option value="$PROJECT_DIR$/src/inject/layout.html" />
         <option value="$PROJECT_DIR$/src/inject/inject.js" />
+        <option value="$PROJECT_DIR$/src/inject/utilities.js" />
+        <option value="$PROJECT_DIR$/src/bg/utilities.js" />
+        <option value="$PROJECT_DIR$/src/bg/background.html" />
+        <option value="$PROJECT_DIR$/src/bg/database.js" />
         <option value="$PROJECT_DIR$/src/bg/background.js" />
       </list>
     </option>
@@ -189,8 +202,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -251,12 +262,32 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bg" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ext" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ext" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="data" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -570,7 +601,8 @@
       <workItem from="1425997954355" duration="3448000" />
       <workItem from="1426432624680" duration="15146000" />
       <workItem from="1426509982032" duration="4335000" />
-      <workItem from="1426601288829" duration="6964000" />
+      <workItem from="1426601288829" duration="7061000" />
+      <workItem from="1426763631342" duration="3073000" />
     </task>
     <task id="LOCAL-00001" summary="added support for bing">
       <created>1423679376246</created>
@@ -582,10 +614,10 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="141336000" />
+    <option name="totallyTimeSpent" value="144506000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1" y="0" width="1368" height="744" extended-state="6" />
+    <frame x="-1" y="0" width="1368" height="744" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -677,14 +709,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/bg/background.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="126" max-vertical-offset="234">
-          <caret line="7" column="7" selection-start-line="7" selection-start-column="7" selection-end-line="7" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/manifest.json">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="36" max-vertical-offset="1044">
@@ -1044,52 +1068,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/inject/utilities.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="252">
-          <caret line="10" column="1" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
-          <folding>
-            <element signature="n#!!doc;n#getWidget#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/bg/database.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2241" max-vertical-offset="4212">
-          <caret line="148" column="51" selection-start-line="148" selection-start-column="51" selection-end-line="148" selection-end-column="51" />
-          <folding>
-            <element signature="e#0#40#0" expanded="false" />
-            <marker date="1426606640003" expanded="true" signature="409:442" placeholder="DROP TABLE I..." />
-            <marker date="1426606640003" expanded="true" signature="473:506" placeholder="DROP TABLE I..." />
-            <marker date="1426606640003" expanded="true" signature="537:569" placeholder="DROP TABLE I..." />
-            <marker date="1426606640003" expanded="true" signature="1048:1087" placeholder="CREATE TABLE..CHVIndexPT..." />
-            <marker date="1426606640003" expanded="true" signature="1048:1141" placeholder="CREATE TABLE..CHVIndexPT..." />
-            <marker date="1426606640003" expanded="true" signature="1345:1383" placeholder="CREATE TABLE..CHVString..." />
-            <marker date="1426606640003" expanded="true" signature="1345:1430" placeholder="CREATE TABLE..CHVString..." />
-            <marker date="1426606640003" expanded="true" signature="2442:2473" placeholder="SELECT * FRO..CHVConcept..." />
-            <marker date="1426606640003" expanded="true" signature="3204:3270" placeholder="INSERT INTO ..." />
-            <marker date="1426606640003" expanded="true" signature="3460:3491" placeholder="SELECT count..CHVIndexPT..." />
-            <marker date="1426606640003" expanded="true" signature="4220:4297" placeholder="INSERT INTO ..." />
-            <marker date="1426606640003" expanded="true" signature="4486:4516" placeholder="SELECT count..CHVString..." />
-            <marker date="1426606640003" expanded="true" signature="5487:5526" placeholder="SELECT * FRO..CHVIndexPT..." />
-            <marker date="1426606640003" expanded="true" signature="7149:7185" placeholder="SELECT * FRO..CHVString..." />
-            <marker date="1426606640003" expanded="true" signature="7923:7961" placeholder="SELECT * FRO..CHVConcept..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/bg/background.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.6666665" vertical-offset="0" max-vertical-offset="234">
-          <caret line="7" column="7" selection-start-line="7" selection-start-column="7" selection-end-line="7" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/inject/layout.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-15.148149" vertical-offset="77" max-vertical-offset="900">
+        <state vertical-scroll-proportion="0.0" vertical-offset="77" max-vertical-offset="900">
           <caret line="176" column="0" selection-start-line="176" selection-start-column="0" selection-end-line="176" selection-end-column="0" />
           <folding>
             <element signature="e#115#5321#0" expanded="false" />
@@ -1099,21 +1080,74 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/inject/inject.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1368" max-vertical-offset="4860">
-          <caret line="107" column="54" selection-start-line="107" selection-start-column="54" selection-end-line="107" selection-end-column="54" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1503" max-vertical-offset="4860">
+          <caret line="107" column="51" selection-start-line="107" selection-start-column="40" selection-end-line="107" selection-end-column="51" />
           <folding>
             <element signature="n#!!block;n#minimize#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/inject/utilities.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="270">
+          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc;n#getWidget#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/bg/background.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.6666667" vertical-offset="0" max-vertical-offset="252">
+          <caret line="4" column="52" selection-start-line="4" selection-start-column="52" selection-end-line="4" selection-end-column="52" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/bg/background.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.79545456" vertical-offset="2984" max-vertical-offset="3600">
-          <caret line="193" column="0" selection-start-line="193" selection-start-column="0" selection-end-line="193" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3618">
+          <caret line="20" column="25" selection-start-line="20" selection-start-column="25" selection-end-line="20" selection-end-column="25" />
           <folding>
-            <marker date="1426608650566" expanded="true" signature="2724:2755" placeholder="SELECT COUNT..CHVConcept..." />
-            <marker date="1426608650566" expanded="true" signature="4337:4376" placeholder="SELECT * FRO..CHVIndexPT..." />
+            <marker date="1426766756032" expanded="true" signature="2775:2806" placeholder="SELECT COUNT..CHVConcept..." />
+            <marker date="1426766756032" expanded="true" signature="4601:4640" placeholder="SELECT * FRO..CHVIndexPT..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/bg/database.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2211" max-vertical-offset="4338">
+          <caret line="52" column="7" selection-start-line="52" selection-start-column="7" selection-end-line="52" selection-end-column="7" />
+          <folding>
+            <element signature="e#0#40#0" expanded="false" />
+            <marker date="1426765962864" expanded="true" signature="409:442" placeholder="DROP TABLE I..." />
+            <marker date="1426765962864" expanded="true" signature="473:506" placeholder="DROP TABLE I..." />
+            <marker date="1426765962864" expanded="true" signature="537:569" placeholder="DROP TABLE I..." />
+            <marker date="1426765962864" expanded="true" signature="1048:1087" placeholder="CREATE TABLE..CHVIndexPT..." />
+            <marker date="1426765962864" expanded="true" signature="1048:1141" placeholder="CREATE TABLE..CHVIndexPT..." />
+            <marker date="1426765962864" expanded="true" signature="1345:1383" placeholder="CREATE TABLE..CHVString..." />
+            <marker date="1426765962864" expanded="true" signature="1345:1430" placeholder="CREATE TABLE..CHVString..." />
+            <marker date="1426765962864" expanded="true" signature="2498:2529" placeholder="SELECT * FRO..CHVConcept..." />
+            <marker date="1426765962864" expanded="true" signature="3260:3326" placeholder="INSERT INTO ..." />
+            <marker date="1426765962864" expanded="true" signature="3516:3547" placeholder="SELECT count..CHVIndexPT..." />
+            <marker date="1426765962864" expanded="true" signature="4276:4353" placeholder="INSERT INTO ..." />
+            <marker date="1426765962864" expanded="true" signature="4542:4572" placeholder="SELECT count..CHVString..." />
+            <marker date="1426765962864" expanded="true" signature="5611:5650" placeholder="SELECT * FRO..CHVIndexPT..." />
+            <marker date="1426765962864" expanded="true" signature="7273:7309" placeholder="SELECT * FRO..CHVString..." />
+            <marker date="1426765962864" expanded="true" signature="7995:8033" placeholder="SELECT * FRO..CHVConcept..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/bg/utilities.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="2.9850745" vertical-offset="0" max-vertical-offset="1980">
+          <caret line="102" column="25" selection-start-line="102" selection-start-column="9" selection-end-line="102" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#40#0" expanded="false" />
           </folding>
         </state>
       </provider>

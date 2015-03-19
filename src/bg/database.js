@@ -51,6 +51,8 @@ var DB =  new function() {
     };
 
     db.populateDatabase = function() {
+        if(!db.database)
+            db.openDatabase();
 
         //Populating CHVConcept table
         $.getJSON( baseUrl + "CHVConcept.json", function( data ) {
@@ -144,7 +146,11 @@ var DB =  new function() {
         });
     }
 
-    db.getStringList = function(terms) {
+    db.getStringList = function(terms, callback) {
+
+        if(!db.database)
+            db.openDatabase();
+
         var object = {};
         db.database.readTransaction(function (tx) {
 
@@ -200,7 +206,6 @@ var DB =  new function() {
                         var result = results.rows.item(0);
                         console.log("CUI: " + JSON.stringify(result));
                         cui = result["cui"];
-                        console.log("cui: " + cui);
                     }
                 });
             }, /*Error*/ function (transaction, error) {
@@ -212,6 +217,8 @@ var DB =  new function() {
                         if (results.rows.length) {
                             var result = results.rows.item(0);
                             console.log("CHVConcept: " + JSON.stringify(result));
+
+                            callback([result["CHV_Pref_PT"], result["CHV_Pref_EN"], result["UMLS_Pref_PT"], result["UMLS_Pref_EN"]]);
                         }
                     })
                 });
