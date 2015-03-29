@@ -7,6 +7,7 @@
 
 var SEARCH = "search";
 var MINIMIZED = "minimized";
+var SUGGESTION = "suggestion"
 //var db;
 
 chrome.runtime.onInstalled.addListener(function(details){
@@ -82,7 +83,7 @@ chrome.runtime.onMessage.addListener(
                     //Checks if this tab was used to do a search
                     console.log("ready result: " + JSON.stringify(result));
                     if (result[SEARCH + sender.tab.id])
-                        notifyTabOfState(sender.tab.id);
+                        loadWidget(sender.tab.id);
 
                 });
 
@@ -106,13 +107,15 @@ chrome.runtime.onMessage.addListener(
                 var obj = {};
                 obj[SEARCH + sender.tab.id] = null;
                 obj[MINIMIZED + sender.tab.id] = null;
+                obj[SUGGESTION + sender.tab.id] = null;
 
                 chrome.storage.local.get(obj, function(result) {
                     //Checks if this tab was used to do a search
                     console.log("loadData result: " + JSON.stringify(result));
                     if (result[SEARCH+sender.tab.id])
                         chrome.tabs.sendMessage(sender.tab.id, {action: "setData", query: result[SEARCH+sender.tab.id],
-                            minimized: result[MINIMIZED + sender.tab.id] ? true : false});
+                            minimized: result[MINIMIZED + sender.tab.id] ? true : false,
+                            suggestions: result[SUGGESTION + sender.tab.id]});
                     else
                         console.log("loadData error");
 
@@ -127,6 +130,9 @@ chrome.runtime.onMessage.addListener(
 
                 DB.getStringList(words, function (sugg) {
                     chrome.tabs.sendMessage(sender.tab.id, {action: "updateSuggestions", suggestions: sugg});
+                    var obj = {};
+                    obj[SUGGESTION + sender.tab.id] = sugg;
+                    chrome.storage.local.set(obj);
                 });
 
 
@@ -171,7 +177,7 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
             newO[SEARCH + details.tabId] = res[SEARCH + details.sourceTabId];
             chrome.storage.local.set(newO);
 
-            notifyTabOfState(details.tabId);
+            loadWidget(details.tabId);
         }
     });
 
@@ -185,11 +191,15 @@ chrome.tabs.onRemoved.addListener(
         //chrome.storage.local.clear();
     });
 
-//TODO: FIX THIS
-function notifyTabOfState(id) {
-    //console.log('notifyTabOfState message to ',id, active,on);
+chrome.app.window.onClosed.addListener(function () {
+    console.log("closed window");
+});
+
+
+function loadWidget(id) {
+    //console.log('loadWidget message to ',id, active,on);
     console.log("Sending message...");
     chrome.tabs.sendMessage(id, {
-        'action': 'tabstate'
+        'action': 'loadWidget'
     });
 }
