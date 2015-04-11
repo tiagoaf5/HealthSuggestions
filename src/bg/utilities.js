@@ -106,6 +106,14 @@ function removeDiacritics(str) {
     });
 }
 
+function processWords(list) {
+    var list2 = removeStopWords (list);
+    for (var i = 0; i < list2.length; i++) {
+        list2[i] = stem(list2[i]);
+    }
+    return list2;
+}
+
 function removeStopWords(list) {
     var stopWords = ["a", "ao", "aos", "aquela", "aquelas", "aquele", "aqueles", "aquilo", "as", "ate", "com", "como", "da", "das", "de", "dela", "delas", "dele", "deles", "depois", "do", "dos", "e", "ela", "elas", "ele", "eles", "em", "entre", "era", "eram", "eramos", "essa", "essas", "esse", "esses", "esta", "estamos", "estao", "estas", "estava", "estavam", "estavamos", "este", "esteja", "estejam", "estejamos", "estes", "esteve", "estive", "estivemos", "estiver", "estivera", "estiveram", "estiveramos", "estiverem", "estivermos", "estivesse", "estivessem", "estivessemos", "estou", "eu", "foi", "fomos", "for", "fora", "foram", "foramos", "forem", "formos", "fosse", "fossem", "fossemos", "fui", "ha", "haja", "hajam", "hajamos", "hao", "havemos", "havia", "hei", "houve", "houvemos", "houver", "houvera", "houveram", "houveramos", "houverao", "houverei", "houverem", "houveremos", "houveria", "houveriam", "houveriamos", "houvermos", "houvesse", "houvessem", "houvessemos", "isso", "isto", "ja", "lhe", "lhes", "mais", "mas", "me", "mesmo", "meu", "meus", "minha", "minhas", "muito", "na", "nao", "nas", "nem", "no", "nos", "nossa", "nossas", "nosso", "nossos", "num", "numa", "o", "os", "ou", "para", "pela", "pelas", "pelo", "pelos", "por", "qual", "quando", "que", "quem", "sao", "se", "seja", "sejam", "sejamos", "sem", "ser", "sera", "serao", "serei", "seremos", "seria", "seriam", "seriamos", "seu", "seus", "so", "somos", "sou", "sua", "suas", "tambem", "te", "tem", "temos", "tenha", "tenham", "tenhamos", "tenho", "ter", "tera", "terao", "terei", "teremos", "teria", "teriam", "teriamos", "teu", "teus", "teve", "tinha", "tinham", "tinhamos", "tive", "tivemos", "tiver", "tivera", "tiveram", "tiveramos", "tiverem", "tivermos", "tivesse", "tivessem", "tivessemos", "tu", "tua", "tuas", "um", "uma", "voce", "voces", "vos"];
     var list2 = [];
@@ -115,4 +123,11 @@ function removeStopWords(list) {
             list2.push(list[i]);
     }
     return list2;
+}
+
+function stem(word) {
+    var testStemmer = new Snowball('portuguese');
+    testStemmer.setCurrent(word);
+    testStemmer.stem();
+    return testStemmer.getCurrent();
 }
