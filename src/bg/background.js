@@ -126,7 +126,9 @@ chrome.runtime.onMessage.addListener(
                 var info = 'getSuggestions: ';
                 console.log(info + request.query);
                 var query = removeDiacritics(request.query); //need to remove any accentuation
-                var words = query.split(" ");
+                var words = removeStopWords(query.split(" ")); //remove Stop Words
+                console.log(info + " words: " + words);
+
 
                 DB.getStringList(words, function (sugg) {
                     chrome.tabs.sendMessage(sender.tab.id, {action: "updateSuggestions", suggestions: sugg});

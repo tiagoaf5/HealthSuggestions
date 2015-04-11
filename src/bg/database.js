@@ -13,6 +13,7 @@ var DB =  new function() {
         db.database.transaction(function (tx) {
             //CHVConcept
             tx.executeSql("DROP TABLE IF EXISTS 'CHVConcept'");
+            tx.executeSql("DROP TABLE IF EXISTS 'CHVStemmedIndexPT'");
             tx.executeSql("DROP TABLE IF EXISTS 'CHVIndexPT'");
             tx.executeSql("DROP TABLE IF EXISTS 'CHVString'");
 
@@ -28,7 +29,7 @@ var DB =  new function() {
 
             //CHVIndexPT
             tx.executeSql(
-                "CREATE TABLE IF NOT EXISTS 'CHVIndexPT' (" +
+                "CREATE TABLE IF NOT EXISTS 'CHVStemmedIndexPT' (" +
                 "'term' varchar(300) PRIMARY KEY," +
                 "'idf' float NOT NULL," +
                 "'stringlist' mediumtext NOT NULL" +
@@ -83,20 +84,20 @@ var DB =  new function() {
         });
 
         //Populating CHVIndexPT table
-        $.getJSON( baseUrl + "CHVIndexPT.json", function( data ) {
+        $.getJSON( baseUrl + "CHVStemmedIndexPT.json", function( data ) {
 
-            console.info("Populating CHVIndexPT table...");
+            console.info("Populating CHVStemmedIndexPT table...");
 
             db.database.transaction(function (tx) {
                 console.log("inserting...");
                 for(var i = 0; i < data.length; i++) {
 
-                    tx.executeSql("INSERT INTO 'CHVIndexPT' ('term','idf','stringlist') VALUES(?,?,?)", data[i],
+                    tx.executeSql("INSERT INTO 'CHVStemmedIndexPT' ('term','idf','stringlist') VALUES(?,?,?)", data[i],
                         nullDataHandler, killTransaction);
                 }
                 console.info("Done Populating CHVIndexPT table...");
 
-                tx.executeSql("SELECT count(*) FROM CHVIndexPT", [], function (tx, results) {
+                tx.executeSql("SELECT count(*) FROM CHVStemmedIndexPT", [], function (tx, results) {
                     console.log(results.rows);
                     var len = results.rows.length;
                     console.log(len);
@@ -155,7 +156,7 @@ var DB =  new function() {
         db.database.readTransaction(function (tx) {
 
             for (var i = 0; i < terms.length; i++) {
-                tx.executeSql("SELECT * FROM CHVIndexPT WHERE term = ?", [terms[i]], function (tx, results) {
+                tx.executeSql("SELECT * FROM CHVStemmedIndexPT WHERE term = ?", [terms[i]], function (tx, results) {
 
                     if (results.rows.length) {
                         var result = results.rows.item(0);
