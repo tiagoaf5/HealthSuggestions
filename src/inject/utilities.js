@@ -36,7 +36,7 @@ function loadWidget() {
         .addClass(widgetContentClass)
         .attr('style',"top: 0px;\
 				right: 0px;\
-				width: 100%;\
+				width: 100% ! important;\
 				height: 100%;\
 				margin: 0px ! important;\
 				border: none ! important;\
@@ -104,18 +104,19 @@ function loadWidget() {
     $contentFrame.contents().find('body').append($contents);
 
     //action onclick
-    $(".widgetContentClass").contents().find("#window-action-minimize").on("click", minimize);
+    $(".widgetContentClass").contents().find("#window-action-minimize").on("click", widgetMinimize);
+    $(".widgetContentClass").contents().find("#window-action-close").on("click", widgetClose);
 }
 
 
 /**
- * Function that handles user click on minimize/maximize button
+ * Function that handles user click on widgetMinimize/maximize button
  */
-function minimize() {
+function widgetMinimize() {
     var i = $(this);
     var isMaximized = i.hasClass("icon-arrows-compress");
 
-    console.log("minimize" + isMaximized);
+    console.log("widgetMinimize" + isMaximized);
     $(".widgetClass").animate({
         bottom: isMaximized ? '-190px' : '0px'
     }, 400, function () {
@@ -133,7 +134,9 @@ function minimize() {
 
 
 }
-/**
- * Updates query text and engine's urls
- * @param query
- */
+
+
+function widgetClose() {
+    $("." + widgetContentClass).remove();
+    chrome.runtime.sendMessage({action: "close", close: true});
+}

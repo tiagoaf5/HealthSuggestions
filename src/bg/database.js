@@ -57,54 +57,49 @@ var DB =  new function() {
 
         //Populating CHVConcept table
         $.getJSON( baseUrl + "CHVConcept.json", function( data ) {
-            console.info("Populating CHVConcept table...");
             db.database.transaction(function (tx) {
-                console.log("inserting...");
+                console.log("Populating CHVConcept table...");
+
                 for(var i = 0; i < data.length; i++) {
 
                     var val = data[i];
 
-                    var insert = "INSERT INTO 'CHVConcept' ('CUI', 'CHV_Pref_EN', 'CHV_Pref_PT', 'UMLS_Pref_EN', 'UMLS_Pref_PT') VALUES(?,?,?,?,?)";
-
-
+                    var insert = "INSERT INTO 'CHVConcept' ('CUI', 'CHV_Pref_EN', 'CHV_Pref_PT', 'UMLS_Pref_EN', " +
+                        "'UMLS_Pref_PT') VALUES(?,?,?,?,?)";
 
                     tx.executeSql(insert, val, nullDataHandler, killTransaction);
                 }
-                console.info("Done Populating CHVConcept table...");
 
                 tx.executeSql("SELECT count(*) FROM CHVConcept", [], function (tx, results) {
-                    console.log(results.rows);
                     var len = results.rows.length;
-                    console.log(len);
                     for (var i = 0; i < len; i++) {
-                        console.log(i + " " + JSON.stringify(results.rows.item(i)));
+                        console.log("Done Populating CHVConcept table...number of entries in CHVConcept: " + JSON.stringify(results.rows.item(i)));
                     }
                 });
+
             });
         });
 
         //Populating CHVIndexPT table
         $.getJSON( baseUrl + "CHVStemmedIndexPT.json", function( data ) {
 
-            console.info("Populating CHVStemmedIndexPT table...");
 
             db.database.transaction(function (tx) {
-                console.log("inserting...");
-                for(var i = 0; i < data.length; i++) {
 
+                console.log("Populating CHVStemmedIndexPT table...");
+
+                for(var i = 0; i < data.length; i++) {
                     tx.executeSql("INSERT INTO 'CHVStemmedIndexPT' ('term','idf','stringlist') VALUES(?,?,?)", data[i],
                         nullDataHandler, killTransaction);
                 }
-                console.info("Done Populating CHVIndexPT table...");
 
                 tx.executeSql("SELECT count(*) FROM CHVStemmedIndexPT", [], function (tx, results) {
-                    console.log(results.rows);
                     var len = results.rows.length;
-                    console.log(len);
                     for (var i = 0; i < len; i++) {
-                        console.log(i + " " + JSON.stringify(results.rows.item(i)));
+                        console.log("Done Populating CHVStemmedIndexPT table...number of entries in CHVStemmedIndexPT: " + JSON.stringify(results.rows.item(i)));
                     }
                 });
+
             });
         });
 
@@ -112,28 +107,25 @@ var DB =  new function() {
         //Populating CHVString table
         $.getJSON( baseUrl + "CHVString.json", function( data ) {
 
-            console.info("Populating CHVString table...");
 
             db.database.transaction(function (tx) {
-                console.log("inserting...");
+                console.log("Populating CHVString table...");
+
                 for(var i = 0; i < data.length; i++) {
 
                     tx.executeSql("INSERT INTO 'CHVString' ('id','en','pt','pt_stemmed','cui') VALUES(?,?,?,?,?)", data[i],
                         nullDataHandler, killTransaction);
                 }
-                console.info("Done Populating CHVString table...");
 
                 tx.executeSql("SELECT count(*) FROM CHVString", [], function (tx, results) {
-                    console.log(results.rows);
                     var len = results.rows.length;
-                    console.log(len);
                     for (var i = 0; i < len; i++) {
-                        console.log(i + " " + JSON.stringify(results.rows.item(i)));
+                        console.log("Done Populating CHVString table...number of entries in CHVString: " + JSON.stringify(results.rows.item(i)));
                     }
                 });
             });
         });
-    }
+    };
 
     db.executeSql = function(sql, params) {
 
@@ -145,7 +137,7 @@ var DB =  new function() {
                 }
             });
         });
-    }
+    };
 
     db.getStringList = function(terms, callback) {
 
@@ -155,76 +147,86 @@ var DB =  new function() {
         var object = {};
         db.database.readTransaction(function (tx) {
 
-            for (var i = 0; i < terms.length; i++) {
-                tx.executeSql("SELECT * FROM CHVStemmedIndexPT WHERE term = ?", [terms[i]], function (tx, results) {
+                for (var i = 0; i < terms.length; i++) {
+                    tx.executeSql("SELECT * FROM CHVStemmedIndexPT WHERE term = ?", [terms[i]], function (tx, results) {
 
-                    if (results.rows.length) {
-                        var result = results.rows.item(0);
-                        var idf = result.idf;
-
-                        var stringlist = (result.stringlist).split(";");
-
-
-                        for (var j = 0; j < stringlist.length; j++) {
-                            if(stringlist[j] != "") {
-                                object[stringlist[j]] =  object.hasOwnProperty(stringlist[j]) ?  object[stringlist[j]] + idf : idf;
-                            }
-                        }
-
-                    }
-
-                });
-            }
-
-        }, /*error*/ function (transaction, error) {
-            console.log("transaction: " +  transaction + "  error: " + error);
-        }, /*success*/ function (transaction, results) {
-            console.log("transaction: " +  transaction + "  results: " + results);
-            console.log("FINAL OBJECT: " + JSON.stringify(object));
-            var max = 0;
-            for (var key in object) {
-                if (object.hasOwnProperty(key)) {
-                    max = max > object[key] ? max : object[key];
-                }
-            }
-
-            console.log("MAX: " + max);
-            var array = [];
-
-            for (var key in object) {
-                if (object.hasOwnProperty(key)) {
-                    if (object[key] == max)
-                        array.push(key);
-                }
-            }
-
-            console.log("MAX ARRAY: " + array);
-
-            var cui;
-            db.database.readTransaction(function (tx) {
-                tx.executeSql("SELECT * FROM CHVString WHERE id = ?", [array[0]], function (tx, results) {
-                    if (results.rows.length) {
-                        var result = results.rows.item(0);
-                        console.log("CUI: " + JSON.stringify(result));
-                        cui = result["cui"];
-                    }
-                });
-            }, /*Error*/ function (transaction, error) {
-                console.log("transaction: " +  transaction + "  error: " + error);
-            },/*Success*/ function (transaction, results) {
-                console.log("transaction: " +  transaction + "  results: " + results);
-                db.database.readTransaction(function (tx) {
-                    tx.executeSql("SELECT * FROM CHVConcept WHERE CUI = ?", [cui], function (tx, results) {
                         if (results.rows.length) {
                             var result = results.rows.item(0);
-                            console.log("CHVConcept: " + JSON.stringify(result));
+                            var idf = result.idf;
 
-                            callback([result["CHV_Pref_PT"], result["CHV_Pref_EN"], result["UMLS_Pref_PT"], result["UMLS_Pref_EN"]]);
+                            var stringlist = (result.stringlist).split(";");
+
+
+                            for (var j = 0; j < stringlist.length; j++) {
+                                if(stringlist[j] != "") {
+                                    object[stringlist[j]] =  object.hasOwnProperty(stringlist[j]) ?  object[stringlist[j]] + idf : idf;
+                                }
+                            }
+
                         }
-                    })
-                });
+
+                    });
+                }
+
+            }, /*error*/
+            function (transaction, error) {
+                console.log("transaction: " +  transaction + "  error: " + error);
+            }, /*success*/
+            function (transaction, results) {
+                console.log("transaction: " +  transaction + "  results: " + results);
+                console.log("FINAL OBJECT: " + JSON.stringify(object));
+                var max = 0;
+                for (var key in object) {
+                    if (object.hasOwnProperty(key)) {
+                        max = max > object[key] ? max : object[key];
+                    }
+                }
+
+                console.log("MAX: " + max);
+                var array = [];
+
+                for (var key in object) {
+                    if (object.hasOwnProperty(key)) {
+                        if (object[key] == max)
+                            array.push(key);
+                    }
+                }
+
+                var cui;
+                db.database.readTransaction(function (tx) {
+                        tx.executeSql("SELECT * FROM CHVString WHERE id = ?", [array[0]], function (tx, results) {
+                            if (results.rows.length) {
+                                var result = results.rows.item(0);
+                                console.log("CUI: " + JSON.stringify(result));
+                                cui = result["cui"];
+                            }
+                        });
+                    }, /*Error*/
+                    function (transaction, error) {
+                        console.log("transaction: " +  transaction + "  error: " + error);
+                    },/*Success*/
+                    function (transaction, results) {
+                        console.log("transaction: " +  transaction + "  results: " + results);
+                        db.database.readTransaction(function (tx) {
+                            tx.executeSql("SELECT * FROM CHVConcept WHERE CUI = ?", [cui], function (tx, results) {
+                                if (results.rows.length) {
+                                    var result = results.rows.item(0);
+                                    var terms = [result["CHV_Pref_PT"], result["CHV_Pref_EN"], result["UMLS_Pref_PT"], result["UMLS_Pref_EN"]];
+                                    var uniqueTerms = [];
+
+                                    for (var i = 0; i < terms.length; i++)
+                                        if (uniqueTerms.indexOf(terms[i]) == -1) {
+                                            uniqueTerms.push(terms[i]);
+                                        }
+
+                                    console.log("CHVConcept: " + JSON.stringify(result));
+
+                                    callback(uniqueTerms);
+                                }
+                            })
+                        });
+                    });
             });
-        });
     }
 };
 

@@ -7,9 +7,13 @@
 
 var SEARCH = "search";
 var MINIMIZED = "minimized";
-var SUGGESTION = "suggestion"
+var CLOSED = "closed";
+var SUGGESTION = "suggestion";
 //var db;
 
+/**
+ * Action when extension is installed
+ */
 chrome.runtime.onInstalled.addListener(function(details){
     if(details.reason == "install"){
         console.log("This is a first install!");
@@ -26,7 +30,8 @@ chrome.runtime.onInstalled.addListener(function(details){
 
         DB.openDatabase();
     }
-    chrome.tabs.create({url: "http://www.bing.pt"});
+
+    //chrome.tabs.create({url: "http://www.bing.pt"});
 
 
 });
@@ -65,6 +70,7 @@ chrome.runtime.onMessage.addListener(
                 var obj = {};
                 obj[SEARCH + sender.tab.id] = null;
                 obj[MINIMIZED + sender.tab.id] = false;
+                obj[CLOSED + sender.tab.id] = false;
                 chrome.storage.local.set(obj);
                 break;
             case 'ready':
@@ -78,11 +84,12 @@ chrome.runtime.onMessage.addListener(
 
                 var obj = {};
                 obj[SEARCH + sender.tab.id] = null;
+                obj[CLOSED + sender.tab.id] = null;
 
                 chrome.storage.local.get(obj, function(result) {
                     //Checks if this tab was used to do a search
                     console.log("ready result: " + JSON.stringify(result));
-                    if (result[SEARCH + sender.tab.id])
+                    if (result[SEARCH + sender.tab.id] && !result[CLOSED + sender.tab.id])
                         loadWidget(sender.tab.id);
 
                 });
@@ -98,21 +105,30 @@ chrome.runtime.onMessage.addListener(
                 chrome.storage.local.set(obj);
                 break;
             case 'updateMinimized':
-                console.info("Creating entry...");
+                console.info("Updating minimized...");
                 var obj = {};
                 obj[MINIMIZED + sender.tab.id] = request.minimized;
+                chrome.storage.local.set(obj);
+                break;
+            case 'close':
+                console.info("Closing entry...");
+                var obj = {};
+                obj[CLOSED + sender.tab.id] = request.close;
                 chrome.storage.local.set(obj);
                 break;
             case 'loadData':
                 var obj = {};
                 obj[SEARCH + sender.tab.id] = null;
                 obj[MINIMIZED + sender.tab.id] = null;
+                obj[CLOSED + sender.tab.id] = null;
                 obj[SUGGESTION + sender.tab.id] = null;
 
                 chrome.storage.local.get(obj, function(result) {
                     //Checks if this tab was used to do a search
                     console.log("loadData result: " + JSON.stringify(result));
-                    if (result[SEARCH+sender.tab.id])
+                    //IF it's closed don't make the call and widget won't be displayed
+                    if (result[SEARCH+sender.tab.id] && !result[CLOSED + sender.tab.id])
+
                         chrome.tabs.sendMessage(sender.tab.id, {action: "setData", query: result[SEARCH+sender.tab.id],
                             minimized: result[MINIMIZED + sender.tab.id] ? true : false,
                             suggestions: result[SUGGESTION + sender.tab.id]});
@@ -131,6 +147,7 @@ chrome.runtime.onMessage.addListener(
 
 
                 DB.getStringList(words, function (sugg) {
+                    console.log("-------------->" + JSON.stringify(sugg));
                     chrome.tabs.sendMessage(sender.tab.id, {action: "updateSuggestions", suggestions: sugg});
                     var obj = {};
                     obj[SUGGESTION + sender.tab.id] = sugg;
@@ -177,6 +194,7 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
         if(res[SEARCH + details.sourceTabId] != null) {
             var newO = {};
             newO[SEARCH + details.tabId] = res[SEARCH + details.sourceTabId];
+            //TODO: ALSO copy minimized and closed?
             chrome.storage.local.set(newO);
 
             loadWidget(details.tabId);
@@ -192,11 +210,11 @@ chrome.tabs.onRemoved.addListener(
         chrome.storage.local.remove(MINIMIZED + tabId);
         //chrome.storage.local.clear();
     });
-
-chrome.app.window.onClosed.addListener(function () {
-    console.log("closed window");
-});
-
+/*
+ chrome.app.window.onClosed.addListener(function () {
+ console.log("closed window");
+ });
+ */
 
 function loadWidget(id) {
     //console.log('loadWidget message to ',id, active,on);

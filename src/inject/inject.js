@@ -23,7 +23,8 @@ $(document).ready(function() {
         console.log("properties: " + JSON.stringify(properties));
     };
 
-    CommonWeb.trackClicks();
+   CommonWeb.trackClicks();
+
 
     //if it's google
     if(/^https?:\/\/www\.google\.\w{1,3}(\/.*)?/.test(url) && url.indexOf("newtab") == -1) {
@@ -106,8 +107,8 @@ chrome.extension.onMessage.addListener(
                 console.log("receiving result...: " + JSON.stringify(request));
                 if (request.minimized) {
                     $(".widgetClass").css("bottom", "-190px");
-                    getWidgetContent().find("#window-action-minimize").removeClass("icon-arrows-compress");
-                    getWidgetContent().find("#window-action-minimize").addClass("icon-arrows-expand");
+                    getWidgetContent().find("#window-action-widgetMinimize").removeClass("icon-arrows-compress");
+                    getWidgetContent().find("#window-action-widgetMinimize").addClass("icon-arrows-expand");
                 }
                 updateSearchQuery(request.query, false);
                 setSuggestions(request.suggestions);
@@ -137,6 +138,7 @@ function updateSearchQuery(query, updateData) {
 }
 
 function updateEnginesUrls(query) {
+    //TODO: replace " " with plus duaaah
     if (query) {
         var splittedQuery = query.split(" ");
         var google = G_GOOGLE_BASE_URL + splittedQuery[0];
@@ -162,7 +164,9 @@ function setSuggestions(suggestions) {
     for(var i = 0; i < suggestions.length; i++) {
         var li = $("<li>");
         li.addClass("suggestion");
-        li.html(suggestions[i]);
+
+        li.html('<a href="'+ G_GOOGLE_BASE_URL + suggestions[i].replace(" ", "+") +  '" target="_top">'
+            + suggestions[i]+ "</a>");
 
         getWidgetContent().find('#suggestions').append(li);
     }
