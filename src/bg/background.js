@@ -147,7 +147,6 @@ chrome.runtime.onMessage.addListener(
 
 
                 DB.getStringList(words, function (sugg) {
-                    console.log("-------------->" + JSON.stringify(sugg));
                     chrome.tabs.sendMessage(sender.tab.id, {action: "updateSuggestions", suggestions: sugg});
                     var obj = {};
                     obj[SUGGESTION + sender.tab.id] = sugg;
@@ -208,13 +207,21 @@ chrome.tabs.onRemoved.addListener(
         console.log("Removing tabID: " + tabId + "....");
         chrome.storage.local.remove(SEARCH + tabId);
         chrome.storage.local.remove(MINIMIZED + tabId);
+        chrome.storage.local.remove(SUGGESTION + tabId);
+        chrome.storage.local.remove(CLOSED + tabId);
+
+
+        chrome.storage.local.get(null, function (items) {
+           console.log("items: " + JSON.stringify(items));
+        });
+
+        //chrome.storage.local.clear();
+
+        chrome.storage.local.get(null, function (items) {
+            console.log("items: " + JSON.stringify(items));
+        });
         //chrome.storage.local.clear();
     });
-/*
- chrome.app.window.onClosed.addListener(function () {
- console.log("closed window");
- });
- */
 
 function loadWidget(id) {
     //console.log('loadWidget message to ',id, active,on);
