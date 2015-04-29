@@ -7,7 +7,7 @@ body#myExtension {
 */
 
 #frame {
-    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
     font-size: medium;
     margin: 0px;
     padding:0;
@@ -27,13 +27,13 @@ body#myExtension {
 
 .header {
     border-bottom: solid 2px #3465A4;
-    background-color: #729FCF;
+    background-color: #E3DEDB;
     /*width: 350px;*/
     width: 100%;
     /*height: 50px;*/
-    //padding-top: 10px;
+//padding-top: 10px;
     display: inline-block;
-    //margin-bottom: 10px;
+//margin-bottom: 10px;
 }
 
 .search-engine {
@@ -75,15 +75,17 @@ body#myExtension {
     -webkit-user-select: none;
     user-select: none;
     cursor: pointer;
-    border: solid 1px rgb(52,101,164);
+    margin: 5px;
+    /*border: solid 1px rgb(52,101,164);*/
 }
-
+/*
 .icon-border {
     border-color: #3465A4;
-}
+}*/
 
 .body {
-    background-color: rgb(238,238,238);
+    background-color: white;
+    color: rgb(48, 57, 66);
     height: 198px;
     width: auto;
 }
@@ -93,6 +95,7 @@ body#myExtension {
     padding: 15px;
 //max-width: 320px;
 }
+
 .blue {
     color: rgb(51,153,255);
 }
@@ -111,5 +114,17 @@ body#myExtension {
     text-shadow: 2px 2px 5px #b3b3b3;
 }
 
+ul#suggestions {
+    list-style: none;
+    padding: 0px;
+}
+
+ul#suggestions li.suggestion {
+    margin-bottom: 7px;
+}
+
+ul#suggestions li.suggestion a {
+    color: rgb(17, 85, 204);
+}
 
 

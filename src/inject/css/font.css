@@ -65,6 +65,9 @@
 .icon-minus-1:before {
   content: "i";
 }
+.icon-heart:before {
+  content: "j";
+}
 
 /*I inserted it here from font-awesome 4.3.0*/
 .icon {

@@ -79,11 +79,12 @@ function loadWidget() {
     $header.html(
         '<div class="header-content">' +
         '<ul class="search-engine">' +
+        '<li><i class="icon-heart icon-2x" style="color:rgb(17, 85, 204);"></i></li>' +
         '<li><a class="search-engine-item" href="#" target="_top"><i id="icon-google" class="icon-google icon-2x"></i></a></li>' +
         '<li><a class="search-engine-item" href="#" target="_top"><i id="icon-bing" class="icon-bing icon-2x"></i></a></li>' +
         '<li><a class="search-engine-item" href="#" target="_top"><i id="icon-yahoo" class="icon-social-yahoo icon-2x"></i></a></li></ul>' +
-        '<span class="window-action"><i id="window-action-close" class="icon icon-remove icon-border"></i></span>' +
-        '<span class="window-action"><i id="window-action-minimize" class="icon icon-arrows-compress icon-border"></i></span></div>');
+        '<span class="window-action"><i id="window-action-close" class="icon icon-remove"></i></span>' +
+        '<span class="window-action"><i id="window-action-minimize" class="icon icon-arrows-compress"></i></span></div>');
 
 
     var $body = $("<div>");
@@ -91,7 +92,7 @@ function loadWidget() {
 
     $body.html(
         '<div class="body-content">' +
-        '<span>Pesquisa original: </span><span id="query" class="blue"></span>' +
+        '<b id="query"></b>' +
         '<ul id="suggestions"></ul>' +
         '</div>');
 
