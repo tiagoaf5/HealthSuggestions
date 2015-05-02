@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="PostgreSQL - healthSuggestions@localhost" uuid="7eb54bb7-1cc6-47c2-a43d-ba56019d4d36">
+      <secret-storage>master_key</secret-storage>
+      <user-name>postgres</user-name>
+      <schema-pattern>healthSuggestions.pg_catalog healthSuggestions.public</schema-pattern>
+      <default-schemas>healthSuggestions.pg_catalog healthSuggestions.public</default-schemas>
+    </data-source>
+  </component>
+</project>
