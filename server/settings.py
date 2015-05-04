@@ -107,7 +107,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 #
-STATIC_URL = "/opt/myenv/static/"
+STATIC_URL = '/static/'
+#STATIC_URL = "/opt/myenv/static/"
+STATIC_ROOT = "/opt/myenv/static/"
 
 
 TEMPLATE_DIRS = (
