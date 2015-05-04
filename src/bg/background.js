@@ -1,15 +1,11 @@
-// if you checked "fancy-settings" in extensionizr.com, uncomment this lines
-
-/*var settings = new Store("settings", {
- "sample_setting": "This is how you use Store.js to remember values"
- });
- */
-
+//DO NOT CHANGE: inject.js loadData depending on it hardcoded
 var SEARCH = "search";
 var MINIMIZED = "minimized";
 var CLOSED = "closed";
 var SUGGESTION = "suggestion";
-//var db;
+
+var TAB = "tabid";
+
 
 /**
  * Action when extension is installed
@@ -29,6 +25,8 @@ chrome.runtime.onInstalled.addListener(function(details){
         console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
 
         DB.openDatabase();
+
+        chrome.storage.local.clear();
     }
 
     //chrome.tabs.create({url: "http://www.bing.pt"});
@@ -42,14 +40,12 @@ chrome.runtime.onInstalled.addListener(function(details){
  */
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
+
         console.log(sender.tab ?
         "from a content script:" + sender.tab.url :
             "from the extension");
-        console.log("request: " + JSON.stringify(request));
 
-        if (request.greeting == "hello") {
-            sendResponse({farewell: "goodbye"});
-        }
+        console.log("request: " + JSON.stringify(request));
 
         if (!request.action) {
             console.warn('invalid command: ', request);
@@ -60,104 +56,108 @@ chrome.runtime.onMessage.addListener(
             case 'getTabId':
                 sendResponse({tabId: sender.tab.id});
                 break;
-            case 'createEntry':
-                /* if(chrome.storage.local.get(SEARCH + sender.tab.id) == chrome.runtime.lastError)
-                 sendResponse();
-
-                 chrome.storage.local.set({'value': theValue}*/
-
+            case 'createEntry': //TODO: DELETE
                 console.info("Creating entry...");
+
                 var obj = {};
-                obj[SEARCH + sender.tab.id] = null;
-                obj[MINIMIZED + sender.tab.id] = false;
-                obj[CLOSED + sender.tab.id] = false;
+                var tab = TAB + sender.tab.id;
+                obj[tab] = {};
+                obj[tab][SEARCH] = null;
+                obj[tab][MINIMIZED] = false;
+                obj[tab][CLOSED] = false;
+                obj[tab][SUGGESTION] = [];
+
+                console.log("-->" + JSON.stringify(obj));
                 chrome.storage.local.set(obj);
                 break;
             case 'ready':
-
-
-                //TEST to check what is saved in storage
-                /*chrome.storage.local.get(null, function(items) {
-
-                 console.log("items: " + JSON.stringify(items));
-                 });*/
-
                 var obj = {};
-                obj[SEARCH + sender.tab.id] = null;
-                obj[CLOSED + sender.tab.id] = null;
+                obj[TAB + sender.tab.id] = null;
 
                 chrome.storage.local.get(obj, function(result) {
                     //Checks if this tab was used to do a search
                     console.log("ready result: " + JSON.stringify(result));
-                    if (result[SEARCH + sender.tab.id] /*&& result[SUGGESTION + sender.tab.id]*/ && !result[CLOSED + sender.tab.id])
+                    var data = result[TAB + sender.tab.id];
+
+                    if (data != null && !data[CLOSED]) {
+                        console.log("**loading widget**");
                         loadWidget(sender.tab.id);
-
+                    }
                 });
-
-                //DB.executeSql("SELECT COUNT(*) FROM CHVConcept",[]);
-
-
                 break;
             case 'updateQuery':
                 console.info("Updating entry...");
+
                 var obj = {};
-                obj[SEARCH + sender.tab.id] = request.query;
+                var tab = TAB + sender.tab.id;
+                obj[tab] = {};
+                obj[tab][SEARCH] = request.query;
+                obj[tab][MINIMIZED] = false;
+                obj[tab][CLOSED] = false;
+                obj[tab][SUGGESTION] = [];
+
+                console.log("-->" + JSON.stringify(obj));
                 chrome.storage.local.set(obj);
                 break;
             case 'updateMinimized':
                 console.info("Updating minimized...");
+
                 var obj = {};
-                obj[MINIMIZED + sender.tab.id] = request.minimized;
-                chrome.storage.local.set(obj);
+                obj[TAB + sender.tab.id] = null;
+
+                chrome.storage.local.get(obj, function(result) {
+                    result[TAB + sender.tab.id][MINIMIZED] = request.minimized;
+                    chrome.storage.local.set(result);
+                });
+
                 break;
             case 'close':
                 console.info("Closing entry...");
+
                 var obj = {};
-                obj[CLOSED + sender.tab.id] = request.close;
-                chrome.storage.local.set(obj);
-                break;
-            case 'loadData':
-                var obj = {};
-                obj[SEARCH + sender.tab.id] = null;
-                obj[MINIMIZED + sender.tab.id] = null;
-                obj[CLOSED + sender.tab.id] = null;
-                obj[SUGGESTION + sender.tab.id] = null;
+                obj[TAB + sender.tab.id] = null;
 
                 chrome.storage.local.get(obj, function(result) {
-                    //Checks if this tab was used to do a search
-                    console.log("loadData result: " + JSON.stringify(result));
-                    //IF it's closed don't make the call and widget won't be displayed
-                    if (result[SEARCH + sender.tab.id] /*&& result[SUGGESTION + sender.tab.id]*/ && !result[CLOSED + sender.tab.id])
+                    result[TAB + sender.tab.id][CLOSED] = request.close;
+                    chrome.storage.local.set(result);
+                });
 
-                        chrome.tabs.sendMessage(sender.tab.id, {action: "setData", query: result[SEARCH+sender.tab.id],
-                            minimized: result[MINIMIZED + sender.tab.id] ? true : false,
-                            suggestions: result[SUGGESTION + sender.tab.id]});
+                break;
+            case 'loadData':
+                console.info("Loading data...");
+                var obj = {};
+                obj[TAB + sender.tab.id] = null;
+
+                chrome.storage.local.get(obj, function(result) {
+                    console.log("loadData result: " + JSON.stringify(result));
+                    var data = result[TAB + sender.tab.id];
+
+                    //IF it's closed don't make the call and widget won't be displayed
+                    if (data != null && !data[CLOSED])
+                        chrome.tabs.sendMessage(sender.tab.id, {action: "setData", data: data});
                     else
                         console.log("loadData error");
-
                 });
                 break;
             case 'getSuggestions':
-
-                var info = 'getSuggestions: ';
-                console.log(info + request.query);
+                console.info("Getting suggestions...");
+                console.log('getSuggestions: ' + request.query);
                 var query = removeDiacritics(request.query); //need to remove any accentuation
                 var words = processWords(query.split(" ")); //remove Stop Words and stem them
-                console.log(info + " words: " + words);
-
+                console.log("getSuggestions: words: " + words);
 
                 DB.getStringList(words, function (sugg) {
                     chrome.tabs.sendMessage(sender.tab.id, {action: "updateSuggestions", suggestions: sugg});
+
                     var obj = {};
-                    obj[SUGGESTION + sender.tab.id] = sugg;
-                    chrome.storage.local.set(obj);
+                    obj[TAB + sender.tab.id] = null;
+
+                    chrome.storage.local.get(obj, function(result) {
+                        result[TAB + sender.tab.id][SUGGESTION] = sugg;
+
+                        chrome.storage.local.set(result);
+                    });
                 });
-
-
-                //DB.executeSql("SELECT * FROM CHVIndexPT WHERE term = ?", [words[i]]);
-
-                //console.log("OBJECT: " + JSON.stringify(object));
-
 
                 break;
             default:
@@ -185,41 +185,31 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
         console.log("activeTab: " + res[0].id);
 
     });
+
     var obj = {};
-    obj[SEARCH + details.sourceTabId] = null;
+    obj[TAB + details.sourceTabId] = null;
 
-    chrome.storage.local.get(obj, function(res) {
-        console.log("onCreated: " + JSON.stringify(res));
-        if(res[SEARCH + details.sourceTabId] != null) {
+    chrome.storage.local.get(obj, function(result) {
+        console.log("previous tab result: " + JSON.stringify(result));
+
+        if(result[TAB + details.sourceTabId] != null) {
             var newO = {};
-            newO[SEARCH + details.tabId] = res[SEARCH + details.sourceTabId];
-            //TODO: ALSO copy minimized and closed?
+            newO[TAB + details.tabId] = result[TAB + details.sourceTabId];
             chrome.storage.local.set(newO);
-
             loadWidget(details.tabId);
         }
     });
-
 });
 
 chrome.tabs.onRemoved.addListener(
     function(tabId) {
         console.log("Removing tabID: " + tabId + "....");
-        chrome.storage.local.remove(SEARCH + tabId);
-        chrome.storage.local.remove(MINIMIZED + tabId);
-        chrome.storage.local.remove(SUGGESTION + tabId);
-        chrome.storage.local.remove(CLOSED + tabId);
-
+        chrome.storage.local.remove(TAB + tabId);
 
         chrome.storage.local.get(null, function (items) {
             console.log("items: " + JSON.stringify(items));
         });
 
-        //chrome.storage.local.clear();
-
-        chrome.storage.local.get(null, function (items) {
-            console.log("items: " + JSON.stringify(items));
-        });
         //chrome.storage.local.clear();
     });
 

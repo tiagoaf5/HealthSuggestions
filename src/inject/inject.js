@@ -104,17 +104,17 @@ chrome.extension.onMessage.addListener(
                 chrome.runtime.sendMessage({action: 'loadData'});
                 break;
             case 'setData':
-                //loadWidget();
+                //TODO: very dependent of background js CONSTANTS, FIX IT
                 console.log("receiving result...: " + JSON.stringify(request));
 
-                if (request.minimized) {
+                if (request.data.minimized) {
                     $(".widgetClass").css("bottom", "-190px");
                     getWidgetContent().find("#window-action-minimize").removeClass("icon-arrows-compress");
                     getWidgetContent().find("#window-action-minimize").removeClass("icon-arrows-expand");
                     getWidgetContent().find("#window-action-minimize").addClass("icon-arrows-expand");
                 }
-                updateSearchQuery(request.query, false);
-                setSuggestions(request.suggestions);
+                updateSearchQuery(request.data.search, false);
+                setSuggestions(request.data.suggestion);
                 break;
             case 'updateSuggestions':
                 setSuggestions(request["suggestions"]);
