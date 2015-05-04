@@ -106,10 +106,12 @@ chrome.extension.onMessage.addListener(
             case 'setData':
                 //loadWidget();
                 console.log("receiving result...: " + JSON.stringify(request));
+
                 if (request.minimized) {
                     $(".widgetClass").css("bottom", "-190px");
-                    getWidgetContent().find("#window-action-widgetMinimize").removeClass("icon-arrows-compress");
-                    getWidgetContent().find("#window-action-widgetMinimize").addClass("icon-arrows-expand");
+                    getWidgetContent().find("#window-action-minimize").removeClass("icon-arrows-compress");
+                    getWidgetContent().find("#window-action-minimize").removeClass("icon-arrows-expand");
+                    getWidgetContent().find("#window-action-minimize").addClass("icon-arrows-expand");
                 }
                 updateSearchQuery(request.query, false);
                 setSuggestions(request.suggestions);

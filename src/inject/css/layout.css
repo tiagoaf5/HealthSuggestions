@@ -15,7 +15,8 @@ body#myExtension {
     font-size:100%;
     vertical-align:baseline;
     background:rgb(238,238,238);
-    border: solid 2px rgb(52,101,164);
+    /*border: solid 2px rgb(52,101,164); removed border*/
+    border: solid 1px #E3DEDB;
     height: 100%;
     /*width: 350px;
     height: 250px;
@@ -26,7 +27,7 @@ body#myExtension {
 }
 
 .header {
-    border-bottom: solid 2px #3465A4;
+    //border-bottom: solid 2px #3465A4;
     background-color: #E3DEDB;
     /*width: 350px;*/
     width: 100%;
@@ -102,12 +103,15 @@ body#myExtension {
 
 #icon-google {
     color: #3f85f4;
+    color: ghostwhite;
 }
 #icon-bing {
     color: #ffb900;
+    color: ghostwhite;
 }
 #icon-yahoo {
     color: #640f6d;
+    color: ghostwhite;
 }
 
 .search-engine i:hover {

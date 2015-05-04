@@ -89,7 +89,7 @@ chrome.runtime.onMessage.addListener(
                 chrome.storage.local.get(obj, function(result) {
                     //Checks if this tab was used to do a search
                     console.log("ready result: " + JSON.stringify(result));
-                    if (result[SEARCH + sender.tab.id] && result[SUGGESTION + sender.tab.id] && !result[CLOSED + sender.tab.id])
+                    if (result[SEARCH + sender.tab.id] /*&& result[SUGGESTION + sender.tab.id]*/ && !result[CLOSED + sender.tab.id])
                         loadWidget(sender.tab.id);
 
                 });
@@ -127,7 +127,7 @@ chrome.runtime.onMessage.addListener(
                     //Checks if this tab was used to do a search
                     console.log("loadData result: " + JSON.stringify(result));
                     //IF it's closed don't make the call and widget won't be displayed
-                    if (result[SEARCH + sender.tab.id] && result[SUGGESTION + sender.tab.id] && !result[CLOSED + sender.tab.id])
+                    if (result[SEARCH + sender.tab.id] /*&& result[SUGGESTION + sender.tab.id]*/ && !result[CLOSED + sender.tab.id])
 
                         chrome.tabs.sendMessage(sender.tab.id, {action: "setData", query: result[SEARCH+sender.tab.id],
                             minimized: result[MINIMIZED + sender.tab.id] ? true : false,
