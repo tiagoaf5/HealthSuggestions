@@ -17,14 +17,14 @@ var G_YAHOO_BASE_URL = "https://search.yahoo.com/search?p=";
  */
 $(document).ready(function() {
     var url = window.location.href;
-
+/*
     CommonWeb.Callback = function(collection, properties, callback) {
         console.log("collectin: " + collection);
         console.log("properties: " + JSON.stringify(properties));
     };
 
    CommonWeb.trackClicks();
-
+*/
 
     //if it's google
     if(/^https?:\/\/www\.google\.\w{1,3}(\/.*)?/.test(url) && url.indexOf("newtab") == -1) {
@@ -104,6 +104,7 @@ chrome.extension.onMessage.addListener(
                 chrome.runtime.sendMessage({action: 'loadData'});
                 break;
             case 'setData':
+                //loadWidget();
                 console.log("receiving result...: " + JSON.stringify(request));
                 if (request.minimized) {
                     $(".widgetClass").css("bottom", "-190px");

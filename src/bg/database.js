@@ -3,7 +3,11 @@
  */
 var DB =  new function() {
     var baseUrl = "../../data/";
+    //var baseRemoteUrl = "http://127.0.0.1:8000/GetConceptView/";
+    var baseRemoteUrl = "http://healthsuggestions.fe.up.pt/GetConceptView/";
     var db = this;
+    db.remote = true;
+
     db.openDatabase = function() {
         db.database = openDatabase('mydb', '2.0', 'my first database', 100000000);
     }
@@ -140,6 +144,28 @@ var DB =  new function() {
     };
 
     db.getStringList = function(terms, callback) {
+
+        if(db.remote) {
+            var tosend = terms[0];
+            for (var i=1; i < terms.length; i++)
+                tosend += "+" + terms[i];
+
+            $.getJSON( baseRemoteUrl + tosend, function( result ) {
+                console.log("DATA received from server: " + JSON.stringify(result));
+
+                var terms = [result["CHV_Pref_PT"], result["CHV_Pref_EN"], result["UMLS_Pref_PT"], result["UMLS_Pref_EN"]];
+                var uniqueTerms = [];
+
+                for (var i = 0; i < terms.length; i++)
+                    if (uniqueTerms.indexOf(terms[i]) == -1) {
+                        uniqueTerms.push(terms[i]);
+                    }
+
+                callback(uniqueTerms);
+            });
+
+            return;
+        }
 
         if(!db.database)
             db.openDatabase();

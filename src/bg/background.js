@@ -24,7 +24,7 @@ chrome.runtime.onInstalled.addListener(function(details){
 
         console.log("populating database...");
         DB.populateDatabase();
-    }else if(details.reason == "update"){
+    } else if(details.reason == "update"){
         var thisVersion = chrome.runtime.getManifest().version;
         console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
 
@@ -89,7 +89,7 @@ chrome.runtime.onMessage.addListener(
                 chrome.storage.local.get(obj, function(result) {
                     //Checks if this tab was used to do a search
                     console.log("ready result: " + JSON.stringify(result));
-                    if (result[SEARCH + sender.tab.id] && !result[CLOSED + sender.tab.id])
+                    if (result[SEARCH + sender.tab.id] && result[SUGGESTION + sender.tab.id] && !result[CLOSED + sender.tab.id])
                         loadWidget(sender.tab.id);
 
                 });
@@ -127,7 +127,7 @@ chrome.runtime.onMessage.addListener(
                     //Checks if this tab was used to do a search
                     console.log("loadData result: " + JSON.stringify(result));
                     //IF it's closed don't make the call and widget won't be displayed
-                    if (result[SEARCH+sender.tab.id] && !result[CLOSED + sender.tab.id])
+                    if (result[SEARCH + sender.tab.id] && result[SUGGESTION + sender.tab.id] && !result[CLOSED + sender.tab.id])
 
                         chrome.tabs.sendMessage(sender.tab.id, {action: "setData", query: result[SEARCH+sender.tab.id],
                             minimized: result[MINIMIZED + sender.tab.id] ? true : false,
@@ -212,7 +212,7 @@ chrome.tabs.onRemoved.addListener(
 
 
         chrome.storage.local.get(null, function (items) {
-           console.log("items: " + JSON.stringify(items));
+            console.log("items: " + JSON.stringify(items));
         });
 
         //chrome.storage.local.clear();
