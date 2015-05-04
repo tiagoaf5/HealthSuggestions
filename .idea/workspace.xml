@@ -3,7 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="1983a30e-645b-4cd4-af54-814b80608d9f" name="Default" comment="added support for bing">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/bg/background.js" afterPath="$PROJECT_DIR$/src/bg/background.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/bg/database.js" afterPath="$PROJECT_DIR$/src/bg/database.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/inject/inject.js" afterPath="$PROJECT_DIR$/src/inject/inject.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/inject/utilities.js" afterPath="$PROJECT_DIR$/src/inject/utilities.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ext.iws" />
@@ -35,11 +37,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="inject.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="inject.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/inject/inject.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1998" max-vertical-offset="3276">
-              <caret line="106" column="73" selection-start-line="106" selection-start-column="73" selection-end-line="106" selection-end-column="73" />
+            <state vertical-scroll-proportion="0.8496622" vertical-offset="2701" max-vertical-offset="3384">
+              <caret line="178" column="0" selection-start-line="178" selection-start-column="0" selection-end-line="178" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -48,11 +50,11 @@
       <file leaf-file-name="utilities.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/inject/utilities.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1869" max-vertical-offset="2628">
-              <caret line="86" column="44" selection-start-line="86" selection-start-column="44" selection-end-line="86" selection-end-column="66" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="2121" max-vertical-offset="2772">
+              <caret line="150" column="1" selection-start-line="150" selection-start-column="1" selection-end-line="150" selection-end-column="1" />
               <folding>
                 <element signature="n#!!doc;n#getWidget#0" expanded="false" />
-                <marker date="1430344037351" expanded="true" signature="2337:2360" placeholder="..." />
+                <marker date="1430756093161" expanded="true" signature="2344:2367" placeholder="..." />
               </folding>
             </state>
           </provider>
@@ -68,16 +70,40 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="background.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="background.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/bg/background.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.664" vertical-offset="2955" max-vertical-offset="3834">
-              <caret line="208" column="8" selection-start-line="208" selection-start-column="8" selection-end-line="208" selection-end-column="8" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3582">
+              <caret line="191" column="3" selection-start-line="191" selection-start-column="3" selection-end-line="191" selection-end-column="3" />
               <folding>
                 <element signature="e#190#235#0" expanded="false" />
                 <element signature="e#292#916#0" expanded="false" />
                 <element signature="e#921#977#0" expanded="false" />
-                <element signature="e#5685#5889#0" expanded="false" />
+                <element signature="e#1515#2013#0" expanded="false" />
+                <element signature="e#2631#3123#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="database.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/bg/database.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1551" max-vertical-offset="5346">
+              <caret line="168" column="44" selection-start-line="168" selection-start-column="44" selection-end-line="168" selection-end-column="44" />
+              <folding>
+                <marker date="1430755564377" expanded="true" signature="576:609" placeholder="DROP TABLE I..." />
+                <marker date="1430755564377" expanded="true" signature="640:680" placeholder="DROP TABLE I..." />
+                <marker date="1430755564377" expanded="true" signature="711:744" placeholder="DROP TABLE I..." />
+                <marker date="1430755564377" expanded="true" signature="775:807" placeholder="DROP TABLE I..." />
+                <marker date="1430755564377" expanded="true" signature="2660:2691" placeholder="SELECT count..CHVConcept..." />
+                <marker date="1430755564377" expanded="true" signature="3374:3447" placeholder="INSERT INTO ..." />
+                <marker date="1430755564377" expanded="true" signature="3568:3606" placeholder="SELECT count..CHVStemmedIndexPT..." />
+                <marker date="1430755564377" expanded="true" signature="4287:4364" placeholder="INSERT INTO ..." />
+                <marker date="1430755564377" expanded="true" signature="4485:4515" placeholder="SELECT count..CHVString..." />
+                <marker date="1430755564377" expanded="true" signature="7280:7326" placeholder="SELECT * FRO..CHVStemmedIndexPT..." />
+                <marker date="1430755564377" expanded="true" signature="9064:9100" placeholder="SELECT * FRO..CHVString..." />
+                <marker date="1430755564377" expanded="true" signature="9922:9960" placeholder="SELECT * FRO..CHVConcept..." />
               </folding>
             </state>
           </provider>
@@ -136,11 +162,11 @@
         <option value="$PROJECT_DIR$/src/bg/background.html" />
         <option value="$PROJECT_DIR$/manifest.json" />
         <option value="db-console:/72337d01/65f61c30-2850-43df-a4d5-724a80f551fa/" />
-        <option value="$PROJECT_DIR$/src/inject/utilities.js" />
         <option value="$PROJECT_DIR$/src/inject/css/layout.css" />
-        <option value="$PROJECT_DIR$/src/bg/database.js" />
-        <option value="$PROJECT_DIR$/src/inject/inject.js" />
         <option value="$PROJECT_DIR$/src/bg/background.js" />
+        <option value="$PROJECT_DIR$/src/bg/database.js" />
+        <option value="$PROJECT_DIR$/src/inject/utilities.js" />
+        <option value="$PROJECT_DIR$/src/inject/inject.js" />
       </list>
     </option>
   </component>
@@ -245,6 +271,24 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ext" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ext" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bg" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -595,7 +639,7 @@
       <workItem from="1430575157107" duration="6210000" />
       <workItem from="1430598046605" duration="3267000" />
       <workItem from="1430737633570" duration="7000000" />
-      <workItem from="1430746115975" duration="3434000" />
+      <workItem from="1430746115975" duration="10263000" />
     </task>
     <task id="LOCAL-00001" summary="added support for bing">
       <created>1423679376246</created>
@@ -607,7 +651,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="198983000" />
+    <option name="totallyTimeSpent" value="205812000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -646,7 +690,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="CheckStyle" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32850242" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32850242" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17147192" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Analysis" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -1060,25 +1104,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/bg/database.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4896">
-          <caret line="6" column="4" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inject/utilities.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1329" max-vertical-offset="2628">
-          <caret line="86" column="44" selection-start-line="86" selection-start-column="44" selection-end-line="86" selection-end-column="66" />
-          <folding>
-            <element signature="n#!!doc;n#getWidget#0" expanded="false" />
-            <marker date="1430344037351" expanded="true" signature="2337:2360" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/bg/utilities.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1803" max-vertical-offset="2502">
@@ -1095,24 +1120,57 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/inject/inject.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1998" max-vertical-offset="3276">
-          <caret line="106" column="73" selection-start-line="106" selection-start-column="73" selection-end-line="106" selection-end-column="73" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/bg/background.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.664" vertical-offset="2955" max-vertical-offset="3834">
-          <caret line="208" column="8" selection-start-line="208" selection-start-column="8" selection-end-line="208" selection-end-column="8" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3582">
+          <caret line="191" column="3" selection-start-line="191" selection-start-column="3" selection-end-line="191" selection-end-column="3" />
           <folding>
             <element signature="e#190#235#0" expanded="false" />
             <element signature="e#292#916#0" expanded="false" />
             <element signature="e#921#977#0" expanded="false" />
-            <element signature="e#5685#5889#0" expanded="false" />
+            <element signature="e#1515#2013#0" expanded="false" />
+            <element signature="e#2631#3123#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/bg/database.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1551" max-vertical-offset="5346">
+          <caret line="168" column="44" selection-start-line="168" selection-start-column="44" selection-end-line="168" selection-end-column="44" />
+          <folding>
+            <marker date="1430755564377" expanded="true" signature="576:609" placeholder="DROP TABLE I..." />
+            <marker date="1430755564377" expanded="true" signature="640:680" placeholder="DROP TABLE I..." />
+            <marker date="1430755564377" expanded="true" signature="711:744" placeholder="DROP TABLE I..." />
+            <marker date="1430755564377" expanded="true" signature="775:807" placeholder="DROP TABLE I..." />
+            <marker date="1430755564377" expanded="true" signature="2660:2691" placeholder="SELECT count..CHVConcept..." />
+            <marker date="1430755564377" expanded="true" signature="3374:3447" placeholder="INSERT INTO ..." />
+            <marker date="1430755564377" expanded="true" signature="3568:3606" placeholder="SELECT count..CHVStemmedIndexPT..." />
+            <marker date="1430755564377" expanded="true" signature="4287:4364" placeholder="INSERT INTO ..." />
+            <marker date="1430755564377" expanded="true" signature="4485:4515" placeholder="SELECT count..CHVString..." />
+            <marker date="1430755564377" expanded="true" signature="7280:7326" placeholder="SELECT * FRO..CHVStemmedIndexPT..." />
+            <marker date="1430755564377" expanded="true" signature="9064:9100" placeholder="SELECT * FRO..CHVString..." />
+            <marker date="1430755564377" expanded="true" signature="9922:9960" placeholder="SELECT * FRO..CHVConcept..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/inject/utilities.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2121" max-vertical-offset="2772">
+          <caret line="150" column="1" selection-start-line="150" selection-start-column="1" selection-end-line="150" selection-end-column="1" />
+          <folding>
+            <element signature="n#!!doc;n#getWidget#0" expanded="false" />
+            <marker date="1430756093161" expanded="true" signature="2344:2367" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/inject/inject.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8496622" vertical-offset="2701" max-vertical-offset="3384">
+          <caret line="178" column="0" selection-start-line="178" selection-start-column="0" selection-end-line="178" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

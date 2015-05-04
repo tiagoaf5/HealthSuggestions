@@ -17,20 +17,20 @@ var G_YAHOO_BASE_URL = "https://search.yahoo.com/search?p=";
  */
 $(document).ready(function() {
     var url = window.location.href;
-/*
-    CommonWeb.Callback = function(collection, properties, callback) {
-        console.log("collectin: " + collection);
-        console.log("properties: " + JSON.stringify(properties));
-    };
+    /*
+     CommonWeb.Callback = function(collection, properties, callback) {
+     console.log("collectin: " + collection);
+     console.log("properties: " + JSON.stringify(properties));
+     };
 
-   CommonWeb.trackClicks();
-*/
+     CommonWeb.trackClicks();
+     */
 
     //if it's google
     if(/^https?:\/\/www\.google\.\w{1,3}(\/.*)?/.test(url) && url.indexOf("newtab") == -1) {
         console.log("It's google here!");
-        loadWidget();
-        chrome.runtime.sendMessage({action: "createEntry"});
+        //loadWidget();
+        //chrome.runtime.sendMessage({action: "createEntry"});
 
         //wait a bit, sometimes the search bar content isn't immediately available
         var xxx = 0;
@@ -46,7 +46,11 @@ $(document).ready(function() {
         })();
 
         //handle search changes
-        $(queryGoogleId).on("change", function() {
+        /*$(queryGoogleId).on("input propertychange paste change", function() {
+            var query = $(queryGoogleId).val();
+            updateSearchQuery(query);
+        });*/
+        $(window).bind('hashchange', function() {
             var query = $(queryGoogleId).val();
             updateSearchQuery(query);
         });
@@ -54,8 +58,8 @@ $(document).ready(function() {
     //if it's bing
     else if (/^https?:\/\/www.bing\.\w{1,3}(\/.*)?/.test(url)) {
         console.log("It's bing here!");
-        loadWidget();
-        chrome.runtime.sendMessage({action: "createEntry"});
+        //loadWidget();
+        //chrome.runtime.sendMessage({action: "createEntry"});
 
         setTimeout(function(){
             var query = $(queryBingId).val();
@@ -66,8 +70,8 @@ $(document).ready(function() {
     //if it's yahoo
     else if (/^https?:\/\/search.yahoo.com\/search(.*)/.test(url)) {
         console.log("It's yahoo here!");
-        loadWidget();
-        chrome.runtime.sendMessage({action: "createEntry"});
+        //loadWidget();
+        //chrome.runtime.sendMessage({action: "createEntry"});
 
         setTimeout(function(){
             var query = $(queryYahooId).val();
@@ -99,13 +103,20 @@ chrome.extension.onMessage.addListener(
             case 'loadWidget':
 
                 console.log("appending widget");
-                loadWidget();
+
+                if (!getWidget().length) {
+                    console.log("**loading widget**");
+                    loadWidget();
+                } else {
+                    console.log("**widget exists**");
+                }
 
                 chrome.runtime.sendMessage({action: 'loadData'});
                 break;
             case 'setData':
                 //TODO: very dependent of background js CONSTANTS, FIX IT
                 console.log("receiving result...: " + JSON.stringify(request));
+
 
                 if (request.data.minimized) {
                     $(".widgetClass").css("bottom", "-190px");
@@ -116,8 +127,12 @@ chrome.extension.onMessage.addListener(
                 updateSearchQuery(request.data.search, false);
                 setSuggestions(request.data.suggestion);
                 break;
-            case 'updateSuggestions':
+            /*case 'updateSuggestions':
+                //loadWidget();
                 setSuggestions(request["suggestions"]);
+                break;*/
+            case 'closeWidget':
+                widgetClose(false);
                 break;
             default :
                 break;
@@ -128,14 +143,11 @@ chrome.extension.onMessage.addListener(
 function updateSearchQuery(query, updateData) {
     updateData = (typeof updateData === "undefined") ? true : updateData;
 
-    //$("#query").text(query);
-
     getWidgetContent().find('#query').text(query);
-    //setSuggestions(["babo", "nabo", "fake"]);
     updateEnginesUrls(query);
 
     if (updateData) {
-        chrome.runtime.sendMessage({action: "updateQuery", query: query});
+        //chrome.runtime.sendMessage({action: "updateQuery", query: query});
         chrome.runtime.sendMessage({action: "getSuggestions", query: query});
     }
 }
@@ -143,16 +155,10 @@ function updateSearchQuery(query, updateData) {
 function updateEnginesUrls(query) {
     //TODO: replace " " with plus duaaah
     if (query) {
-        var splittedQuery = query.split(" ");
-        var google = G_GOOGLE_BASE_URL + splittedQuery[0];
-        var bing = G_BING_BASE_URL + splittedQuery[0];
-        var yahoo = G_YAHOO_BASE_URL + splittedQuery[0];
-
-        for(var i = 1; i < splittedQuery.length; i++) {
-            google += "+" + splittedQuery[i];
-            bing += "+" + splittedQuery[i];
-            yahoo += "+" + splittedQuery[i];
-        }
+        var splittedQuery = replaceAll(" ", "+", query);
+        var google = G_GOOGLE_BASE_URL + splittedQuery;
+        var bing = G_BING_BASE_URL + splittedQuery;
+        var yahoo = G_YAHOO_BASE_URL + splittedQuery;
 
         var contents = getWidgetContent();
 
@@ -168,8 +174,8 @@ function setSuggestions(suggestions) {
         var li = $("<li>");
         li.addClass("suggestion");
 
-        li.html('<a href="'+ G_GOOGLE_BASE_URL + suggestions[i].replace(" ", "+") +  '" target="_top">'
-            + suggestions[i]+ "</a>");
+        li.html('<a href="'+ G_GOOGLE_BASE_URL + replaceAll(" ", "+", suggestions[i]) +  '" target="_top">'
+        + suggestions[i]+ "</a>");
 
         getWidgetContent().find('#suggestions').append(li);
     }

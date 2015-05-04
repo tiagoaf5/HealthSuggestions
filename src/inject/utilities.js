@@ -3,7 +3,7 @@
  */
 
 function getWidget() {
-    return $("." + widgetClass);
+    return $("." + widgetContentClass);
 }
 
 function getWidgetContent() {
@@ -137,7 +137,15 @@ function widgetMinimize() {
 }
 
 
-function widgetClose() {
+function widgetClose(updateData) {
+    updateData = (typeof updateData === "undefined") ? true : updateData;
+
     $("." + widgetContentClass).remove();
-    chrome.runtime.sendMessage({action: "close", close: true});
+
+    if(updateData)
+        chrome.runtime.sendMessage({action: "close", close: true});
+}
+
+function replaceAll(find, replace, str) {
+    return str.replace(new RegExp(find, 'g'), replace);
 }

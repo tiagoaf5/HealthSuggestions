@@ -150,7 +150,7 @@ var DB =  new function() {
             for (var i=1; i < terms.length; i++)
                 tosend += "+" + terms[i];
 
-            $.getJSON( baseRemoteUrl + tosend, function( result ) {
+            /*$.getJSON( baseRemoteUrl + tosend, function( result ) {
                 console.log("DATA received from server: " + JSON.stringify(result));
 
                 var terms = [result["CHV_Pref_PT"], result["CHV_Pref_EN"], result["UMLS_Pref_PT"], result["UMLS_Pref_EN"]];
@@ -162,6 +162,31 @@ var DB =  new function() {
                     }
 
                 callback(uniqueTerms);
+            });*/
+
+            $.ajax({
+                type: "GET",
+                url: baseRemoteUrl + tosend,
+                dataType: "json",
+                success: function(result){
+                    console.log("DATA received from server: " + JSON.stringify(result));
+
+                    var terms = [result["CHV_Pref_PT"], result["CHV_Pref_EN"], result["UMLS_Pref_PT"], result["UMLS_Pref_EN"]];
+                    var uniqueTerms = [];
+
+                    for (var i = 0; i < terms.length; i++)
+                        if (uniqueTerms.indexOf(terms[i]) == -1) {
+                            uniqueTerms.push(terms[i]);
+                        }
+
+                    callback(uniqueTerms);
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    console.log(XMLHttpRequest);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    callback([]);
+                }
             });
 
             return;

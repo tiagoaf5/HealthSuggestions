@@ -56,7 +56,7 @@ chrome.runtime.onMessage.addListener(
             case 'getTabId':
                 sendResponse({tabId: sender.tab.id});
                 break;
-            case 'createEntry': //TODO: DELETE
+            /*case 'createEntry': //TODO: DELETE
                 console.info("Creating entry...");
 
                 var obj = {};
@@ -69,7 +69,7 @@ chrome.runtime.onMessage.addListener(
 
                 console.log("-->" + JSON.stringify(obj));
                 chrome.storage.local.set(obj);
-                break;
+                break;*/
             case 'ready':
                 var obj = {};
                 obj[TAB + sender.tab.id] = null;
@@ -85,7 +85,7 @@ chrome.runtime.onMessage.addListener(
                     }
                 });
                 break;
-            case 'updateQuery':
+            /*case 'updateQuery':
                 console.info("Updating entry...");
 
                 var obj = {};
@@ -98,7 +98,7 @@ chrome.runtime.onMessage.addListener(
 
                 console.log("-->" + JSON.stringify(obj));
                 chrome.storage.local.set(obj);
-                break;
+                break;*/
             case 'updateMinimized':
                 console.info("Updating minimized...");
 
@@ -147,15 +147,38 @@ chrome.runtime.onMessage.addListener(
                 console.log("getSuggestions: words: " + words);
 
                 DB.getStringList(words, function (sugg) {
-                    chrome.tabs.sendMessage(sender.tab.id, {action: "updateSuggestions", suggestions: sugg});
+                    //chrome.tabs.sendMessage(sender.tab.id, {action: "updateSuggestions", suggestions: sugg});
 
-                    var obj = {};
-                    obj[TAB + sender.tab.id] = null;
+                    if (sugg.length == 0) {
+                        console.log("No suggestions");
+                        chrome.tabs.sendMessage(sender.tab.id, {action: "closeWidget"});
+                        return;
+                    }
+                    var obj0 = {};
+                    obj0[TAB + sender.tab.id] = null;
 
-                    chrome.storage.local.get(obj, function(result) {
-                        result[TAB + sender.tab.id][SUGGESTION] = sugg;
+                    chrome.storage.local.get(obj0, function(result) {
+                        var tab = TAB + sender.tab.id;
 
-                        chrome.storage.local.set(result);
+                        if (result[TAB + sender.tab.id] == null) {
+                            var obj = {};
+                            obj[tab] = {};
+                            obj[tab][SEARCH] = request.query;
+                            obj[tab][MINIMIZED] = false;
+                            obj[tab][CLOSED] = false;
+                            obj[tab][SUGGESTION] = sugg;
+
+                            console.log("-->" + JSON.stringify(obj));
+                            chrome.storage.local.set(obj);
+                            //chrome.tabs.sendMessage(sender.tab.id, {action: "setData", data: obj[tab]});
+                        } else {
+                            result[tab][SUGGESTION] = sugg;
+                            result[tab][SEARCH] = request.query;
+                            console.log("-->" + JSON.stringify(result));
+                            chrome.storage.local.set(result);
+                            //chrome.tabs.sendMessage(sender.tab.id, {action: "setData", data: result[tab]});
+                        }
+                        loadWidget(sender.tab.id);
                     });
                 });
 
