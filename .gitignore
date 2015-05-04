@@ -62,3 +62,6 @@ venv
 staticfiles
 
 .idea/
+
+# local_settings
+server/local_settings.py
