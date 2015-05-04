@@ -24,7 +24,7 @@ chrome.runtime.onInstalled.addListener(function(details){
         var thisVersion = chrome.runtime.getManifest().version;
         console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
 
-        DB.openDatabase();
+        //DB.openDatabase();
 
         chrome.storage.local.clear();
     }
@@ -174,6 +174,7 @@ chrome.runtime.onMessage.addListener(
                         } else {
                             result[tab][SUGGESTION] = sugg;
                             result[tab][SEARCH] = request.query;
+                            result[tab][CLOSED] = false;
                             console.log("-->" + JSON.stringify(result));
                             chrome.storage.local.set(result);
                             //chrome.tabs.sendMessage(sender.tab.id, {action: "setData", data: result[tab]});
