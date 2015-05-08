@@ -151,18 +151,18 @@ var DB =  new function() {
                 tosend += "+" + terms[i];
 
             /*$.getJSON( baseRemoteUrl + tosend, function( result ) {
-                console.log("DATA received from server: " + JSON.stringify(result));
+             console.log("DATA received from server: " + JSON.stringify(result));
 
-                var terms = [result["CHV_Pref_PT"], result["CHV_Pref_EN"], result["UMLS_Pref_PT"], result["UMLS_Pref_EN"]];
-                var uniqueTerms = [];
+             var terms = [result["CHV_Pref_PT"], result["CHV_Pref_EN"], result["UMLS_Pref_PT"], result["UMLS_Pref_EN"]];
+             var uniqueTerms = [];
 
-                for (var i = 0; i < terms.length; i++)
-                    if (uniqueTerms.indexOf(terms[i]) == -1) {
-                        uniqueTerms.push(terms[i]);
-                    }
+             for (var i = 0; i < terms.length; i++)
+             if (uniqueTerms.indexOf(terms[i]) == -1) {
+             uniqueTerms.push(terms[i]);
+             }
 
-                callback(uniqueTerms);
-            });*/
+             callback(uniqueTerms);
+             });*/
 
             $.ajax({
                 type: "GET",

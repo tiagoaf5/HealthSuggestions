@@ -142,8 +142,8 @@ chrome.runtime.onMessage.addListener(
             case 'getSuggestions':
                 console.info("Getting suggestions...");
                 console.log('getSuggestions: ' + request.query);
-                var query = removeDiacritics(request.query); //need to remove any accentuation
-                var words = processWords(query.split(" ")); //remove Stop Words and stem them
+                var query = split(removeDiacritics(request.query)); //need to remove any accentuation and then split
+                var words = processWords(query); //remove Stop Words and stem them
                 console.log("getSuggestions: words: " + words);
 
                 DB.getStringList(words, function (sugg) {

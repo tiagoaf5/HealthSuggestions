@@ -106,6 +106,15 @@ function removeDiacritics(str) {
     });
 }
 
+function split(str) {
+    var words = str.split(/;|,|\*|\n|\s|-|\)|\(|\+|\[|]|\//);
+    var newWords = [];
+    for (var i = 0; i < words.length; i++)
+        if (words[i].trim() != "")
+            newWords.push(words[i]);
+    return newWords;
+}
+
 function processWords(list) {
     var list2 = removeStopWords (list);
     for (var i = 0; i < list2.length; i++) {
