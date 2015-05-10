@@ -6,7 +6,7 @@ var DB =  new function() {
     //var baseRemoteUrl = "http://127.0.0.1:8000/GetConceptView/";
     var baseRemoteUrl = "http://healthsuggestions.fe.up.pt/GetConceptView/";
     var db = this;
-    db.remote = true;
+    db.remote = false;
 
     db.openDatabase = function() {
         db.database = openDatabase('mydb', '2.0', 'my first database', 100000000);

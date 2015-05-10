@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1983a30e-645b-4cd4-af54-814b80608d9f" name="Default" comment="added support for bing">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/bg/background.js" afterPath="$PROJECT_DIR$/src/bg/background.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/bg/database.js" afterPath="$PROJECT_DIR$/src/bg/database.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/bg/utilities.js" afterPath="$PROJECT_DIR$/src/bg/utilities.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/inject/inject.js" afterPath="$PROJECT_DIR$/src/inject/inject.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ext.iws" />
@@ -37,7 +36,7 @@
         <entry file="file://$PROJECT_DIR$/src/inject/inject.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="178" column="0" selection-start-line="178" selection-start-column="0" selection-end-line="178" selection-end-column="0" />
+              <caret line="207" column="42" selection-start-line="207" selection-start-column="42" selection-end-line="207" selection-end-column="42" />
               <folding />
             </state>
           </provider>
@@ -66,11 +65,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="background.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="background.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/bg/background.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5103093">
-              <caret line="144" column="116" selection-start-line="144" selection-start-column="116" selection-end-line="144" selection-end-column="116" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="159" column="36" selection-start-line="159" selection-start-column="36" selection-end-line="159" selection-end-column="36" />
               <folding>
                 <element signature="e#190#235#0" expanded="false" />
                 <element signature="e#923#979#0" expanded="false" />
@@ -84,9 +83,32 @@
       <file leaf-file-name="utilities.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/bg/utilities.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.8">
+            <state vertical-scroll-proportion="-0.0">
               <caret line="116" column="0" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="database.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/bg/database.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.24324325">
+              <caret line="8" column="21" selection-start-line="8" selection-start-column="21" selection-end-line="8" selection-end-column="21" />
+              <folding>
+                <marker date="1431257355449" expanded="true" signature="577:610" placeholder="DROP TABLE I..." />
+                <marker date="1431257355449" expanded="true" signature="641:681" placeholder="DROP TABLE I..." />
+                <marker date="1431257355449" expanded="true" signature="712:745" placeholder="DROP TABLE I..." />
+                <marker date="1431257355449" expanded="true" signature="776:808" placeholder="DROP TABLE I..." />
+                <marker date="1431257355449" expanded="true" signature="2661:2692" placeholder="SELECT count..CHVConcept..." />
+                <marker date="1431257355449" expanded="true" signature="3375:3448" placeholder="INSERT INTO ..." />
+                <marker date="1431257355449" expanded="true" signature="3569:3607" placeholder="SELECT count..CHVStemmedIndexPT..." />
+                <marker date="1431257355449" expanded="true" signature="4288:4365" placeholder="INSERT INTO ..." />
+                <marker date="1431257355449" expanded="true" signature="4486:4516" placeholder="SELECT count..CHVString..." />
+                <marker date="1431257355449" expanded="true" signature="7242:7288" placeholder="SELECT * FRO..CHVStemmedIndexPT..." />
+                <marker date="1431257355449" expanded="true" signature="9026:9062" placeholder="SELECT * FRO..CHVString..." />
+                <marker date="1431257355449" expanded="true" signature="9884:9922" placeholder="SELECT * FRO..CHVConcept..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -140,10 +162,10 @@
         <option value="db-console:/72337d01/65f61c30-2850-43df-a4d5-724a80f551fa/" />
         <option value="$PROJECT_DIR$/src/inject/css/layout.css" />
         <option value="$PROJECT_DIR$/src/inject/utilities.js" />
-        <option value="$PROJECT_DIR$/src/inject/inject.js" />
         <option value="$PROJECT_DIR$/src/bg/background.js" />
         <option value="$PROJECT_DIR$/src/bg/utilities.js" />
         <option value="$PROJECT_DIR$/src/bg/database.js" />
+        <option value="$PROJECT_DIR$/src/inject/inject.js" />
       </list>
     </option>
   </component>
@@ -216,8 +238,8 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scratches" />
+      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -234,6 +256,38 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="ext" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ext" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ext" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ext" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ext" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bg" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -258,7 +312,7 @@
     <property name="DefaultHtmlFileTemplate" value="Html5" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="dynamic.classpath" value="false" />
-    <property name="settings.editor.selected.configurable" value="terminal" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Console Colors" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
   </component>
   <component name="RecentsManager">
@@ -593,7 +647,12 @@
       <workItem from="1430999755410" duration="85000" />
       <workItem from="1430999859877" duration="464000" />
       <workItem from="1431000341009" duration="66000" />
-      <workItem from="1431026438659" duration="2768000" />
+      <workItem from="1431026438659" duration="3262000" />
+      <workItem from="1431184599990" duration="79000" />
+      <workItem from="1431184699324" duration="29000" />
+      <workItem from="1431184746541" duration="246000" />
+      <workItem from="1431185475698" duration="607000" />
+      <workItem from="1431195627494" duration="4135000" />
     </task>
     <task id="LOCAL-00001" summary="added support for bing">
       <created>1423679376246</created>
@@ -605,7 +664,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="211258000" />
+    <option name="totallyTimeSpent" value="216848000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -629,7 +688,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1366" height="743" extended-state="1" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32850242" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -638,7 +697,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32850242" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32850242" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31078905" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1056,19 +1115,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/inject/inject.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="178" column="0" selection-start-line="178" selection-start-column="0" selection-end-line="178" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/snowball-js/Snowball.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.09608541">
           <caret line="10" column="12" selection-start-line="10" selection-start-column="12" selection-end-line="10" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1083,44 +1133,52 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/bg/background.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="159" column="36" selection-start-line="159" selection-start-column="36" selection-end-line="159" selection-end-column="36" />
+          <folding>
+            <element signature="e#190#235#0" expanded="false" />
+            <element signature="e#923#979#0" expanded="false" />
+            <element signature="e#1517#2015#0" expanded="false" />
+            <element signature="e#2633#3125#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/bg/utilities.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.8">
+        <state vertical-scroll-proportion="0.0">
           <caret line="116" column="0" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/inject/inject.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="207" column="42" selection-start-line="207" selection-start-column="42" selection-end-line="207" selection-end-column="42" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/bg/database.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="281" column="2" selection-start-line="281" selection-start-column="2" selection-end-line="281" selection-end-column="2" />
+        <state vertical-scroll-proportion="0.24324325">
+          <caret line="8" column="21" selection-start-line="8" selection-start-column="21" selection-end-line="8" selection-end-column="21" />
           <folding>
-            <marker date="1431121583828" expanded="true" signature="-1:-1" placeholder="DROP TABLE I..." />
-            <marker date="1431121583828" expanded="true" signature="-1:-1" placeholder="DROP TABLE I..." />
-            <marker date="1431121583828" expanded="true" signature="-1:-1" placeholder="DROP TABLE I..." />
-            <marker date="1431121583828" expanded="true" signature="-1:-1" placeholder="DROP TABLE I..." />
-            <marker date="1431121583828" expanded="true" signature="-1:-1" placeholder="SELECT count..CHVConcept..." />
-            <marker date="1431121583828" expanded="true" signature="-1:-1" placeholder="INSERT INTO ..." />
-            <marker date="1431121583828" expanded="true" signature="-1:-1" placeholder="SELECT count..CHVStemmedIndexPT..." />
-            <marker date="1431121583828" expanded="true" signature="-1:-1" placeholder="INSERT INTO ..." />
-            <marker date="1431121583828" expanded="true" signature="-1:-1" placeholder="SELECT count..CHVString..." />
-            <marker date="1431121583828" expanded="true" signature="-1:-1" placeholder="SELECT * FRO..CHVStemmedIndexPT..." />
-            <marker date="1431121583828" expanded="true" signature="-1:-1" placeholder="SELECT * FRO..CHVString..." />
-            <marker date="1431121583828" expanded="true" signature="-1:-1" placeholder="SELECT * FRO..CHVConcept..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/bg/background.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5103093">
-          <caret line="144" column="116" selection-start-line="144" selection-start-column="116" selection-end-line="144" selection-end-column="116" />
-          <folding>
-            <element signature="e#190#235#0" expanded="false" />
-            <element signature="e#923#979#0" expanded="false" />
-            <element signature="e#1517#2015#0" expanded="false" />
-            <element signature="e#2633#3125#0" expanded="false" />
+            <marker date="1431257355449" expanded="true" signature="577:610" placeholder="DROP TABLE I..." />
+            <marker date="1431257355449" expanded="true" signature="641:681" placeholder="DROP TABLE I..." />
+            <marker date="1431257355449" expanded="true" signature="712:745" placeholder="DROP TABLE I..." />
+            <marker date="1431257355449" expanded="true" signature="776:808" placeholder="DROP TABLE I..." />
+            <marker date="1431257355449" expanded="true" signature="2661:2692" placeholder="SELECT count..CHVConcept..." />
+            <marker date="1431257355449" expanded="true" signature="3375:3448" placeholder="INSERT INTO ..." />
+            <marker date="1431257355449" expanded="true" signature="3569:3607" placeholder="SELECT count..CHVStemmedIndexPT..." />
+            <marker date="1431257355449" expanded="true" signature="4288:4365" placeholder="INSERT INTO ..." />
+            <marker date="1431257355449" expanded="true" signature="4486:4516" placeholder="SELECT count..CHVString..." />
+            <marker date="1431257355449" expanded="true" signature="7242:7288" placeholder="SELECT * FRO..CHVStemmedIndexPT..." />
+            <marker date="1431257355449" expanded="true" signature="9026:9062" placeholder="SELECT * FRO..CHVString..." />
+            <marker date="1431257355449" expanded="true" signature="9884:9922" placeholder="SELECT * FRO..CHVConcept..." />
           </folding>
         </state>
       </provider>

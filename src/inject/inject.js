@@ -150,10 +150,55 @@ function updateSearchQuery(query, updateData) {
         //chrome.runtime.sendMessage({action: "updateQuery", query: query});
         chrome.runtime.sendMessage({action: "getSuggestions", query: query});
     }
+    getGoogleResults();
+    getBingResults();
+    getYahooResults()
+}
+
+function getGoogleResults() {
+    console.log("Google results: ");
+    var results = $("#resultStats").text();
+    console.log("results -> " + results);
+    $("div.srg > li").each(function (index) {
+        var title = $(this).find("h3.r a").text();
+        var url = $(this).find("h3.r a").attr("href");
+        var snippet = $(this).find("span.st").text();
+        console.log(index + ": " + title + " -> " + url);
+        console.log(snippet);
+    });
+}
+
+function getBingResults() {
+    console.log("Bing results: ");
+    var results = $("#b_tween > span.sb_count").text();
+    console.log("results -> " + results);
+
+    $("ol#b_results > li.b_algo").each(function (index) {
+        var title = $(this).find("div.b_title > h2 > a").text();
+        var url = $(this).find("div.b_title > h2 > a").attr("href");
+        var snippet = $(this).find("div.b_caption > p").text();
+        console.log(index + ": " + title + " -> " + url);
+        console.log(snippet);
+    });
+
+}
+
+function getYahooResults() {
+    console.log("Yahoo results: ");
+    var results = $("ol.searchBottom div.compPagination > span").text();
+    console.log("results -> " + results);
+
+    $(".dd.algo").each(function (index) {
+        var title = $(this).find("div.compTitle > h3.title > a").text();
+        var url = $(this).find("div.compTitle > div > span.wr-bw").text();
+        var snippet = $(this).find("div.compText > p").text();
+        console.log(index + ": " + title + " -> " + url);
+        console.log(snippet);
+    });
+
 }
 
 function updateEnginesUrls(query) {
-    //TODO: replace " " with plus duaaah
     if (query) {
         var splittedQuery = replaceAll(" ", "+", query);
         var google = G_GOOGLE_BASE_URL + splittedQuery;
