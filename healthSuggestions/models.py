@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 #############################
-#Indexes for extension      #
+#   Indexes for extension   #
 #############################
 
 class CHVConcept(models.Model):
@@ -36,7 +36,8 @@ class CHVString(models.Model):
 #     User and Sessions     #
 #############################
 
-class User(models.Model):
+
+class TestUser(models.Model):
     cookieID = models.UUIDField(primary_key=True)
     registerDate = models.DateTimeField(auto_now_add=True)
     browser = models.CharField(max_length=50, blank=True)
@@ -44,7 +45,7 @@ class User(models.Model):
 
 
 class Session(models.Model):
-    cookieID = models.ForeignKey('User')
+    cookieID = models.ForeignKey('TestUser')
     ip = models.GenericIPAddressField()
     startTimestamp = models.DateTimeField(auto_now_add=True)
 
@@ -54,12 +55,12 @@ class Session(models.Model):
 
 
 class SuggestionLanguage(models.Model):
-    language = models.CharField(max_length=20)
-    iso6391 = models.CharField(max_length=2)
+    language = models.CharField(max_length=20, unique=True)
+    iso6391 = models.CharField(max_length=2, unique=True)
 
 
 class SuggestionType(models.Model):
-    type = models.CharField(max_length=20)
+    type = models.CharField(max_length=20, unique=True)
 
 
 class Suggestion(models.Model):
@@ -74,7 +75,7 @@ class Suggestion(models.Model):
 
 
 class SearchEngine(models.Model):
-    name = models.CharField(max_length=10)
+    name = models.CharField(max_length=10, unique=True)
     url = models.URLField()
 
 
@@ -130,7 +131,7 @@ class Event(models.Model):
 
 
 class EventType(models.Model):
-    type = models.CharField(max_length=20)
+    type = models.CharField(max_length=20, unique=True)
 
 
 class Copy(models.Model):
