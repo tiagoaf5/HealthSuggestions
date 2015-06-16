@@ -62,11 +62,11 @@ class SuggestionTypeSerializer(serializers.ModelSerializer):  # be populated ini
 class SuggestionSerializer(serializers.ModelSerializer):
     suggestionLanguage = serializers.SlugRelatedField(
         slug_field='iso6391',
-        queryset=SuggestionLanguage.objects.filter('iso6391')
+        queryset=SuggestionLanguage.objects.all()
     )
     suggestionType = serializers.SlugRelatedField(
         slug_field='type',
-        queryset=SuggestionType.objects.filter('type')
+        queryset=SuggestionType.objects.all()
     )
 
     class Meta:

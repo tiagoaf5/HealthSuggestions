@@ -124,6 +124,7 @@ class WebPage(models.Model):
 
 
 class Event(models.Model):
+    id = models.AutoField(primary_key=True)
     eventTimestamp = models.DateTimeField(auto_now_add=True)
     type = models.ForeignKey('EventType', related_name='events')
     searchPage = models.ForeignKey('SearchPage', related_name='events', blank=True, null=True)
@@ -135,19 +136,19 @@ class EventType(models.Model):
 
 
 class Copy(models.Model):
-    id = models.OneToOneField('Event', primary_key=True)
+    id = models.OneToOneField(Event, primary_key=True)
     copyText = models.TextField()
 
 
 class Find(models.Model):
-    id = models.OneToOneField('Event', primary_key=True)
+    id = models.OneToOneField(Event, primary_key=True)
     findText = models.CharField(max_length=50)
 
 
 class SwitchSE(models.Model):
-    id = models.OneToOneField('Event', primary_key=True)
-    origin = models.ForeignKey('SearchEngine')
-    destination = models.ForeignKey('SearchEngine')
+    id = models.OneToOneField(Event, primary_key=True)
+    origin = models.ForeignKey('SearchEngine', related_name='engine_origin')
+    destination = models.ForeignKey('SearchEngine', related_name='engine_destination')
 
 
 class Click(models.Model):
