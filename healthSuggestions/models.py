@@ -115,7 +115,7 @@ class WebPage(models.Model):
     pageLoadTimestamp = models.DateTimeField(auto_now_add=True)
     timeOnPage = models.FloatField(blank=True)
     numScrollEvents = models.PositiveSmallIntegerField(blank=True)
-    searchResult = models.ManyToManyField('SearchResult', related_name='webPages')
+    searchResults = models.ManyToManyField('SearchResult', related_name='webPages')
 
 
 #############################
@@ -152,6 +152,7 @@ class SwitchSE(models.Model):
 
 
 class Click(models.Model):
+    id = models.OneToOneField(Event, primary_key=True)
     linkText = models.URLField(blank=True)
     searchResult = models.ForeignKey('SearchResult', blank=True, null=True)
     seRelatedSearch = models.ForeignKey('SERelatedSearch', blank=True, null=True)
