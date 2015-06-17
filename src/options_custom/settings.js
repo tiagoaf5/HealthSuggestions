@@ -1,9 +1,15 @@
 window.addEvent("domready", function () {
     // Option 1: Use the manifest:
     new FancySettings.initWithManifest(function (settings) {
+        console.log("-->" + settings.manifest.loggingCheckBox.checked() );
+        settings.manifest.loggingCheckBox.value = true;
         settings.manifest.myButton.addEvent("action", function () {
             alert("You clicked me!");
         });
+        settings.manifest.loggingCheckBox.addEvent("action", function () {
+            alert("You clicked me!");
+        });
+
     });
     
     // Option 2: Do everything manually:

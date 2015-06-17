@@ -1,8 +1,20 @@
 // SAMPLE
 this.manifest = {
-    "name": "My Extension",
-    "icon": "icon.png",
+    "name": "HealthSuggestions",
+    "icon": "../../icons/icon48.png",
     "settings": [
+        {
+            "tab": i18n.get("logging"),
+            "name": "loggingCheckBox",
+            "label": i18n.get("acceptLogging"),
+            "type": "checkbox"
+        },
+        {
+            "tab": i18n.get("logging"),
+            "name": "loggingDescription",
+            "type": "description",
+            "text": i18n.get("description")
+        },
         {
             "tab": i18n.get("information"),
             "group": i18n.get("login"),
@@ -27,6 +39,16 @@ this.manifest = {
             "type": "description",
             "text": i18n.get("description")
         },
+        /*****/
+        {
+            "tab": i18n.get("information"),
+            "group": i18n.get("disconnect"),
+            "name": "cenas",
+            "type": "checkbox",
+            "label": "slb"
+        },
+
+        /****/
         {
             "tab": i18n.get("information"),
             "group": i18n.get("logout"),

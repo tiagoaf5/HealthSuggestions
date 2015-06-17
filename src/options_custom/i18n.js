@@ -2,42 +2,42 @@
 this.i18n = {
     "settings": {
         "en": "Settings",
-        "de": "Optionen"
+        "pt": "Opções"
     },
     "search": {
         "en": "Search",
-        "de": "Suche"
+        "pt": "Pesquisa"
     },
     "nothing-found": {
         "en": "No matches were found.",
-        "de": "Keine Übereinstimmungen gefunden."
+        "pt": "Não há resultados."
     },
     
     
     
     "information": {
         "en": "Information",
-        "de": "Information"
+        "pt": "Informação"
     },
     "login": {
         "en": "Login",
-        "de": "Anmeldung"
+        "pt": "Login"
     },
     "username": {
         "en": "Username:",
-        "de": "Benutzername:"
+        "pt": "Username:"
     },
     "password": {
         "en": "Password:",
-        "de": "Passwort:"
+        "pt": "Password:"
     },
     "x-characters": {
         "en": "6 - 12 characters",
-        "de": "6 - 12 Zeichen"
+        "pt": "6 - 12 caracteres"
     },
     "x-characters-pw": {
         "en": "10 - 18 characters",
-        "de": "10 - 18 Zeichen"
+        "pt": "10 - 18 caracteres"
     },
     "description": {
         "en": "This is a description. You can write any text inside of this.<br>\
@@ -48,7 +48,7 @@ this.i18n = {
         dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.\
         Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
         
-        "de": "Das ist eine Beschreibung. Du kannst hier beliebigen Text einfügen.<br>\
+        "pt": "Das ist eine Beschreibung. Du kannst hier beliebigen Text einfügen.<br>\
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut\
         labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores\
         et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem\
@@ -58,14 +58,26 @@ this.i18n = {
     },
     "logout": {
         "en": "Logout",
-        "de": "Abmeldung"
+        "pt": "Logout"
     },
     "enable": {
         "en": "Enable",
-        "de": "Aktivieren"
+        "pt": "Ativar"
     },
     "disconnect": {
         "en": "Disconnect:",
-        "de": "Trennen:"
+        "pt": "Desconectar:"
+    },
+    "logging": {
+        "en": "Logging",
+        "pt": "Registo"
+    },
+    "acceptLogging": {
+        "en": "Accept logging",
+        "pt": "Permitir registo de atividade"
+    },
+    "languages": {
+        "en": "Languages",
+        "pt": "Línguas"
     }
 };
