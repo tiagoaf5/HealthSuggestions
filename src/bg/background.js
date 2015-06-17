@@ -246,3 +246,11 @@ function loadWidget(id) {
         'action': 'loadWidget'
     });
 }
+
+chrome.browserAction.onClicked.addListener(function() {
+    //chrome.browserAction.setIcon({path: "../../icons/bing.png"});
+    chrome.runtime.openOptionsPage(function(){
+        if(chrome.runtime.lastError)
+            alert("Something went wrong! :(");
+    })
+});

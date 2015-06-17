@@ -41,11 +41,19 @@ window.addEvent("domready", function () {
                     else
                         return;
                 };
-                
+
             }
             else {
                 document.getElementsByTagName("progress")[0].remove();
             }
+        });
+
+        settings.manifest.enabled.addEvent("action", function() {
+            var bkg = chrome.extension.getBackgroundPage();
+            if(bkg.SETTINGS.get("enabled"))
+                chrome.browserAction.setIcon({path: "../../icons/bing.png"});
+            else
+                chrome.browserAction.setIcon({path: "../../icons/yahoo.png"});
         });
 
     });

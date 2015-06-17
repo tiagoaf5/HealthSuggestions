@@ -5,6 +5,20 @@ this.manifest = {
     "settings": [
         {
             "tab": i18n.get("settings"),
+            "group": i18n.get("extension"),
+            "name": "enabled",
+            "label": i18n.get("enabled"),
+            "type": "checkbox"
+        },
+        {
+            "tab": i18n.get("settings"),
+            "group": i18n.get("extension"),
+            "name": "enabledExplained",
+            "type": "description",
+            "text": i18n.get("enabledExplained")
+        },
+        {
+            "tab": i18n.get("settings"),
             "group": i18n.get("logging"),
             "name": "logging",
             "label": i18n.get("allowLogging"),

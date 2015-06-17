@@ -134,4 +134,16 @@ this.i18n = {
         dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.\
         Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
     },
+    "extension": {
+        "en": "Extension",
+        "pt": "Extensão"
+    },
+    "enabled": {
+        "en": "Enable extension.",
+        "pt": "Ativar extensão."
+    },
+    "enabledExplained": {
+        "en": "If you uncheck this box the extension will be disabled.",
+        "pt": "Se desmarcar esta caixa a extensão será desativada."
+    }
 };
