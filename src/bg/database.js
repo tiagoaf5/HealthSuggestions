@@ -4,7 +4,7 @@
 var DB =  new function() {
     var baseUrl = "../../data/";
     //var baseRemoteUrl = "http://127.0.0.1:8000/GetConceptView/";
-    var baseRemoteUrl = "http://healthsuggestions.fe.up.pt/GetConceptView/";
+    var baseRemoteUrl = "http://irlab.fe.up.pt/p/healthsuggestions/GetConceptView/";
     var db = this;
 
     db.openDatabase = function() {
@@ -175,8 +175,8 @@ var DB =  new function() {
                     var uniqueTerms = [];
 
                     for (var i = 0; i < terms.length; i++)
-                        if (uniqueTerms.indexOf(terms[i]) == -1) {
-                            uniqueTerms.push(terms[i]);
+                        if (uniqueTerms.indexOf(terms[i].trim()) == -1) {
+                            uniqueTerms.push(terms[i].trim());
                         }
 
                     callback(uniqueTerms);
@@ -266,8 +266,10 @@ var DB =  new function() {
                                     var uniqueTerms = [];
 
                                     for (var i = 0; i < terms.length; i++)
-                                        if (uniqueTerms.indexOf(terms[i]) == -1) {
-                                            uniqueTerms.push(terms[i]);
+
+                                        if (uniqueTerms.indexOf(terms[i].trim()) == -1) {
+                                            console.log("unique->" + terms[i]);
+                                            uniqueTerms.push(terms[i].trim());
                                         }
 
                                     console.log("CHVConcept: " + JSON.stringify(result));
