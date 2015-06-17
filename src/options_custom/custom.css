@@ -2,3 +2,56 @@
 // Add your own style rules here, not in css/main.css
 // or css/setting.css for easy updating reasons.
 */
+
+/* All Progress Bars */
+progress {
+    /* Reset the default appearance */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* Determinate */
+progress[value] {
+    /* Reset the default appearance */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* Indeterminate */
+progress:not([value]) {
+    /* Reset the default appearance */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+
+
+progress::-webkit-progress-bar {
+    background: #EEE;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.2) inset;
+    border-radius: 3px;
+}
+
+progress::-webkit-progress-value {
+    background-color: #7b7c7b;
+    border-radius: 3px;
+}
+
+
+progress {
+    background: #EEE;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.2) inset;
+    border-radius: 3px;
+}
+
+progress::-moz-progress-bar {
+    background-color: #7b7c7b;
+    border-radius: 3px;
+}
+
+.test_bar {
+    margin-left: 50px;
+}

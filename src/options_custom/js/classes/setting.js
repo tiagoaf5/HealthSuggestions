@@ -620,7 +620,7 @@
                     "class": "setting container radio-buttons"
                 })).inject(this.bundle);
                 this.containers.push(container);
-                
+
                 this.elements.push((new Element("input", {
                     "id": optionID,
                     "name": settingID,

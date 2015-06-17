@@ -6,6 +6,8 @@ var SUGGESTION = "suggestion";
 
 var TAB = "tabid";
 
+var NO_DATABASE_ENTRIES = 167892;
+
 
 /**
  * Action when extension is installed

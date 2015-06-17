@@ -4,17 +4,75 @@ this.manifest = {
     "icon": "../../icons/icon48.png",
     "settings": [
         {
-            "tab": i18n.get("logging"),
-            "name": "loggingCheckBox",
-            "label": i18n.get("acceptLogging"),
+            "tab": i18n.get("settings"),
+            "group": i18n.get("logging"),
+            "name": "logging",
+            "label": i18n.get("allowLogging"),
             "type": "checkbox"
         },
         {
-            "tab": i18n.get("logging"),
+            "tab": i18n.get("settings"),
+            "group": i18n.get("logging"),
             "name": "loggingDescription",
             "type": "description",
             "text": i18n.get("description")
         },
+        {
+            "tab": i18n.get("settings"),
+            "group": i18n.get("database"),
+            "name": "database",
+            "type": "radioButtons",
+            "label": i18n.get("database_to_use"),
+            "options": [
+                {value: "remote", text: i18n.get("database_remote")},
+                {value: "local", text: i18n.get("database_local")}
+            ]
+        },
+        {
+            "tab": i18n.get("settings"),
+            "group": i18n.get("languages"),
+            "name": "language1",
+            "label": i18n.get("language1"),
+            "type": "popupButton",
+            "options": {
+                "values": [
+                    {
+                        "value": "en",
+                        "text": i18n.get("en")
+                    },
+                    {
+                        "value": "pt",
+                        "text": i18n.get("pt")
+                    }
+                ]
+            }
+        },
+        {
+            "tab": i18n.get("settings"),
+            "group": i18n.get("languages"),
+            "name": "language2",
+            "label": i18n.get("language2"),
+            "type": "popupButton",
+            "options": {
+                "values": [
+                    {
+                        "value": "en",
+                        "text": i18n.get("en")
+                    },
+                    {
+                        "value": "pt",
+                        "text": i18n.get("pt")
+                    }
+                ]
+            }
+        },
+        {
+            "tab": i18n.get("about"),
+            "name": "aboutDescription",
+            "type": "description",
+            "text": i18n.get("descriptionAbout")
+        },
+        /*
         {
             "tab": i18n.get("information"),
             "group": i18n.get("login"),
@@ -39,16 +97,7 @@ this.manifest = {
             "type": "description",
             "text": i18n.get("description")
         },
-        /*****/
-        {
-            "tab": i18n.get("information"),
-            "group": i18n.get("disconnect"),
-            "name": "cenas",
-            "type": "checkbox",
-            "label": "slb"
-        },
 
-        /****/
         {
             "tab": i18n.get("information"),
             "group": i18n.get("logout"),
@@ -141,8 +190,8 @@ this.manifest = {
                 ["hot", "Hot and yummy"],
                 ["cold"]
             ]
-        }
-    ],
+        }*/
+    ]/*,
     "alignment": [
         [
             "username",
@@ -152,5 +201,5 @@ this.manifest = {
             "noti_volume",
             "sound_volume"
         ]
-    ]
+    ]*/
 };

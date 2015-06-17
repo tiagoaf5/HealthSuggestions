@@ -6,7 +6,6 @@ var DB =  new function() {
     //var baseRemoteUrl = "http://127.0.0.1:8000/GetConceptView/";
     var baseRemoteUrl = "http://healthsuggestions.fe.up.pt/GetConceptView/";
     var db = this;
-    db.remote = false;
 
     db.openDatabase = function() {
         db.database = openDatabase('mydb', '2.0', 'my first database', 100000000);
@@ -144,8 +143,9 @@ var DB =  new function() {
     };
 
     db.getStringList = function(terms, callback) {
+        console.log("SETTINGS.database ->" + SETTINGS.toObject());
 
-        if(db.remote) {
+        if(SETTINGS.get("database") === "remote") {
             var tosend = terms[0];
             for (var i=1; i < terms.length; i++)
                 tosend += "+" + terms[i];
@@ -285,8 +285,10 @@ var DB =  new function() {
 /* This is the data handler which would be null in case of table creation and record insertion */
 function nullDataHandler(transaction, results)   {
     console.log("transaction: " +  transaction + "  results: " + results);
+    localStorage.setItem("populateTotal", Number(localStorage.getItem("populateTotal")) + 1);
 }
 /* This is the error handler */
 function killTransaction(transaction, error) {
     console.log("transaction: " +  transaction + "  error: " + error);
+    localStorage.setItem("populateTotal", Number(localStorage.getItem("populateTotal")) + 1);
 }
