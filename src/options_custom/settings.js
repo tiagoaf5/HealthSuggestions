@@ -10,14 +10,17 @@ window.addEvent("domready", function () {
                 var bkg = chrome.extension.getBackgroundPage();
                 var progress = 0;
 
-                alert("You clicked me!");
+                var progressBar = document.createElement("progress");
+                progressBar.addClass("test_bar");
+                progressBar.setAttribute("max", "100");
+                progressBar.setAttribute("value", progress);
 
-                var x = document.createElement("progress");
-                x.addClass("test_bar");
-                x.setAttribute("max", "100");
-                x.setAttribute("value", progress);
-                //document.getElementById("content").appendChild(x);
-                document.querySelector('input[value="local"]').parentNode.appendChild(x);
+                var progressBarInfo = document.createElement("span");
+                progressBarInfo.textContent = i18n.get("populatingDatabase");
+                progressBarInfo.addClass("test_bar_info");
+
+                document.querySelector('input[value="local"]').parentNode.appendChild(progressBar);
+                document.querySelector('input[value="local"]').parentNode.appendChild(progressBarInfo);
 
                 var total = bkg.NO_DATABASE_ENTRIES;
                 (function myLoop (i) {
@@ -26,6 +29,7 @@ window.addEvent("domready", function () {
                         document.getElementsByClassName("test_bar")[0].setAttribute("value", progress);
                         if(progress >= 99) {
                             console.log("DONE!!");
+                            document.getElementsByClassName("test_bar_info")[0].textContent = i18n.get("donePopulatingDatabase");
                             i = 1;
                         }
                         if (--i) myLoop(i);      //  decrement i and call myLoop again if i > 0
@@ -45,6 +49,7 @@ window.addEvent("domready", function () {
             }
             else {
                 document.getElementsByTagName("progress")[0].remove();
+                document.getElementsByClassName("test_bar_info")[0].remove();
             }
         });
 

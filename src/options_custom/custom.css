@@ -52,6 +52,7 @@ progress::-moz-progress-bar {
     border-radius: 3px;
 }
 
-.test_bar {
-    margin-left: 50px;
+.test_bar, .test_bar_info {
+    margin-left: 25px;
 }
+

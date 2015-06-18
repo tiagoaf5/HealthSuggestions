@@ -145,5 +145,13 @@ this.i18n = {
     "enabledExplained": {
         "en": "If you uncheck this box the extension will be disabled.",
         "pt": "Se desmarcar esta caixa a extensão será desativada."
+    },
+    "populatingDatabase": {
+        "en": "Populating database...",
+        "pt": "Povoando base de dados..."
+    },
+    "donePopulatingDatabase": {
+        "en": "Finished population.",
+        "pt": "Concluído povoamento."
     }
 };
