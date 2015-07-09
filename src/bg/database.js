@@ -298,7 +298,7 @@ var DB =  new function() {
                             tx.executeSql("SELECT * FROM CHVConcept WHERE CUI = ?", [cui], function (tx, results) {
                                 if (results.rows.length) {
                                     var result = results.rows.item(0);
-                                    var terms = [result["CHV_Pref_PT"], result["CHV_Pref_EN"], result["UMLS_Pref_PT"], result["UMLS_Pref_EN"]];
+                                    var terms = getTermsByLanguage(result, language);
                                     var uniqueTerms = [];
 
                                     for (var i = 0; i < terms.length; i++)

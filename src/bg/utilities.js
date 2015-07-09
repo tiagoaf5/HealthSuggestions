@@ -192,3 +192,14 @@ function getDatabaseTable(language) {
             return "CHVStemmedIndexEN";
     }
 }
+
+function getTermsByLanguage (terms, language) {
+    switch (language) {
+        case "por":
+            return [terms["CHV_Pref_PT"], terms["UMLS_Pref_PT"], terms["CHV_Pref_EN"], terms["UMLS_Pref_EN"]];
+        case "eng":
+            return [terms["CHV_Pref_EN"], terms["UMLS_Pref_EN"]];
+        default:
+            return [terms["CHV_Pref_PT"], terms["UMLS_Pref_PT"], terms["CHV_Pref_EN"], terms["UMLS_Pref_EN"]];
+    }
+}
