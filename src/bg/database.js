@@ -17,6 +17,7 @@ var DB =  new function() {
             //CHVConcept
             tx.executeSql("DROP TABLE IF EXISTS 'CHVConcept'");
             tx.executeSql("DROP TABLE IF EXISTS 'CHVStemmedIndexPT'");
+            tx.executeSql("DROP TABLE IF EXISTS 'CHVStemmedIndexEN'");
             tx.executeSql("DROP TABLE IF EXISTS 'CHVIndexPT'");
             tx.executeSql("DROP TABLE IF EXISTS 'CHVString'");
 
@@ -30,9 +31,18 @@ var DB =  new function() {
                 ")"
             );
 
-            //CHVIndexPT
+            //CHVStemmedIndexPT
             tx.executeSql(
                 "CREATE TABLE IF NOT EXISTS 'CHVStemmedIndexPT' (" +
+                "'term' varchar(300) PRIMARY KEY," +
+                "'idf' float NOT NULL," +
+                "'stringlist' mediumtext NOT NULL" +
+                ")"
+            );
+
+            //CHVStemmedIndexPT
+            tx.executeSql(
+                "CREATE TABLE IF NOT EXISTS 'CHVStemmedIndexEN' (" +
                 "'term' varchar(300) PRIMARY KEY," +
                 "'idf' float NOT NULL," +
                 "'stringlist' mediumtext NOT NULL" +
@@ -83,7 +93,7 @@ var DB =  new function() {
             });
         });
 
-        //Populating CHVIndexPT table
+        //Populating CHVStemmedIndexPT table
         $.getJSON( baseUrl + "CHVStemmedIndexPT.json", function( data ) {
 
 
@@ -100,6 +110,30 @@ var DB =  new function() {
                     var len = results.rows.length;
                     for (var i = 0; i < len; i++) {
                         console.log("Done Populating CHVStemmedIndexPT table...number of entries in CHVStemmedIndexPT: " + JSON.stringify(results.rows.item(i)));
+                    }
+                });
+
+            });
+        });
+
+
+        //Populating CHVStemmedIndexEN table
+        $.getJSON( baseUrl + "CHVStemmedIndexEN.json", function( data ) {
+
+
+            db.database.transaction(function (tx) {
+
+                console.log("Populating CHVStemmedIndexEN table...");
+
+                for(var i = 0; i < data.length; i++) {
+                    tx.executeSql("INSERT INTO 'CHVStemmedIndexEN' ('term','idf','stringlist') VALUES(?,?,?)", data[i],
+                        nullDataHandler, killTransaction);
+                }
+
+                tx.executeSql("SELECT count(*) FROM CHVStemmedIndexEN", [], function (tx, results) {
+                    var len = results.rows.length;
+                    for (var i = 0; i < len; i++) {
+                        console.log("Done Populating CHVStemmedIndexEN table...number of entries in CHVStemmedIndexEN: " + JSON.stringify(results.rows.item(i)));
                     }
                 });
 
@@ -142,7 +176,7 @@ var DB =  new function() {
         });
     };
 
-    db.getStringList = function(terms, callback) {
+    db.getStringList = function(terms, language, callback) {
         console.log("SETTINGS.database ->" + SETTINGS.toObject());
 
         if(SETTINGS.get("database") === "remote") {
@@ -195,11 +229,13 @@ var DB =  new function() {
         if(!db.database)
             db.openDatabase();
 
+        var dbTable = getDatabaseTable(language);
+
+
         var object = {};
         db.database.readTransaction(function (tx) {
-
                 for (var i = 0; i < terms.length; i++) {
-                    tx.executeSql("SELECT * FROM CHVStemmedIndexPT WHERE term = ?", [terms[i]], function (tx, results) {
+                    tx.executeSql("SELECT * FROM " + dbTable + " WHERE term = ?", [terms[i]], function (tx, results) {
 
                         if (results.rows.length) {
                             var result = results.rows.item(0);

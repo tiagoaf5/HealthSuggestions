@@ -100,13 +100,13 @@ this.i18n = {
         "en": "About",
         "pt": "Sobre"
     },
-    "language1": {
-        "en": "1st Language",
-        "pt": "1ª Língua"
+    "queryLanguage": {
+        "en": "Query language",
+        "pt": "Língua de pesquisa"
     },
-    "language2": {
-        "en": "2nd Language",
-        "pt": "2ª Língua"
+    "auto": {
+        "en": "Detect",
+        "pt": "Detetar"
     },
 
     "en": {

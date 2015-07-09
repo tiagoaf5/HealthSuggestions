@@ -6,7 +6,7 @@ var SUGGESTION = "suggestion";
 
 var TAB = "tabid";
 
-var NO_DATABASE_ENTRIES = 167892;
+var NO_DATABASE_ENTRIES = 192691;
 
 
 /**
@@ -144,11 +144,13 @@ chrome.runtime.onMessage.addListener(
             case 'getSuggestions':
                 console.info("Getting suggestions...");
                 console.log('getSuggestions: ' + request.query);
+                var language = getLanguage(request.query)
+                console.log("Language: " + language);
                 var query = split(removeDiacritics(request.query)); //need to remove any accentuation and then split
-                var words = processWords(query); //remove Stop Words and stem them
+                var words = processWords(query, language); //remove Stop Words and stem them
                 console.log("getSuggestions: words: " + words);
 
-                DB.getStringList(words, function (sugg) {
+                DB.getStringList(words, language, function (sugg) {
                     //chrome.tabs.sendMessage(sender.tab.id, {action: "updateSuggestions", suggestions: sugg});
 
                     if (sugg.length == 0) {

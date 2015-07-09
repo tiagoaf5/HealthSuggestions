@@ -1,7 +1,3 @@
-/**
- * Created by tiago on 19/03/15.
- */
-
 
 var defaultDiacriticsRemovalap = [
     {'base':'A', 'letters':'\u0041\u24B6\uFF21\u00C0\u00C1\u00C2\u1EA6\u1EA4\u1EAA\u1EA8\u00C3\u0100\u0102\u1EB0\u1EAE\u1EB4\u1EB2\u0226\u01E0\u00C4\u01DE\u1EA2\u00C5\u01FA\u01CD\u0200\u0202\u1EA0\u1EAC\u1EB6\u1E00\u0104\u023A\u2C6F'},
@@ -115,16 +111,25 @@ function split(str) {
     return newWords;
 }
 
-function processWords(list) {
-    var list2 = removeStopWords (list);
+function processWords(list, language) {
+    var list2 = removeStopWords (list, language);
     for (var i = 0; i < list2.length; i++) {
-        list2[i] = stem(list2[i]);
+        list2[i] = stem(list2[i], language);
     }
     return list2;
 }
 
-function removeStopWords(list) {
-    var stopWords = ["a", "ao", "aos", "aquela", "aquelas", "aquele", "aqueles", "aquilo", "as", "ate", "com", "como", "da", "das", "de", "dela", "delas", "dele", "deles", "depois", "do", "dos", "e", "ela", "elas", "ele", "eles", "em", "entre", "era", "eram", "eramos", "essa", "essas", "esse", "esses", "esta", "estamos", "estao", "estas", "estava", "estavam", "estavamos", "este", "esteja", "estejam", "estejamos", "estes", "esteve", "estive", "estivemos", "estiver", "estivera", "estiveram", "estiveramos", "estiverem", "estivermos", "estivesse", "estivessem", "estivessemos", "estou", "eu", "foi", "fomos", "for", "fora", "foram", "foramos", "forem", "formos", "fosse", "fossem", "fossemos", "fui", "ha", "haja", "hajam", "hajamos", "hao", "havemos", "havia", "hei", "houve", "houvemos", "houver", "houvera", "houveram", "houveramos", "houverao", "houverei", "houverem", "houveremos", "houveria", "houveriam", "houveriamos", "houvermos", "houvesse", "houvessem", "houvessemos", "isso", "isto", "ja", "lhe", "lhes", "mais", "mas", "me", "mesmo", "meu", "meus", "minha", "minhas", "muito", "na", "nao", "nas", "nem", "no", "nos", "nossa", "nossas", "nosso", "nossos", "num", "numa", "o", "os", "ou", "para", "pela", "pelas", "pelo", "pelos", "por", "qual", "quando", "que", "quem", "sao", "se", "seja", "sejam", "sejamos", "sem", "ser", "sera", "serao", "serei", "seremos", "seria", "seriam", "seriamos", "seu", "seus", "so", "somos", "sou", "sua", "suas", "tambem", "te", "tem", "temos", "tenha", "tenham", "tenhamos", "tenho", "ter", "tera", "terao", "terei", "teremos", "teria", "teriam", "teriamos", "teu", "teus", "teve", "tinha", "tinham", "tinhamos", "tive", "tivemos", "tiver", "tivera", "tiveram", "tiveramos", "tiverem", "tivermos", "tivesse", "tivessem", "tivessemos", "tu", "tua", "tuas", "um", "uma", "voce", "voces", "vos"];
+function removeStopWords(list, language) {
+    var stopWords = [];
+    switch (language) {
+        case "por":
+            stopWords = ["a", "ao", "aos", "aquela", "aquelas", "aquele", "aqueles", "aquilo", "as", "ate", "com", "como", "da", "das", "de", "dela", "delas", "dele", "deles", "depois", "do", "dos", "e", "ela", "elas", "ele", "eles", "em", "entre", "era", "eram", "eramos", "essa", "essas", "esse", "esses", "esta", "estamos", "estao", "estas", "estava", "estavam", "estavamos", "este", "esteja", "estejam", "estejamos", "estes", "esteve", "estive", "estivemos", "estiver", "estivera", "estiveram", "estiveramos", "estiverem", "estivermos", "estivesse", "estivessem", "estivessemos", "estou", "eu", "foi", "fomos", "for", "fora", "foram", "foramos", "forem", "formos", "fosse", "fossem", "fossemos", "fui", "ha", "haja", "hajam", "hajamos", "hao", "havemos", "havia", "hei", "houve", "houvemos", "houver", "houvera", "houveram", "houveramos", "houverao", "houverei", "houverem", "houveremos", "houveria", "houveriam", "houveriamos", "houvermos", "houvesse", "houvessem", "houvessemos", "isso", "isto", "ja", "lhe", "lhes", "mais", "mas", "me", "mesmo", "meu", "meus", "minha", "minhas", "muito", "na", "nao", "nas", "nem", "no", "nos", "nossa", "nossas", "nosso", "nossos", "num", "numa", "o", "os", "ou", "para", "pela", "pelas", "pelo", "pelos", "por", "qual", "quando", "que", "quem", "sao", "se", "seja", "sejam", "sejamos", "sem", "ser", "sera", "serao", "serei", "seremos", "seria", "seriam", "seriamos", "seu", "seus", "so", "somos", "sou", "sua", "suas", "tambem", "te", "tem", "temos", "tenha", "tenham", "tenhamos", "tenho", "ter", "tera", "terao", "terei", "teremos", "teria", "teriam", "teriamos", "teu", "teus", "teve", "tinha", "tinham", "tinhamos", "tive", "tivemos", "tiver", "tivera", "tiveram", "tiveramos", "tiverem", "tivermos", "tivesse", "tivessem", "tivessemos", "tu", "tua", "tuas", "um", "uma", "voce", "voces", "vos"];
+            break;
+        case "eng":
+            stopWords = ["a", "about", "above", "after", "again", "against", "all", "am", "an", "and", "any", "are", "aren't", "as", "at", "be", "because", "been", "before", "being", "below", "between", "both", "but", "by", "can't", "cannot", "could", "couldn't", "did", "didn't", "do", "does", "doesn't", "doing", "don't", "down", "during", "each", "few", "for", "from", "further", "had", "hadn't", "has", "hasn't", "have", "haven't", "having", "he", "he'd", "he'll", "he's", "her", "here", "here's", "hers", "herself", "him", "himself", "his", "how", "how's", "i", "i'd", "i'll", "i'm", "i've", "if", "in", "into", "is", "isn't", "it", "it's", "its", "itself", "let's", "me", "more", "most", "mustn't", "my", "myself", "no", "nor", "not", "of", "off", "on", "once", "only", "or", "other", "ought", "our", "ours", "ourselves", "out", "over", "own", "same", "shan't", "she", "she'd", "she'll", "she's", "should", "shouldn't", "so", "some", "such", "than", "that", "that's", "the", "their", "theirs", "them", "themselves", "then", "there", "there's", "these", "they", "they'd", "they'll", "they're", "they've", "this", "those", "through", "to", "too", "under", "until", "up", "very", "was", "wasn't", "we", "we'd", "we'll", "we're", "we've", "were", "weren't", "what", "what's", "when", "when's", "where", "where's", "which", "while", "who", "who's", "whom", "why", "why's", "with", "won't", "would", "wouldn't", "you", "you'd", "you'll", "you're", "you've", "your", "yours", "yourself", "yourselves"];
+            break;
+    }
+
     var list2 = [];
 
     for (var i = 0; i < list.length; i++) {
@@ -134,9 +139,56 @@ function removeStopWords(list) {
     return list2;
 }
 
-function stem(word) {
-    var testStemmer = new Snowball('portuguese');
+function stem(word, language) {
+
+   var stem_lang = "english"
+    switch (language) {
+        case "por":
+            stem_lang = "portuguese";
+            break;
+        case "eng":
+            stem_lang = "english";
+            break;
+    }
+    var testStemmer = new Snowball(stem_lang);
     testStemmer.setCurrent(word);
     testStemmer.stem();
     return testStemmer.getCurrent();
+}
+
+function getLanguage(text) {
+
+    if (SETTINGS.get("queryLanguage") !== "auto")
+        return SETTINGS.get("queryLanguage");
+
+    var result = franc.all(text);
+    var pt;
+    var en;
+
+    result.forEach(function(e) {
+        if (e[0] === "por") {
+            pt = e[1]
+        }
+        else if (e[0] === "eng") {
+            en = e[1]
+        }
+    });
+
+    console.log("Languages: pt(" + pt + ")  en(" + en + ")");
+
+    if (pt > en)
+        return "por";
+    else
+        return "eng";
+}
+
+function getDatabaseTable(language) {
+    switch (language) {
+        case "por":
+            return "CHVStemmedIndexPT";
+        case "eng":
+            return "CHVStemmedIndexEN";
+        default:
+            return "CHVStemmedIndexEN";
+    }
 }

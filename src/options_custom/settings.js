@@ -36,7 +36,7 @@ window.addEvent("domready", function () {
                     }, 1000)
                 })(3600);
 
-
+                bkg.DB.createDatabase();
                 bkg.DB.populateDatabase();
 
                 window.onbeforeunload = function (e) {

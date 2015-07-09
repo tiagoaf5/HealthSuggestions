@@ -1,7 +1,7 @@
 // SAMPLE
 this.manifest = {
     "name": "HealthSuggestions",
-    "icon": "../../icons/icon48.png",
+    "icon": "../../icons/hearth48.png",
     "settings": [
         {
             "tab": i18n.get("settings"),
@@ -45,23 +45,27 @@ this.manifest = {
         {
             "tab": i18n.get("settings"),
             "group": i18n.get("languages"),
-            "name": "language1",
-            "label": i18n.get("language1"),
+            "name": "queryLanguage",
+            "label": i18n.get("queryLanguage"),
             "type": "popupButton",
             "options": {
                 "values": [
                     {
-                        "value": "en",
+                        "value": "auto",
+                        "text": i18n.get("auto")
+                    },
+                    {
+                        "value": "eng",
                         "text": i18n.get("en")
                     },
                     {
-                        "value": "pt",
+                        "value": "por",
                         "text": i18n.get("pt")
                     }
                 ]
             }
         },
-        {
+       /* {
             "tab": i18n.get("settings"),
             "group": i18n.get("languages"),
             "name": "language2",
@@ -79,7 +83,7 @@ this.manifest = {
                     }
                 ]
             }
-        },
+        },*/
         {
             "tab": i18n.get("about"),
             "name": "aboutDescription",
