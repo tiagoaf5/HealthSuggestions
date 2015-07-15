@@ -38,6 +38,7 @@
         "js/jQuery/jquery-2.1.3.js",
         "src/inject/utilities.js",
         "js/common-web/common-web.js",
+        "src/inject/tracking.js",
         "src/inject/inject.js"
       ],
       "css": [

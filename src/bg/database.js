@@ -1,6 +1,3 @@
-/**
- * Created by tiago on 10/03/15.
- */
 var DB =  new function() {
     var baseUrl = "../../data/";
     //var baseRemoteUrl = "http://127.0.0.1:8000/GetConceptView/";

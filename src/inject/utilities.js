@@ -125,15 +125,16 @@ function widgetMinimize() {
             i.removeClass("icon-arrows-compress");
             i.addClass("icon-arrows-expand");
             chrome.runtime.sendMessage({action: "updateMinimized", minimized: true});
+            TrackingSystem.logSuggestionBoard('minimize');
         }
         else {
             i.removeClass("icon-arrows-expand");
             i.addClass("icon-arrows-compress");
             chrome.runtime.sendMessage({action: "updateMinimized", minimized: false});
+            TrackingSystem.logSuggestionBoard('maximize');
+
         }
     });
-
-
 }
 
 
@@ -144,6 +145,8 @@ function widgetClose(updateData) {
 
     if(updateData)
         chrome.runtime.sendMessage({action: "close", close: true});
+
+    TrackingSystem.logSuggestionBoard('close');
 }
 
 function replaceAll(find, replace, str) {

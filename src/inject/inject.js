@@ -17,14 +17,20 @@ var G_YAHOO_BASE_URL = "https://search.yahoo.com/search?p=";
  */
 $(document).ready(function() {
     var url = window.location.href;
-    /*
-     CommonWeb.Callback = function(collection, properties, callback) {
-     console.log("collectin: " + collection);
-     console.log("properties: " + JSON.stringify(properties));
-     };
 
-     CommonWeb.trackClicks();
-     */
+
+
+    CommonWeb.Callback = function(collection, properties, callback) {
+        console.log("collection: " + collection);
+        console.log("properties: " + JSON.stringify(properties));
+        console.log("callback: " + JSON.stringify(callback));
+    };
+
+    CommonWeb.trackSession('health_suggestions_user_guid', 'semi-random-user-identifier');
+    CommonWeb.trackClicksPassive($("#b_results a"));
+    CommonWeb.trackPageview();
+
+
 
     //if it's google
     if(/^https?:\/\/www\.google\.\w{1,3}(\/.*)?/.test(url) && url.indexOf("newtab") == -1) {
@@ -47,9 +53,9 @@ $(document).ready(function() {
 
         //handle search changes
         /*$(queryGoogleId).on("input propertychange paste change", function() {
-            var query = $(queryGoogleId).val();
-            updateSearchQuery(query);
-        });*/
+         var query = $(queryGoogleId).val();
+         updateSearchQuery(query);
+         });*/
         $(window).bind('hashchange', function() {
             var query = $(queryGoogleId).val();
             updateSearchQuery(query);
@@ -65,6 +71,15 @@ $(document).ready(function() {
             var query = $(queryBingId).val();
             updateSearchQuery(query);
         }, 400);
+
+        TrackingSystem.trackSession(function (guid) {
+            TrackingSystem.trackPageView();
+            TrackingSystem.trackCopy();
+            TrackingSystem.trackFind();
+            TrackingSystem.trackScroll();
+            TrackingSystem.trackClicks();
+            TrackingSystem.trackSERPClicks();
+        });
 
     }
     //if it's yahoo
@@ -128,9 +143,9 @@ chrome.extension.onMessage.addListener(
                 setSuggestions(request.data.suggestion);
                 break;
             /*case 'updateSuggestions':
-                //loadWidget();
-                setSuggestions(request["suggestions"]);
-                break;*/
+             //loadWidget();
+             setSuggestions(request["suggestions"]);
+             break;*/
             case 'closeWidget':
                 widgetClose(false);
                 break;
@@ -150,9 +165,9 @@ function updateSearchQuery(query, updateData) {
         //chrome.runtime.sendMessage({action: "updateQuery", query: query});
         chrome.runtime.sendMessage({action: "getSuggestions", query: query});
     }
-    getGoogleResults();
-    getBingResults();
-    getYahooResults()
+    //getGoogleResults();
+    //getBingResults();
+    //getYahooResults()
 }
 
 function getGoogleResults() {
@@ -220,7 +235,7 @@ function setSuggestions(suggestions) {
         li.addClass("suggestion");
 
         li.html('<a href="'+ G_GOOGLE_BASE_URL + replaceAll(" ", "+", suggestions[i]) +  '" target="_top">'
-        + suggestions[i]+ "</a>");
+            + suggestions[i]+ "</a>");
 
         getWidgetContent().find('#suggestions').append(li);
     }
