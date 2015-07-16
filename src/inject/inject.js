@@ -27,10 +27,10 @@ $(document).ready(function() {
     };
 
     CommonWeb.trackSession('health_suggestions_user_guid', 'semi-random-user-identifier');
-    CommonWeb.trackClicksPassive($("#b_results a"));
+    CommonWeb.trackClicksPassive($("a"));
     CommonWeb.trackPageview();
 
-
+    TrackingSystem.trackSERPClicks();
 
     //if it's google
     if(/^https?:\/\/www\.google\.\w{1,3}(\/.*)?/.test(url) && url.indexOf("newtab") == -1) {
@@ -71,7 +71,7 @@ $(document).ready(function() {
             var query = $(queryBingId).val();
             updateSearchQuery(query);
         }, 400);
-
+/*
         TrackingSystem.trackSession(function (guid) {
             TrackingSystem.trackPageView();
             TrackingSystem.trackCopy();
@@ -79,7 +79,7 @@ $(document).ready(function() {
             TrackingSystem.trackScroll();
             TrackingSystem.trackClicks();
             TrackingSystem.trackSERPClicks();
-        });
+        });*/
 
     }
     //if it's yahoo
@@ -165,7 +165,7 @@ function updateSearchQuery(query, updateData) {
         //chrome.runtime.sendMessage({action: "updateQuery", query: query});
         chrome.runtime.sendMessage({action: "getSuggestions", query: query});
     }
-    //getGoogleResults();
+    getGoogleResults();
     //getBingResults();
     //getYahooResults()
 }

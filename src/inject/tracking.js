@@ -116,21 +116,39 @@
     };
 
     TrackingSystem.trackClicks = function() {
-        $("a").click(function(e) {
-            console.log("___>" + $(this).text());
-            console.log("___>" + $(this).text());
+        /*  $("a").click(function(e) {
+         console.log("___>" + $(this).text());
+         console.log("___>" + $(this).text());
 
 
-            console.log("clicking! ->>" + e.timeStamp + " - " + e.which + " -- "+" --- " + e.target.nodeName);
-        });
+         console.log("clicking! ->>" + e.timeStamp + " - " + e.which + " -- "+" --- " + e.target.nodeName);
+         });*/
     };
 
     TrackingSystem.trackSERPClicks = function(engine) {
-        $("ol#b_results > li.b_algo > div.b_title > h2 > a").click(function(){
+        $("ol#b_results > li.b_algo > div.b_title > h2 > a, div.srg > li h3.r a, ").on('click',function(e){
             var title = $(this).text();
             var url = $(this).attr("href");
-            console.log("trackSERPClicks: " + title + " -> " + url);
+            console.log("trackSERPClicks: " + title + " -> " + url + " - " + e.which);
         });
+
+        switch (engine) {
+            case 'bing':
+                $("ol#b_results > li.b_algo > div.b_title > h2 > a, div.srg > li h3.r a").click(function(e){
+                    var title = $(this).text();
+                    var url = $(this).attr("href");
+                    console.log("trackSERPClicks: " + title + " -> " + url + " - " + e.which);
+                });
+                break;
+            case 'google':
+
+                break;
+
+            case 'yahoo':
+
+                break;
+        }
+
     };
 
 
