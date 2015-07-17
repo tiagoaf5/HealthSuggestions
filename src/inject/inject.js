@@ -165,7 +165,7 @@ function updateSearchQuery(query, updateData) {
         //chrome.runtime.sendMessage({action: "updateQuery", query: query});
         chrome.runtime.sendMessage({action: "getSuggestions", query: query});
     }
-    getGoogleResults();
+    //getGoogleResults();
     //getBingResults();
     //getYahooResults()
 }

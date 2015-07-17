@@ -104,9 +104,12 @@ function loadWidget() {
     $contentFrame.contents().find('body').attr('id','myExtension');
     $contentFrame.contents().find('body').append($contents);
 
-    //action onclick
+    //actions onclick
     $(".widgetContentClass").contents().find("#window-action-minimize").on("click", widgetMinimize);
     $(".widgetContentClass").contents().find("#window-action-close").on("click", widgetClose);
+    $(".widgetContentClass").contents().on("click", "#suggestions > li > a", function() {
+        TrackingSystem.logPanelSuggestions($(this).text());
+    });
 }
 
 

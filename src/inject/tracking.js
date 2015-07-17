@@ -112,7 +112,7 @@
 
 
     TrackingSystem.logSuggestionBoard = function(action) {
-        console.log("_widget_Action: " + action);
+        console.log("logSuggestionBoard: " + action);
     };
 
     TrackingSystem.trackClicks = function() {
@@ -146,6 +146,11 @@
 
             console.log("trackSERPClicks (Suggestions): " + $(this).text());
         });
+    };
+
+    TrackingSystem.logPanelSuggestions = function(text) {
+        console.log("trackPanelSuggestions: " + text);
+
     };
 
 
