@@ -6,9 +6,7 @@ var queryGoogleId = "#lst-ib";//"#gbqfq";
 var queryBingId = "#sb_form_q";
 var queryYahooId = "#yschsp";
 
-var G_GOOGLE_BASE_URL = "https://www.google.com/search?q=";
-var G_BING_BASE_URL = "https://www.bing.com/search?q=";
-var G_YAHOO_BASE_URL = "https://search.yahoo.com/search?p=";
+
 
 
 
@@ -20,7 +18,7 @@ $(document).ready(function() {
 
 
 
-    CommonWeb.Callback = function(collection, properties, callback) {
+    /*CommonWeb.Callback = function(collection, properties, callback) {
         console.log("collection: " + collection);
         console.log("properties: " + JSON.stringify(properties));
         console.log("callback: " + JSON.stringify(callback));
@@ -28,9 +26,18 @@ $(document).ready(function() {
 
     CommonWeb.trackSession('health_suggestions_user_guid', 'semi-random-user-identifier');
     CommonWeb.trackClicksPassive($("a"));
-    CommonWeb.trackPageview();
+    CommonWeb.trackPageview();*/
 
-    TrackingSystem.trackSERPClicks();
+    TrackingSystem.trackSession(function() {
+        TrackingSystem.trackPageView();
+        TrackingSystem.trackCopy();
+        TrackingSystem.trackFind();
+        TrackingSystem.trackScroll();
+        TrackingSystem.trackClicks();
+        TrackingSystem.trackSERPClicks();
+        TrackingSystem.trackCopy();
+        TrackingSystem.trackGoBack();
+    });
 
     //if it's google
     if(/^https?:\/\/www\.google\.\w{1,3}(\/.*)?/.test(url) && url.indexOf("newtab") == -1) {

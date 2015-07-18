@@ -1,14 +1,3 @@
-//DO NOT CHANGE: inject.js loadData depending on it hardcoded
-var SEARCH = "search";
-var MINIMIZED = "minimized";
-var CLOSED = "closed";
-var SUGGESTION = "suggestion";
-
-var TAB = "tabid";
-
-var NO_DATABASE_ENTRIES = 192691;
-
-
 /**
  * Action when extension is installed
  */
@@ -58,20 +47,6 @@ chrome.runtime.onMessage.addListener(
             case 'getTabId':
                 sendResponse({tabId: sender.tab.id});
                 break;
-            /*case 'createEntry': //TODO: DELETE
-                console.info("Creating entry...");
-
-                var obj = {};
-                var tab = TAB + sender.tab.id;
-                obj[tab] = {};
-                obj[tab][SEARCH] = null;
-                obj[tab][MINIMIZED] = false;
-                obj[tab][CLOSED] = false;
-                obj[tab][SUGGESTION] = [];
-
-                console.log("-->" + JSON.stringify(obj));
-                chrome.storage.local.set(obj);
-                break;*/
             case 'ready':
                 var obj = {};
                 obj[TAB + sender.tab.id] = null;
@@ -87,20 +62,6 @@ chrome.runtime.onMessage.addListener(
                     }
                 });
                 break;
-            /*case 'updateQuery':
-                console.info("Updating entry...");
-
-                var obj = {};
-                var tab = TAB + sender.tab.id;
-                obj[tab] = {};
-                obj[tab][SEARCH] = request.query;
-                obj[tab][MINIMIZED] = false;
-                obj[tab][CLOSED] = false;
-                obj[tab][SUGGESTION] = [];
-
-                console.log("-->" + JSON.stringify(obj));
-                chrome.storage.local.set(obj);
-                break;*/
             case 'updateMinimized':
                 console.info("Updating minimized...");
 
@@ -200,7 +161,7 @@ chrome.runtime.onMessage.addListener(
  * just when a tab is opened from a link in another tab
  */
 chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
-    console.log("------------------");
+    /*console.log("------------------");
     console.log("sourceTabId: " + details.sourceTabId);
     console.log("------------------");
 
@@ -212,7 +173,7 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
     chrome.tabs.query({active: true}, function (res) {
         console.log("activeTab: " + res[0].id);
 
-    });
+    });*/
 
     var obj = {};
     obj[TAB + details.sourceTabId] = null;
@@ -223,6 +184,8 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
         if(result[TAB + details.sourceTabId] != null) {
             var newO = {};
             newO[TAB + details.tabId] = result[TAB + details.sourceTabId];
+            newO[TAB + details.tabId][PARENT] = details.sourceTabId;
+            console.log("new tab result: " + JSON.stringify(newO));
             chrome.storage.local.set(newO);
             loadWidget(details.tabId);
         }
@@ -248,6 +211,30 @@ function loadWidget(id) {
         'action': 'loadWidget'
     });
 }
+/*
+function updateStorageProperties(tabid, properties) {
+
+    var obj0 = {};
+    obj0[TAB + tabid] = null;
+    
+    chrome.storage.local.get(obj0, function(result) {
+        var tab = TAB + tabid;
+
+        if (result[tab] != null) {
+            var obj = {};
+            obj[tab] = {};
+            obj[tab][SEARCH] = request.query;
+            obj[tab][MINIMIZED] = false;
+            obj[tab][CLOSED] = false;
+            obj[tab][SUGGESTION] = sugg;
+
+            console.log("-->" + JSON.stringify(obj));
+            chrome.storage.local.set(obj);
+            //chrome.tabs.sendMessage(tabid, {action: "setData", data: obj[tab]});
+        }
+    });
+}*/
+
 
 chrome.browserAction.onClicked.addListener(function() {
     //chrome.browserAction.setIcon({path: "../../icons/bing.png"});
@@ -256,3 +243,4 @@ chrome.browserAction.onClicked.addListener(function() {
             alert("Something went wrong! :(");
     })
 });
+
