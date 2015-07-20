@@ -174,7 +174,6 @@ var DB =  new function() {
     };
 
     db.getStringList = function(terms, language, callback) {
-        console.log("SETTINGS.database ->" + SETTINGS.toObject());
 
         if(SETTINGS.get("database") === "remote") {
             var tosend = terms[0];
@@ -258,7 +257,7 @@ var DB =  new function() {
             }, /*success*/
             function (transaction, results) {
                 console.log("transaction: " +  transaction + "  results: " + results);
-                console.log("FINAL OBJECT: " + JSON.stringify(object));
+                //console.log("FINAL OBJECT: " + JSON.stringify(object));
                 var max = 0;
                 for (var key in object) {
                     if (object.hasOwnProperty(key)) {
@@ -266,7 +265,7 @@ var DB =  new function() {
                     }
                 }
 
-                console.log("MAX: " + max);
+                //console.log("MAX: " + max);
                 var array = [];
 
                 for (var key in object) {
@@ -301,7 +300,6 @@ var DB =  new function() {
                                     for (var i = 0; i < terms.length; i++)
 
                                         if (uniqueTerms.indexOf(terms[i].trim()) == -1) {
-                                            console.log("unique->" + terms[i]);
                                             uniqueTerms.push(terms[i].trim());
                                         }
 

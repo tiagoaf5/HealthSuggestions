@@ -4,13 +4,12 @@
 chrome.runtime.onInstalled.addListener(function(details){
     if(details.reason == "install"){
         console.log("This is a first install!");
+        /*console.log("creating database...");
+         DB.createDatabase();
+         console.log("done creating database...");
 
-        console.log("creating database...");
-        DB.createDatabase();
-        console.log("done creating database...");
-
-        console.log("populating database...");
-        DB.populateDatabase();
+         console.log("populating database...");
+         DB.populateDatabase();*/
     } else if(details.reason == "update"){
         var thisVersion = chrome.runtime.getManifest().version;
         console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
@@ -19,10 +18,6 @@ chrome.runtime.onInstalled.addListener(function(details){
 
         chrome.storage.local.clear();
     }
-
-    //chrome.tabs.create({url: "http://www.bing.pt"});
-
-
 });
 
 
@@ -40,6 +35,9 @@ chrome.runtime.onMessage.addListener(
 
         if (!request.action) {
             console.warn('invalid command: ', request);
+            return;
+        } else if (SETTINGS.get('enabled') === false) {
+            console.info('Extension disabled');
             return;
         }
 
@@ -126,17 +124,37 @@ chrome.runtime.onMessage.addListener(
                         var tab = TAB + sender.tab.id;
 
                         if (result[TAB + sender.tab.id] == null) {
+
+                            //create tab object
                             var obj = {};
                             obj[tab] = {};
                             obj[tab][SEARCH] = request.query;
                             obj[tab][MINIMIZED] = false;
                             obj[tab][CLOSED] = false;
                             obj[tab][SUGGESTION] = sugg;
+                            obj[tab][SEARCH_ENGINE] = request.search_engine;
+                            var nowMilliseconds = new Date();
+                            var hash = CryptoJS.SHA1(request.query + nowMilliseconds.toUTCString());
+                            hash = hash.toString();
+                            obj[tab][HASH] = hash;
 
-                            console.log("-->" + JSON.stringify(obj));
+                            console.log("-tab->" + JSON.stringify(obj));
                             chrome.storage.local.set(obj);
-                            //chrome.tabs.sendMessage(sender.tab.id, {action: "setData", data: obj[tab]});
+                            //create object to hold search's logging
+
+                            if (SETTINGS.get('logging') === true) {
+                                var logObj = {};
+                                logObj[hash] = {};
+                                logObj[hash][TABS_SEARCH] = [sender.tab.id];
+                                console.log("-log->" + JSON.stringify(logObj));
+                                chrome.storage.local.set(logObj);
+                            }
+
                         } else {
+                            //TODO: CHECK IF PARENT STILL ALIVE && WITH SAME SEARCH
+                            //TODO: SEND TO THE SERVER PREVIOUS SEARCH
+
+                            result[tab][SEARCH_ENGINE] = request.search_engine;
                             result[tab][SUGGESTION] = sugg;
                             result[tab][SEARCH] = request.query;
                             result[tab][CLOSED] = false;
@@ -149,11 +167,17 @@ chrome.runtime.onMessage.addListener(
                 });
 
                 break;
+            case 'log':
+                saveLogData(request.log_action, request.data);
+
+                break;
             default:
                 console.warn('Unknown request: ', request);
 
         }
     });
+
+
 
 /**
  * used instead of chrome.tabs.onCreated.addListener(function(details)
@@ -161,20 +185,6 @@ chrome.runtime.onMessage.addListener(
  * just when a tab is opened from a link in another tab
  */
 chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
-    /*console.log("------------------");
-    console.log("sourceTabId: " + details.sourceTabId);
-    console.log("------------------");
-
-
-    console.log("Created new tab with ID: " + details.tabId);
-
-
-    console.log("parent: " + details.sourceTabId);
-    chrome.tabs.query({active: true}, function (res) {
-        console.log("activeTab: " + res[0].id);
-
-    });*/
-
     var obj = {};
     obj[TAB + details.sourceTabId] = null;
 
@@ -185,6 +195,20 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
             var newO = {};
             newO[TAB + details.tabId] = result[TAB + details.sourceTabId];
             newO[TAB + details.tabId][PARENT] = details.sourceTabId;
+
+            // if logging -> add the tab to the list of tabs in logging object
+            if(SETTINGS.get('logging') === true) {
+                var logObj = {};
+                var hash = result[TAB + details.sourceTabId][HASH];
+                logObj[hash] = null;
+
+                chrome.storage.local.get(logObj, function(logResult) {
+                    logResult[hash][TABS_SEARCH] = logResult[hash][TABS_SEARCH].concat(details.tabId);
+                    console.log("hash_after_new_window: " + JSON.stringify(logResult));
+                    chrome.storage.local.set(logResult);
+
+                });
+            }
             console.log("new tab result: " + JSON.stringify(newO));
             chrome.storage.local.set(newO);
             loadWidget(details.tabId);
@@ -192,52 +216,90 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
     });
 });
 
-chrome.tabs.onRemoved.addListener(
-    function(tabId) {
-        console.log("Removing tabID: " + tabId + "....");
-        chrome.storage.local.remove(TAB + tabId);
+function saveLogData(log_action, data) {
+    switch (log_action)  {
+        case LOG_ACTIONS.clickSERPResults:
 
-        chrome.storage.local.get(null, function (items) {
-            console.log("items: " + JSON.stringify(items));
-        });
+            break;
+    }
+};
 
-        //chrome.storage.local.clear();
+chrome.tabs.onRemoved.addListener( function(tabId) {
+    console.log("Removing tabID: " + tabId + "....");
+
+    var obj = {};
+    obj[TAB + tabId] = null;
+
+    //Check logging
+    chrome.storage.local.get(obj, function(result) {
+        if(result[TAB + tabId] != null) {
+            var hash = result[TAB + tabId][HASH];
+
+            var logObj = {};
+            logObj[hash] = null;
+
+            chrome.storage.local.get(logObj, function(logResult) {
+                var index = logResult[hash][TABS_SEARCH].indexOf(tabId);
+
+                if(index !== -1) {
+                    logResult[hash][TABS_SEARCH].splice(index, 1);
+                }
+
+                console.log("hash_after_remove_window: " + JSON.stringify(logResult));
+
+                if(logResult[hash][TABS_SEARCH].length === 0) {
+                    //TODO: Send data to server
+                    console.log("Sending data to server : " + JSON.stringify(logResult[hash]));
+                    chrome.storage.local.remove(hash);
+                } else {
+                    chrome.storage.local.set(logResult);
+                }
+            });
+        }
     });
+
+    chrome.storage.local.remove(TAB + tabId);
+
+    chrome.storage.local.get(null, function (items) {
+        console.log("items: " + JSON.stringify(items));
+    });
+
+    //chrome.storage.local.clear();
+});
 
 function loadWidget(id) {
     //console.log('loadWidget message to ',id, active,on);
     console.log("Sending message...");
     chrome.tabs.sendMessage(id, {
-        'action': 'loadWidget'
+        'action': 'loadWidget', logging: SETTINGS.get('logging'), enabled: SETTINGS.get('enabled')
     });
 }
 /*
-function updateStorageProperties(tabid, properties) {
+ function updateStorageProperties(tabid, properties) {
 
-    var obj0 = {};
-    obj0[TAB + tabid] = null;
-    
-    chrome.storage.local.get(obj0, function(result) {
-        var tab = TAB + tabid;
+ var obj0 = {};
+ obj0[TAB + tabid] = null;
 
-        if (result[tab] != null) {
-            var obj = {};
-            obj[tab] = {};
-            obj[tab][SEARCH] = request.query;
-            obj[tab][MINIMIZED] = false;
-            obj[tab][CLOSED] = false;
-            obj[tab][SUGGESTION] = sugg;
+ chrome.storage.local.get(obj0, function(result) {
+ var tab = TAB + tabid;
 
-            console.log("-->" + JSON.stringify(obj));
-            chrome.storage.local.set(obj);
-            //chrome.tabs.sendMessage(tabid, {action: "setData", data: obj[tab]});
-        }
-    });
-}*/
+ if (result[tab] != null) {
+ var obj = {};
+ obj[tab] = {};
+ obj[tab][SEARCH] = request.query;
+ obj[tab][MINIMIZED] = false;
+ obj[tab][CLOSED] = false;
+ obj[tab][SUGGESTION] = sugg;
+
+ console.log("-->" + JSON.stringify(obj));
+ chrome.storage.local.set(obj);
+ //chrome.tabs.sendMessage(tabid, {action: "setData", data: obj[tab]});
+ }
+ });
+ }*/
 
 
 chrome.browserAction.onClicked.addListener(function() {
-    //chrome.browserAction.setIcon({path: "../../icons/bing.png"});
     chrome.runtime.openOptionsPage(function(){
         if(chrome.runtime.lastError)
             alert("Something went wrong! :(");

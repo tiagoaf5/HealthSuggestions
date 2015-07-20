@@ -23,7 +23,7 @@
 
   // initiate user tracking, using a GUID stored in a cookie
   // The user can pass in a custom cookie name and custom GUID, if they would like
-  CommonWeb.trackSession = function(cookieName, defaultGuid) {
+  CommonWeb.trackSearch = function(cookieName, defaultGuid) {
     if(typeof(cookieName) !== "string") {
       cookieName = "common_web_guid";
     }

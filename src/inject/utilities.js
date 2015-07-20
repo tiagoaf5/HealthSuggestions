@@ -110,6 +110,7 @@ function loadWidget() {
     $(".widgetContentClass").contents().on("click", "#suggestions > li > a", function() {
         TrackingSystem.logPanelSuggestions($(this).text());
     });
+
 }
 
 

@@ -7,7 +7,7 @@ var queryBingId = "#sb_form_q";
 var queryYahooId = "#yschsp";
 
 
-
+var searchEngineBeingUsed = undefined;
 
 
 /**
@@ -16,34 +16,17 @@ var queryYahooId = "#yschsp";
 $(document).ready(function() {
     var url = window.location.href;
 
-
-
     /*CommonWeb.Callback = function(collection, properties, callback) {
-        console.log("collection: " + collection);
+        console.log("collectin: " + collection);
         console.log("properties: " + JSON.stringify(properties));
-        console.log("callback: " + JSON.stringify(callback));
     };
+    CommonWeb.trackClicksPassive($("a"));*/
 
-    CommonWeb.trackSession('health_suggestions_user_guid', 'semi-random-user-identifier');
-    CommonWeb.trackClicksPassive($("a"));
-    CommonWeb.trackPageview();*/
-
-    TrackingSystem.trackSession(function() {
-        TrackingSystem.trackPageView();
-        TrackingSystem.trackCopy();
-        TrackingSystem.trackFind();
-        TrackingSystem.trackScroll();
-        TrackingSystem.trackClicks();
-        TrackingSystem.trackSERPClicks();
-        TrackingSystem.trackCopy();
-        TrackingSystem.trackGoBack();
-    });
 
     //if it's google
     if(/^https?:\/\/www\.google\.\w{1,3}(\/.*)?/.test(url) && url.indexOf("newtab") == -1) {
         console.log("It's google here!");
-        //loadWidget();
-        //chrome.runtime.sendMessage({action: "createEntry"});
+        searchEngineBeingUsed = GOOGLE;
 
         //wait a bit, sometimes the search bar content isn't immediately available
         var xxx = 0;
@@ -58,11 +41,6 @@ $(document).ready(function() {
             }, 400)
         })();
 
-        //handle search changes
-        /*$(queryGoogleId).on("input propertychange paste change", function() {
-         var query = $(queryGoogleId).val();
-         updateSearchQuery(query);
-         });*/
         $(window).bind('hashchange', function() {
             var query = $(queryGoogleId).val();
             updateSearchQuery(query);
@@ -71,29 +49,19 @@ $(document).ready(function() {
     //if it's bing
     else if (/^https?:\/\/www.bing\.\w{1,3}(\/.*)?/.test(url)) {
         console.log("It's bing here!");
-        //loadWidget();
-        //chrome.runtime.sendMessage({action: "createEntry"});
+        searchEngineBeingUsed = BING;
+
 
         setTimeout(function(){
             var query = $(queryBingId).val();
             updateSearchQuery(query);
         }, 400);
-/*
-        TrackingSystem.trackSession(function (guid) {
-            TrackingSystem.trackPageView();
-            TrackingSystem.trackCopy();
-            TrackingSystem.trackFind();
-            TrackingSystem.trackScroll();
-            TrackingSystem.trackClicks();
-            TrackingSystem.trackSERPClicks();
-        });*/
 
     }
     //if it's yahoo
     else if (/^https?:\/\/search.yahoo.com\/search(.*)/.test(url)) {
         console.log("It's yahoo here!");
-        //loadWidget();
-        //chrome.runtime.sendMessage({action: "createEntry"});
+        searchEngineBeingUsed = YAHOO;
 
         setTimeout(function(){
             var query = $(queryYahooId).val();
@@ -133,10 +101,33 @@ chrome.extension.onMessage.addListener(
                     console.log("**widget exists**");
                 }
 
+                if(request.logging === true) {
+                    if(searchEngineBeingUsed != undefined) {
+
+                        TrackingSystem.trackSearch( function () {
+                            TrackingSystem.getSEResults(searchEngineBeingUsed);
+                            TrackingSystem.trackPageView();
+                            TrackingSystem.trackCopy();
+                            TrackingSystem.trackFind();
+                            TrackingSystem.trackScroll();
+                            //TrackingSystem.trackClicks();
+                            TrackingSystem.trackSERPClicks();
+                            TrackingSystem.trackCopy();
+                        });
+                    }
+                    else {
+                        TrackingSystem.trackPageView();
+                        TrackingSystem.trackCopy();
+                        TrackingSystem.trackFind();
+                        TrackingSystem.trackScroll();
+                        TrackingSystem.trackClicks();
+                        TrackingSystem.trackCopy();
+                    }
+                }
+
                 chrome.runtime.sendMessage({action: 'loadData'});
                 break;
             case 'setData':
-                //TODO: very dependent of background js CONSTANTS, FIX IT
                 console.log("receiving result...: " + JSON.stringify(request));
 
 
@@ -146,13 +137,9 @@ chrome.extension.onMessage.addListener(
                     getWidgetContent().find("#window-action-minimize").removeClass("icon-arrows-expand");
                     getWidgetContent().find("#window-action-minimize").addClass("icon-arrows-expand");
                 }
-                updateSearchQuery(request.data.search, false);
-                setSuggestions(request.data.suggestion);
+                updateSearchQuery(request['data'][SEARCH], false);
+                setSuggestions(request['data'][SUGGESTION]);
                 break;
-            /*case 'updateSuggestions':
-             //loadWidget();
-             setSuggestions(request["suggestions"]);
-             break;*/
             case 'closeWidget':
                 widgetClose(false);
                 break;
@@ -168,64 +155,24 @@ function updateSearchQuery(query, updateData) {
     getWidgetContent().find('#query').text(query);
     updateEnginesUrls(query);
 
+    //only when updating query in search engine's textinput
     if (updateData) {
-        //chrome.runtime.sendMessage({action: "updateQuery", query: query});
-        chrome.runtime.sendMessage({action: "getSuggestions", query: query});
+        chrome.runtime.sendMessage({action: "getSuggestions", query: query, search_engine: searchEngineBeingUsed});
     }
+
     //getGoogleResults();
     //getBingResults();
     //getYahooResults()
 }
 
-function getGoogleResults() {
-    console.log("Google results: ");
-    var results = $("#resultStats").text();
-    console.log("results -> " + results);
-    $("div.srg > li").each(function (index) {
-        var title = $(this).find("h3.r a").text();
-        var url = $(this).find("h3.r a").attr("href");
-        var snippet = $(this).find("span.st").text();
-        console.log(index + ": " + title + " -> " + url);
-        console.log(snippet);
-    });
-}
 
-function getBingResults() {
-    console.log("Bing results: ");
-    var results = $("#b_tween > span.sb_count").text();
-    console.log("results -> " + results);
-
-    $("ol#b_results > li.b_algo").each(function (index) {
-        var title = $(this).find("div.b_title > h2 > a").text();
-        var url = $(this).find("div.b_title > h2 > a").attr("href");
-        var snippet = $(this).find("div.b_caption > p").text();
-        console.log(index + ": " + title + " -> " + url);
-        console.log(snippet);
-    });
-
-}
-
-function getYahooResults() {
-    console.log("Yahoo results: ");
-    var results = $("ol.searchBottom div.compPagination > span").text();
-    console.log("results -> " + results);
-
-    $(".dd.algo").each(function (index) {
-        var title = $(this).find("div.compTitle > h3.title > a").text();
-        var url = $(this).find("div.compTitle > div > span.wr-bw").text();
-        var snippet = $(this).find("div.compText > p").text();
-        console.log(index + ": " + title + " -> " + url);
-        console.log(snippet);
-    });
-
-}
 
 function updateEnginesUrls(query) {
     if (query) {
         var splittedQuery = replaceAll(" ", "+", query);
-        var google = G_GOOGLE_BASE_URL + splittedQuery;
-        var bing = G_BING_BASE_URL + splittedQuery;
-        var yahoo = G_YAHOO_BASE_URL + splittedQuery;
+        var google = G_GOOGLE_SEARCH_URL + splittedQuery;
+        var bing = G_BING_SEARCH_URL + splittedQuery;
+        var yahoo = G_YAHOO_SEARCH_URL + splittedQuery;
 
         var contents = getWidgetContent();
 
@@ -241,7 +188,7 @@ function setSuggestions(suggestions) {
         var li = $("<li>");
         li.addClass("suggestion");
 
-        li.html('<a href="'+ G_GOOGLE_BASE_URL + replaceAll(" ", "+", suggestions[i]) +  '" target="_top">'
+        li.html('<a href="'+ G_GOOGLE_SEARCH_URL + replaceAll(" ", "+", suggestions[i]) +  '" target="_top">'
             + suggestions[i]+ "</a>");
 
         getWidgetContent().find('#suggestions').append(li);
