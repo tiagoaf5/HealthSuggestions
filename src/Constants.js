@@ -18,6 +18,7 @@ var SUGGESTION = "suggestion";
 var PARENT = "parent";
 var HASH = "query_hash";
 var LOG = "log";
+var ERROR = "generic_error";
 var TABS_SEARCH = "tabs_search";
 
 var SEARCH_ENGINE = "search_engine";

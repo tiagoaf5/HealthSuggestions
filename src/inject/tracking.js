@@ -7,9 +7,11 @@
         clicksEventName: "clicks",
         globalProperties: {
             page_url: window.location.href,
-            referrer_url: document.referrer,
-            ip_address: ""
+            referrer_url: document.referrer
         },
+        sessionProperties : {
+            ip: ""
+        }
     };
 
     // create a common namespace with options
@@ -47,16 +49,29 @@
 
             TrackingSystem.addGlobalProperties({'guid': guid});
 
-            if(TrackingSystem.options.globalProperties.ip_address === "") {
+            if(TrackingSystem.options.sessionProperties.ip === "") {
 
+                //last function run in this function (because getLocalIPs is async)
                 var setIp = function(ips) {
 
                     if (ips[0].indexOf(':') == -1)
-                        TrackingSystem.options.globalProperties.ip_address = ips[1];
+                        TrackingSystem.options.sessionProperties.ip = ips[1];
                     else
-                        TrackingSystem.options.globalProperties.ip_address = ips[0];
+                        TrackingSystem.options.sessionProperties.ip = ips[0];
 
-                    console.log("options_w_ip: " + JSON.stringify(TrackingSystem.options.globalProperties));
+                    console.log("options_w_ip: " + JSON.stringify(TrackingSystem.options.sessionProperties));
+
+                    // Ad-blocker blocking call
+                    /*$.getJSON('http://www.telize.com/geoip', function(data) {
+                     console.log(":::::>" + JSON.stringify(data));
+                     });*/
+
+                    //TODO: save data in storage
+                    chrome.runtime.sendMessage({
+                            action: 'log', logTable: 'Session', data:
+                            $.extend(true, {guid: TrackingSystem.options.globalProperties.guid},
+                                TrackingSystem.options.sessionProperties)
+                    });
 
                     if (typeof(callback) === "function")
                         callback(guid);
@@ -252,9 +267,12 @@
                     };
                 };
 
-                TrackingSystem.addGlobalProperties(get_user_info());
+                //TrackingSystem.addGlobalProperties(get_user_info());
+                $.extend(TrackingSystem.options.sessionProperties, get_user_info());
                 getLocalIPs(); //asynchronous call -> calls setIP when done
             }
+
+
         });
 
 
@@ -396,7 +414,11 @@
 
         var searchPages = {};
         searchPages['SERPOrder'] = 1; //TODO: think about it
-        searchPages['SERPOrder'] = 1;
+        searchPages['totalTimeOverSearchPage'] = "";
+        searchPages['totalTimeOverSuggestionBoard'] = "";
+        searchPages['timestamp'] = new Date().toJSON();
+        searchPages['url'] = TrackingSystem.options.globalProperties.page_url;
+
 
 
         switch(se){
@@ -416,7 +438,16 @@
                 return;
 
         }
+
+        searchPages['SearchResults'] = results;
+        searchPages['SearchEngine'] = searchEngine;
+
+        console.log("--------------------------------------");
         console.log(results);
+        console.log("--------------------------------------");
+
+        chrome.runtime.sendMessage({action: 'log', logTable: 'SearchPage', data: searchPages});
+
     };
 
 
@@ -436,7 +467,7 @@
         var n_results = m[0].trim();
         var time = m[1].trim();
 
-        var data = {total: n_results, time: time, results: []};
+        var data = {totalNoResults: n_results, answerTime: time, results: []};
         var data_results = data.results;
 
         $("div.srg > li").each(function (index) {
@@ -448,7 +479,13 @@
             data_results.push({index: index, title: title, snippet: snippet, url: url});
         });
 
-        //console.log(JSON.stringify(data));
+        data['SERelatedSearches'] = [];
+        console.log(":::SERelatedSearch")
+        $("div#brs > div > div > p > a").each(function(index) {
+            data['SERelatedSearches'].push($(this).text());
+            console.log(index + ": " + $(this).text());
+        });
+
         return data;
     }
 
@@ -460,7 +497,7 @@
         var m = extractNumbers(results);
         var n_results = m[0].trim();
 
-        var data = {total: n_results, results: []};
+        var data = {totalNoResults: n_results, results: []};
         var data_results = data.results;
 
 
@@ -471,6 +508,13 @@
             //console.log(index + ": " + title + " -> " + url);
             //console.log(snippet);
             data_results.push({index: index, title: title, snippet: snippet, url: url});
+        });
+
+        data['SERelatedSearches'] = [];
+        console.log(":::SERelatedSearch")
+        $("ol#b_context ul.b_vList > li > a").each(function(index) {
+            data['SERelatedSearches'].push($(this).text());
+            console.log(index + ": " + $(this).text());
         });
 
         return data;
@@ -484,7 +528,7 @@
         var m = extractNumbers(results);
         var n_results = m[0].trim();
 
-        var data = {total: n_results, results: []};
+        var data = {totalNoResults: n_results, results: []};
         var data_results = data.results;
 
         $(".dd.algo").each(function (index) {
@@ -497,51 +541,15 @@
 
         });
 
+        data['SERelatedSearches'] = [];
+        console.log(":::SERelatedSearch")
+        $("div.dd.AlsoTry > table tr > td > a").each(function(index) {
+            data['SERelatedSearches'].push($(this).text());
+            console.log(index + ": " + $(this).text());
+        });
+
         return data;
     }
-
-    /*TrackingSystem.getGoogleResults = function() {
-     console.log("Google results: ");
-     var results = $("#resultStats").text();
-     console.log("results -> " + results);
-     $("div.srg > li").each(function (index) {
-     var title = $(this).find("h3.r a").text();
-     var url = $(this).find("h3.r a").attr("href");
-     var snippet = $(this).find("span.st").text();
-     console.log(index + ": " + title + " -> " + url);
-     console.log(snippet);
-     });
-     }
-
-     TrackingSystem.getBingResults = function() {
-     console.log("Bing results: ");
-     var results = $("#b_tween > span.sb_count").text();
-     console.log("results -> " + results);
-
-     $("ol#b_results > li.b_algo").each(function (index) {
-     var title = $(this).find("div.b_title > h2 > a").text();
-     var url = $(this).find("div.b_title > h2 > a").attr("href");
-     var snippet = $(this).find("div.b_caption > p").text();
-     console.log(index + ": " + title + " -> " + url);
-     console.log(snippet);
-     });
-
-     }
-
-     TrackingSystem.getYahooResults = function() {
-     console.log("Yahoo results: ");
-     var results = $("ol.searchBottom div.compPagination > span").text();
-     console.log("results -> " + results);
-
-     $(".dd.algo").each(function (index) {
-     var title = $(this).find("div.compTitle > h3.title > a").text();
-     var url = $(this).find("div.compTitle > div > span.wr-bw").text();
-     var snippet = $(this).find("div.compText > p").text();
-     console.log(index + ": " + title + " -> " + url);
-     console.log(snippet);
-     });
-
-     }*/
 
 
 

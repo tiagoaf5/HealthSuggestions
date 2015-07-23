@@ -146,6 +146,15 @@ chrome.runtime.onMessage.addListener(
                                 var logObj = {};
                                 logObj[hash] = {};
                                 logObj[hash][TABS_SEARCH] = [sender.tab.id];
+
+                                //Search Table
+                                //[hash][table][key]
+                                logObj[hash]['Search'] = {};
+                                logObj[hash]['Search']['query'] = request.query;
+                                logObj[hash]['Search']['queryInputTimestamp'] = nowMilliseconds.toJSON();
+                                logObj[hash]['Search']['totalNoResults'] = "";
+                                logObj[hash]['Search']['answerTime'] = "";
+
                                 console.log("-log->" + JSON.stringify(logObj));
                                 chrome.storage.local.set(logObj);
                             }
@@ -168,7 +177,8 @@ chrome.runtime.onMessage.addListener(
 
                 break;
             case 'log':
-                saveLogData(request.log_action, request.data);
+
+                saveLogData(sender.tab.id, request.logTable, request.data);
 
                 break;
             default:
@@ -216,13 +226,82 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
     });
 });
 
-function saveLogData(log_action, data) {
-    switch (log_action)  {
-        case LOG_ACTIONS.clickSERPResults:
+function saveLogData(tabId, logTable, data) {
+    console.log("table: " + logTable + ", data: " + JSON.stringify(data));
 
-            break;
-    }
+    getLogSavedData(tabId, function(object, hash) {
+        if (object === ERROR) return;
+                var object2 = object[hash];
+
+        var toSave = true;
+
+        switch (logTable)  {
+            case 'Session':
+                if(!object2[logTable])
+                    object2[logTable] = {};
+
+                object2[logTable] = data;
+                chrome.storage.local.set(object);
+
+                break;
+            case 'SearchPage':
+                if(data['SERPOrder'] == 1) {
+                    object2['Search']['totalNoResults'] = data['SearchResults']['totalNoResults'];
+                    object2['Search']['answerTime'] = data['SearchResults']['answerTime'] ? data['SearchResults']['answerTime'] : "";
+                    object2['Search']['SearchPages'] = [{SERPOrder: data['SERPOrder'],
+                        totalTimeOverSearchPage: data['totalTimeOverSearchPage'],
+                        totalTimeOverSuggestionBoard: data['totalTimeOverSuggestionBoard'],
+                        timestamp: data['timestamp'],
+                        url: data['url'],
+                        SearchResults: data['SearchResults']
+                    }];
+                    object2['Search']['SearchEngine'] = data['SearchEngine'];
+                    object2['Search']['SERelatedSearches'] = data['SearchResults']['SERelatedSearches'];
+
+                }
+                break;
+            default:
+                toSave = false;
+        }
+
+        console.log('-object->' + JSON.stringify(object));
+
+        if (toSave)
+            chrome.storage.local.set(object);
+
+    });
 };
+
+function getHash(tabId, callback) {
+    var obj0 = {};
+    obj0[TAB + tabId] = null;
+
+    chrome.storage.local.get(obj0, function(result) {
+        var hash = result[TAB + tabId][HASH];
+        if(hash)
+            callback(hash);
+        else
+            callback(ERROR);
+    });
+
+}
+
+function getLogSavedData(tabId, callback) {
+    getHash(tabId, function(hash) {
+        if (hash !== ERROR) {
+
+            var obj0 = {};
+            obj0[hash] = null;
+
+            chrome.storage.local.get(obj0, function(result){
+                if (result)
+                    callback(result, hash);
+                else
+                    callback(ERROR);
+            });
+        }
+    });
+}
 
 chrome.tabs.onRemoved.addListener( function(tabId) {
     console.log("Removing tabID: " + tabId + "....");
