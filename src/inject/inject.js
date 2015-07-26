@@ -188,8 +188,8 @@ function setSuggestions(suggestions) {
         var li = $("<li>");
         li.addClass("suggestion");
 
-        li.html('<a href="'+ G_GOOGLE_SEARCH_URL + replaceAll(" ", "+", suggestions[i]) +  '" target="_top">'
-            + suggestions[i]+ "</a>");
+        li.html('<a data-suggestion-lang="'+  suggestions[i].lang +'" data-suggestion-type="' + suggestions[i].type + '" href="'+ G_GOOGLE_SEARCH_URL + replaceAll(" ", "+", suggestions[i].term) +  '" target="_top">'
+            + suggestions[i].term + "</a>");
 
         getWidgetContent().find('#suggestions').append(li);
     }

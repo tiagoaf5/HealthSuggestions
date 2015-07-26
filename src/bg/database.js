@@ -199,7 +199,7 @@ var DB =  new function() {
                 url: baseRemoteUrl + tosend,
                 dataType: "json",
                 success: function(result){
-                    console.log("DATA received from server: " + JSON.stringify(result));
+                    /*console.log("DATA received from server: " + JSON.stringify(result));
 
                     var terms = [result["CHV_Pref_PT"], result["CHV_Pref_EN"], result["UMLS_Pref_PT"], result["UMLS_Pref_EN"]];
                     var uniqueTerms = [];
@@ -207,7 +207,8 @@ var DB =  new function() {
                     for (var i = 0; i < terms.length; i++)
                         if (uniqueTerms.indexOf(terms[i].trim()) == -1) {
                             uniqueTerms.push(terms[i].trim());
-                        }
+                        }*/
+                    var uniqueTerms = getTermsByLanguage(result, language);
 
                     callback(uniqueTerms);
                 },
@@ -225,7 +226,9 @@ var DB =  new function() {
         if(!db.database)
             db.openDatabase();
 
-        var dbTable = getDatabaseTable(language);
+        var databaseTableNField = getDatabaseTableNField(language);
+        var dbTable = databaseTableNField[0];
+        var dbTableCol = databaseTableNField[1];
 
 
         var object = {};
@@ -277,7 +280,7 @@ var DB =  new function() {
 
                 var cui;
                 db.database.readTransaction(function (tx) {
-                        tx.executeSql("SELECT * FROM CHVString WHERE id = ?", [array[0]], function (tx, results) {
+                        tx.executeSql("SELECT * FROM CHVString WHERE id = ? ORDER BY ? ASC", [array[0], dbTableCol], function (tx, results) {
                             if (results.rows.length) {
                                 var result = results.rows.item(0);
                                 console.log("CUI: " + JSON.stringify(result));
@@ -295,17 +298,8 @@ var DB =  new function() {
                                 if (results.rows.length) {
                                     var result = results.rows.item(0);
                                     var terms = getTermsByLanguage(result, language);
-                                    var uniqueTerms = [];
 
-                                    for (var i = 0; i < terms.length; i++)
-
-                                        if (uniqueTerms.indexOf(terms[i].trim()) == -1) {
-                                            uniqueTerms.push(terms[i].trim());
-                                        }
-
-                                    console.log("CHVConcept: " + JSON.stringify(result));
-
-                                    callback(uniqueTerms);
+                                    callback(terms);
                                 }
                             })
                         });

@@ -38,6 +38,16 @@ var LOG_ACTIONS = {
     find: 'find'
 };
 
+var LANGUAGES = {
+  pt: {language: 'portuguese', iso6391: 'pt'},
+  en: {language: 'english', iso6391: 'en'}
+};
+
+var SUGGESTION_TYPE = {
+    lay: 'lay',
+    scientific: 'medico-scientific'
+};
+
 var TAB = "tabid";
 
 var NO_DATABASE_ENTRIES = 192691;

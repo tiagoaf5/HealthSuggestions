@@ -141,7 +141,7 @@ function removeStopWords(list, language) {
 
 function stem(word, language) {
 
-   var stem_lang = "english"
+    var stem_lang = "english"
     switch (language) {
         case "por":
             stem_lang = "portuguese";
@@ -182,24 +182,54 @@ function getLanguage(text) {
         return "eng";
 }
 
-function getDatabaseTable(language) {
+function getDatabaseTableNField(language) {
     switch (language) {
         case "por":
-            return "CHVStemmedIndexPT";
+            return ["CHVStemmedIndexPT", 'pt_stemmed_count'];
         case "eng":
-            return "CHVStemmedIndexEN";
+            return ["CHVStemmedIndexEN", 'en_stemmed_count'];
         default:
-            return "CHVStemmedIndexEN";
+            return ["CHVStemmedIndexEN", 'en_stemmed_count'];
     }
 }
 
 function getTermsByLanguage (terms, language) {
+    var results;
     switch (language) {
         case "por":
-            return [terms["CHV_Pref_PT"], terms["UMLS_Pref_PT"], terms["CHV_Pref_EN"], terms["UMLS_Pref_EN"]];
+            results = [
+                {term: terms["UMLS_Pref_PT"], type: SUGGESTION_TYPE.scientific, lang: LANGUAGES.pt.iso6391},
+                {term: terms["CHV_Pref_PT"], type: SUGGESTION_TYPE.lay, lang: LANGUAGES.pt.iso6391},
+                {term: terms["UMLS_Pref_EN"], type: SUGGESTION_TYPE.scientific, lang: LANGUAGES.en.iso6391},
+                {term: terms["CHV_Pref_EN"], type: SUGGESTION_TYPE.lay, lang: LANGUAGES.en.iso6391}
+            ];
         case "eng":
-            return [terms["CHV_Pref_EN"], terms["UMLS_Pref_EN"]];
+            results = [
+                {term: terms["UMLS_Pref_EN"], type: SUGGESTION_TYPE.scientific, lang: LANGUAGES.en.iso6391},
+                {term: terms["CHV_Pref_EN"], type: SUGGESTION_TYPE.lay, lang: LANGUAGES.en.iso6391}
+            ];
         default:
-            return [terms["CHV_Pref_PT"], terms["UMLS_Pref_PT"], terms["CHV_Pref_EN"], terms["UMLS_Pref_EN"]];
+            results = [
+                {term: terms["UMLS_Pref_PT"], type: SUGGESTION_TYPE.scientific, lang: LANGUAGES.pt.iso6391},
+                {term: terms["CHV_Pref_PT"], type: SUGGESTION_TYPE.lay, lang: LANGUAGES.pt.iso6391},
+                {term: terms["UMLS_Pref_EN"], type: SUGGESTION_TYPE.scientific, lang: LANGUAGES.en.iso6391},
+                {term: terms["CHV_Pref_EN"], type: SUGGESTION_TYPE.lay, lang: LANGUAGES.en.iso6391}
+            ];
     }
+
+    var uniqueTerms = [];
+
+    for (var i = 0; i < results.length; i++) {
+        var toAdd = true;
+        for (var j = 0; j < uniqueTerms.length; j++) {
+           if(results[i]['term'] === uniqueTerms[j]['term']) {
+                toAdd = false;
+                break;
+            }
+        }
+        if (toAdd)
+            uniqueTerms.push(results[i]);
+    }
+
+    return uniqueTerms;
 }
