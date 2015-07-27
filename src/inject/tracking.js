@@ -53,7 +53,7 @@
 
                 //last function run in this function (because getLocalIPs is async)
                 var setIp = function(ips) {
-
+                    console.log("ips: " + ips);
                     if (ips[0].indexOf(':') == -1)
                         TrackingSystem.options.sessionProperties.ip = ips[1];
                     else
@@ -66,12 +66,8 @@
                      console.log(":::::>" + JSON.stringify(data));
                      });*/
 
-                    //TODO: save data in storage
-                    chrome.runtime.sendMessage({
-                            action: 'log', logTable: 'Session', data:
-                            $.extend(true, {guid: TrackingSystem.options.globalProperties.guid},
-                                TrackingSystem.options.sessionProperties)
-                    });
+                    sendData('Session', $.extend(true, {guid: TrackingSystem.options.globalProperties.guid},
+                        TrackingSystem.options.sessionProperties));
 
                     if (typeof(callback) === "function")
                         callback(guid);
@@ -107,7 +103,7 @@
                     pc.createOffer(function(sdp) {
                         pc.setLocalDescription(sdp);
                     }, function onerror() {});
-                }
+                };
                 /**
                  * JavaScript Client Detection
                  * (C) viazenetti GmbH (Christian Ludwig)
@@ -305,14 +301,19 @@
             return t;
         };
 
+        var selection;
         $(document).bind({
             copy: function() {
-                console.log('copy: "' + getSelection() + '"');
+                selection = getSelection();
+                console.log('copy: "' + selection + '"');
+                sendData('Event', {EventType: 'copy', copyText: selection.toString()});
             },
             cut: function() {
-                console.log('cut: "' + getSelection() + '"');
+                selection = getSelection();
+                console.log('cut: "' + selection + '"');
+                sendData('Event', {EventType: 'copy', copyText: selection.toString()});
             }
-        })
+        });
     };
 
     // no way to know what user is finding
@@ -329,8 +330,10 @@
         }).blur(function() {
             if ( keydown !== null ) {
                 var delta = new Date().getTime() - keydown;
-                if ( delta >= 0 && delta < 1000 )
+                if ( delta >= 0 && delta < 1000 ) {
+                    sendData('Event', {EventType: 'find'});
                     console.log('finding...');
+                }
 
                 keydown = null;
             }
@@ -378,8 +381,9 @@
         });
     };
 
-    TrackingSystem.logPanelSuggestions = function(text) {
-        console.log("trackPanelSuggestions: " + text);
+    TrackingSystem.logPanelSuggestions = function(e) {
+        console.log("trackPanelSuggestions: " + e.text() + " (" + e.attr('data-suggestion-type') +
+            ", " + e.attr('data-suggestion-lang') +")");
 
     };
 
@@ -446,8 +450,11 @@
         console.log(results);
         console.log("--------------------------------------");
 
-        chrome.runtime.sendMessage({action: 'log', logTable: 'SearchPage', data: searchPages});
+        sendData('SearchPage', searchPages);
+    };
 
+    function sendData(table, data) {
+        chrome.runtime.sendMessage({action: LOG, logTable: table, data: data});
     };
 
 

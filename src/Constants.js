@@ -1,3 +1,6 @@
+var GOOGLE = "Google";
+var BING = "Bing";
+var YAHOO = "Yahoo";
 
 //mainly inject
 var G_GOOGLE_BASE_URL = "https://www.google.com";
@@ -7,6 +10,12 @@ var G_YAHOO_BASE_URL = "https://search.yahoo.com";
 var G_GOOGLE_SEARCH_URL = G_GOOGLE_BASE_URL + "/search?q=";
 var G_BING_SEARCH_URL = G_BING_BASE_URL + "/search?q=";
 var G_YAHOO_SEARCH_URL = G_YAHOO_BASE_URL + "/search?p=";
+
+var SEARCH_URL = {};
+SEARCH_URL[GOOGLE] = G_GOOGLE_SEARCH_URL;
+SEARCH_URL[BING] = G_BING_SEARCH_URL;
+SEARCH_URL[YAHOO] = G_YAHOO_SEARCH_URL;
+
 
 
 //mainly background
@@ -23,9 +32,7 @@ var TABS_SEARCH = "tabs_search";
 
 var SEARCH_ENGINE = "search_engine";
 
-var GOOGLE = "Google";
-var BING = "Bing";
-var YAHOO = "Yahoo";
+
 
 
 

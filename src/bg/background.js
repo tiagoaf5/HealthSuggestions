@@ -151,9 +151,11 @@ chrome.runtime.onMessage.addListener(
                                 //[hash][table][key]
                                 logObj[hash]['Search'] = {};
                                 logObj[hash]['Search']['query'] = request.query;
+                                logObj[hash]['Search']['Suggestions'] = sugg;
                                 logObj[hash]['Search']['queryInputTimestamp'] = nowMilliseconds.toJSON();
                                 logObj[hash]['Search']['totalNoResults'] = "";
                                 logObj[hash]['Search']['answerTime'] = "";
+                                logObj[hash]['Events'] = [];
 
                                 console.log("-log->" + JSON.stringify(logObj));
                                 chrome.storage.local.set(logObj);
@@ -176,7 +178,7 @@ chrome.runtime.onMessage.addListener(
                 });
 
                 break;
-            case 'log':
+            case LOG:
 
                 saveLogData(sender.tab.id, request.logTable, request.data);
 
@@ -253,10 +255,23 @@ function saveLogData(tabId, logTable, data) {
                         totalTimeOverSuggestionBoard: data['totalTimeOverSuggestionBoard'],
                         timestamp: data['timestamp'],
                         url: data['url'],
-                        SearchResults: data['SearchResults']
+                        SearchResults: data['SearchResults']['results']
                     }];
                     object2['Search']['SearchEngine'] = data['SearchEngine'];
                     object2['Search']['SERelatedSearches'] = data['SearchResults']['SERelatedSearches'];
+
+                }
+                break;
+            case 'Event':
+                var timestamp = new Date().toJSON();
+                switch (data.EventType) {
+                    case 'copy':
+                        object2['Events'].push({EventType: 'copy', EventTimestamp: timestamp, copyText: data.copyText});
+                        break;
+                    case 'find':
+                        object2['Events'].push({EventType: 'find', EventTimestamp: timestamp});
+                        break;
+
 
                 }
                 break;

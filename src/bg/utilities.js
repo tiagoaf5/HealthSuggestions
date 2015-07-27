@@ -198,22 +198,22 @@ function getTermsByLanguage (terms, language) {
     switch (language) {
         case "por":
             results = [
-                {term: terms["UMLS_Pref_PT"], type: SUGGESTION_TYPE.scientific, lang: LANGUAGES.pt.iso6391},
-                {term: terms["CHV_Pref_PT"], type: SUGGESTION_TYPE.lay, lang: LANGUAGES.pt.iso6391},
-                {term: terms["UMLS_Pref_EN"], type: SUGGESTION_TYPE.scientific, lang: LANGUAGES.en.iso6391},
-                {term: terms["CHV_Pref_EN"], type: SUGGESTION_TYPE.lay, lang: LANGUAGES.en.iso6391}
+                {term: terms["UMLS_Pref_PT"].trim(), type: SUGGESTION_TYPE.scientific, lang: LANGUAGES.pt.iso6391},
+                {term: terms["CHV_Pref_PT"].trim(), type: SUGGESTION_TYPE.lay, lang: LANGUAGES.pt.iso6391},
+                {term: terms["UMLS_Pref_EN"].trim(), type: SUGGESTION_TYPE.scientific, lang: LANGUAGES.en.iso6391},
+                {term: terms["CHV_Pref_EN"].trim(), type: SUGGESTION_TYPE.lay, lang: LANGUAGES.en.iso6391}
             ];
         case "eng":
             results = [
-                {term: terms["UMLS_Pref_EN"], type: SUGGESTION_TYPE.scientific, lang: LANGUAGES.en.iso6391},
-                {term: terms["CHV_Pref_EN"], type: SUGGESTION_TYPE.lay, lang: LANGUAGES.en.iso6391}
+                {term: terms["UMLS_Pref_EN"].trim(), type: SUGGESTION_TYPE.scientific, lang: LANGUAGES.en.iso6391},
+                {term: terms["CHV_Pref_EN"].trim(), type: SUGGESTION_TYPE.lay, lang: LANGUAGES.en.iso6391}
             ];
         default:
             results = [
-                {term: terms["UMLS_Pref_PT"], type: SUGGESTION_TYPE.scientific, lang: LANGUAGES.pt.iso6391},
-                {term: terms["CHV_Pref_PT"], type: SUGGESTION_TYPE.lay, lang: LANGUAGES.pt.iso6391},
-                {term: terms["UMLS_Pref_EN"], type: SUGGESTION_TYPE.scientific, lang: LANGUAGES.en.iso6391},
-                {term: terms["CHV_Pref_EN"], type: SUGGESTION_TYPE.lay, lang: LANGUAGES.en.iso6391}
+                {term: terms["UMLS_Pref_PT"].trim(), type: SUGGESTION_TYPE.scientific, lang: LANGUAGES.pt.iso6391},
+                {term: terms["CHV_Pref_PT"].trim(), type: SUGGESTION_TYPE.lay, lang: LANGUAGES.pt.iso6391},
+                {term: terms["UMLS_Pref_EN"].trim(), type: SUGGESTION_TYPE.scientific, lang: LANGUAGES.en.iso6391},
+                {term: terms["CHV_Pref_EN"].trim(), type: SUGGESTION_TYPE.lay, lang: LANGUAGES.en.iso6391}
             ];
     }
 

@@ -130,6 +130,8 @@ chrome.extension.onMessage.addListener(
             case 'setData':
                 console.log("receiving result...: " + JSON.stringify(request));
 
+                if(searchEngineBeingUsed == undefined)
+                    searchEngineBeingUsed = request['data'][SEARCH_ENGINE];
 
                 if (request.data.minimized) {
                     $(".widgetClass").css("bottom", "-190px");
@@ -188,7 +190,8 @@ function setSuggestions(suggestions) {
         var li = $("<li>");
         li.addClass("suggestion");
 
-        li.html('<a data-suggestion-lang="'+  suggestions[i].lang +'" data-suggestion-type="' + suggestions[i].type + '" href="'+ G_GOOGLE_SEARCH_URL + replaceAll(" ", "+", suggestions[i].term) +  '" target="_top">'
+        li.html('<a data-suggestion-lang="'+  suggestions[i].lang +'" data-suggestion-type="' + suggestions[i].type +
+            '" href="'+ SEARCH_URL[searchEngineBeingUsed] + replaceAll(" ", "+", suggestions[i].term) +  '" target="_top">'
             + suggestions[i].term + "</a>");
 
         getWidgetContent().find('#suggestions').append(li);

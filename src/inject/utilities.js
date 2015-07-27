@@ -108,7 +108,7 @@ function loadWidget() {
     $(".widgetContentClass").contents().find("#window-action-minimize").on("click", widgetMinimize);
     $(".widgetContentClass").contents().find("#window-action-close").on("click", widgetClose);
     $(".widgetContentClass").contents().on("click", "#suggestions > li > a", function() {
-        TrackingSystem.logPanelSuggestions($(this).text());
+        TrackingSystem.logPanelSuggestions($(this));
     });
 
 }
