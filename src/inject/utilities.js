@@ -107,8 +107,8 @@ function loadWidget() {
     //actions onclick
     $(".widgetContentClass").contents().find("#window-action-minimize").on("click", widgetMinimize);
     $(".widgetContentClass").contents().find("#window-action-close").on("click", widgetClose);
-    $(".widgetContentClass").contents().on("click", "#suggestions > li > a", function() {
-        TrackingSystem.logPanelSuggestions($(this));
+    $(".widgetContentClass").contents().on("click", "#suggestions > li > a", function(e) {
+        TrackingSystem.logPanelSuggestions($(this), e.which);
     });
     $(".widgetContentClass").contents().on("click", "ul.search-engine > li > a.search-engine-item", function() {
         TrackingSystem.logPanelSwitchSearchEngine($(this), searchEngineBeingUsed);
@@ -150,10 +150,10 @@ function widgetClose(updateData) {
 
     $("." + widgetContentClass).remove();
 
-    if(updateData)
+    if(updateData) {
         chrome.runtime.sendMessage({action: "close", close: true});
-
-    TrackingSystem.logSuggestionBoard('close');
+        TrackingSystem.logSuggestionBoard('close');
+    }
 }
 
 function replaceAll(find, replace, str) {

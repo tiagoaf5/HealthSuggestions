@@ -156,6 +156,7 @@ chrome.runtime.onMessage.addListener(
                                 logObj[hash]['Search']['totalNoResults'] = "";
                                 logObj[hash]['Search']['answerTime'] = "";
                                 logObj[hash]['Events'] = [];
+                                logObj[hash]['WebPages'] = [];
 
                                 console.log("-log->" + JSON.stringify(logObj));
                                 chrome.storage.local.set(logObj);
@@ -269,14 +270,21 @@ function saveLogData(tabId, logTable, data) {
                         object2['Events'].push({EventType: 'copy', EventTimestamp: timestamp, copyText: data.copyText});
                         break;
                     case 'find':
-                        object2['Events'].push({EventType: 'find', EventTimestamp: timestamp});
+                    case 'ShowSugBoard':
+                    case 'HideSugBoard':
+                    case 'CloseSugBoard':
+                        object2['Events'].push({EventType: data.EventType, EventTimestamp: timestamp});
                         break;
                     case 'SwitchSE':
-                        console.log("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-                        console.log("Saving SwitchSE " + hash);
-                        object2['Events'].push({EventType: 'SwitchSE', EventTimestamp: timestamp, from: data.from, to: data.to});
+                        object2['Events'].push({EventType: 'SwitchSE', EventTimestamp: timestamp,
+                            from: data.from, to: data.to});
                         break;
-
+                    case 'ClickSuggestion':
+                    case 'ClickSERelatedSearch':
+                        object2['Events'].push({EventType: data.EventType, EventTimestamp: timestamp,
+                            linkText: data.linkText, button: data.button, suggestion: data.suggestion});
+                        break;
+                    //ShowSugBoard etc
                 }
 
                 break;

@@ -348,6 +348,18 @@
 
 
     TrackingSystem.logSuggestionBoard = function(action) {
+        switch (action) {
+            case 'minimize':
+                sendData(TABLE_EVENT, {EventType: 'HideSugBoard'});
+                break;
+            case 'maximize':
+                sendData(TABLE_EVENT, {EventType: 'ShowSugBoard'});
+                break;
+
+            case 'close':
+                sendData(TABLE_EVENT, {EventType: 'CloseSugBoard'});
+                break;
+        }
         console.log("logSuggestionBoard: " + action);
     };
 
@@ -375,17 +387,28 @@
         //bing, bing, google, yahoo
         $("ol#b_context ul.b_vList > li > a, div.b_rs > div.b_rich > div.b_vlist2col > ul > li > a, " +
             "div#brs > div > div > p > a," +
-            "div.dd.AlsoTry > table tr > td > a").on('click', function() {
+            "div.dd.AlsoTry > table tr > td > a").on('click', function(e) {
+            var linkText = $(this).attr('href');
+            linkText = linkText.indexOf('/') == 0 ? ENGINE_BASE_URL[searchEngineBeingUsed] + linkText : linkText;
+            var suggestion = $(this).text();
+            var button = e.which;
 
-            console.log("trackSERPClicks (Suggestions): " + $(this).text());
+            sendData(TABLE_EVENT, {EventType: 'ClickSERelatedSearch', linkText: linkText, button: button,
+                suggestion: suggestion});
+            console.log("trackSERPClicks (Suggestions): " + suggestion + " - " + linkText + " - " + button);
         });
     };
 
-    TrackingSystem.logPanelSuggestions = function(e) {
-        console.log("trackPanelSuggestions: " + e.text() + " (" + e.attr('data-suggestion-type') +
-            ", " + e.attr('data-suggestion-lang') +")");
+    TrackingSystem.logPanelSuggestions = function(e, button) {
+        var term = e.text();
+        var type = e.attr('data-suggestion-type');
+        var lang = e.attr('data-suggestion-lang');
 
+        console.log("trackPanelSuggestions: " + term + " (" + type +
+            ", " + lang +")");
+        sendData(TABLE_EVENT, {EventType: 'ClickSuggestion', linkText: e.attr('href'), button: button, suggestion: {term: term, lang: lang, type: type}})
     };
+
     TrackingSystem.logPanelSwitchSearchEngine = function(e, currentEngine) {
         var newEngine = e.attr('data-search-engine');
         if (currentEngine != newEngine) {
@@ -394,6 +417,7 @@
         }
     };
 
+    //TODO: fix trackGoBack
     TrackingSystem.trackGoBack = function() {
 
         if (window.history && window.history.pushState) {
