@@ -26,9 +26,14 @@ var CLOSED = "closed";
 var SUGGESTION = "suggestion";
 var PARENT = "parent";
 var HASH = "query_hash";
+
 var LOG = "log";
+var TABLE_EVENT = 'Event';
+var TABLE_SEARCH_PAGE = 'SearchPage';
+
 var ERROR = "generic_error";
 var TABS_SEARCH = "tabs_search";
+
 
 var SEARCH_ENGINE = "search_engine";
 

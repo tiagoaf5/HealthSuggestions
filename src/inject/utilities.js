@@ -80,9 +80,9 @@ function loadWidget() {
         '<div class="header-content">' +
         '<ul class="search-engine">' +
         '<li><i class="icon-heart icon-2x" style="color:rgb(17, 85, 204);"></i></li>' +
-        '<li><a class="search-engine-item" href="#" target="_top"><i id="icon-google" class="icon-google icon-2x"></i></a></li>' +
-        '<li><a class="search-engine-item" href="#" target="_top"><i id="icon-bing" class="icon-bing icon-2x"></i></a></li>' +
-        '<li><a class="search-engine-item" href="#" target="_top"><i id="icon-yahoo" class="icon-social-yahoo icon-2x"></i></a></li></ul>' +
+        '<li><a data-search-engine="' + GOOGLE + '" class="search-engine-item" href="#" target="_top"><i id="icon-google" class="icon-google icon-2x"></i></a></li>' +
+        '<li><a data-search-engine="' + BING + '" class="search-engine-item" href="#" target="_top"><i id="icon-bing" class="icon-bing icon-2x"></i></a></li>' +
+        '<li><a data-search-engine="' + YAHOO + '" class="search-engine-item" href="#" target="_top"><i id="icon-yahoo" class="icon-social-yahoo icon-2x"></i></a></li></ul>' +
         '<span class="window-action"><i id="window-action-close" class="icon icon-remove"></i></span>' +
         '<span class="window-action"><i id="window-action-minimize" class="icon icon-arrows-compress"></i></span></div>');
 
@@ -109,6 +109,9 @@ function loadWidget() {
     $(".widgetContentClass").contents().find("#window-action-close").on("click", widgetClose);
     $(".widgetContentClass").contents().on("click", "#suggestions > li > a", function() {
         TrackingSystem.logPanelSuggestions($(this));
+    });
+    $(".widgetContentClass").contents().on("click", "ul.search-engine > li > a.search-engine-item", function() {
+        TrackingSystem.logPanelSwitchSearchEngine($(this), searchEngineBeingUsed);
     });
 
 }

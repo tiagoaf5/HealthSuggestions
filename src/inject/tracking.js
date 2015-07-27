@@ -306,12 +306,12 @@
             copy: function() {
                 selection = getSelection();
                 console.log('copy: "' + selection + '"');
-                sendData('Event', {EventType: 'copy', copyText: selection.toString()});
+                sendData(TABLE_EVENT, {EventType: 'copy', copyText: selection.toString()});
             },
             cut: function() {
                 selection = getSelection();
                 console.log('cut: "' + selection + '"');
-                sendData('Event', {EventType: 'copy', copyText: selection.toString()});
+                sendData(TABLE_EVENT, {EventType: 'copy', copyText: selection.toString()});
             }
         });
     };
@@ -331,7 +331,7 @@
             if ( keydown !== null ) {
                 var delta = new Date().getTime() - keydown;
                 if ( delta >= 0 && delta < 1000 ) {
-                    sendData('Event', {EventType: 'find'});
+                    sendData(TABLE_EVENT, {EventType: 'find'});
                     console.log('finding...');
                 }
 
@@ -385,6 +385,13 @@
         console.log("trackPanelSuggestions: " + e.text() + " (" + e.attr('data-suggestion-type') +
             ", " + e.attr('data-suggestion-lang') +")");
 
+    };
+    TrackingSystem.logPanelSwitchSearchEngine = function(e, currentEngine) {
+        var newEngine = e.attr('data-search-engine');
+        if (currentEngine != newEngine) {
+            console.log("trackPanelSwitchSearchEngine: from " + currentEngine + " to " + newEngine);
+            sendData(TABLE_EVENT, {EventType: 'SwitchSE', from: currentEngine, to: newEngine});
+        }
     };
 
     TrackingSystem.trackGoBack = function() {
@@ -450,21 +457,21 @@
         console.log(results);
         console.log("--------------------------------------");
 
-        sendData('SearchPage', searchPages);
+        sendData(TABLE_SEARCH_PAGE, searchPages);
     };
 
+
+
+    //AUXILIARY
     function sendData(table, data) {
         chrome.runtime.sendMessage({action: LOG, logTable: table, data: data});
     };
 
-
-    //AUXILIARY
     function extractNumbers(results) {
         var re = /([0-9].?)+/g;
         var m = results.match(re);
         return m;
     }
-
 
     function getGoogleResults() {
         console.log("Google results: ");

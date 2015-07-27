@@ -233,7 +233,7 @@ function saveLogData(tabId, logTable, data) {
 
     getLogSavedData(tabId, function(object, hash) {
         if (object === ERROR) return;
-                var object2 = object[hash];
+        var object2 = object[hash];
 
         var toSave = true;
 
@@ -246,7 +246,7 @@ function saveLogData(tabId, logTable, data) {
                 chrome.storage.local.set(object);
 
                 break;
-            case 'SearchPage':
+            case TABLE_SEARCH_PAGE:
                 if(data['SERPOrder'] == 1) {
                     object2['Search']['totalNoResults'] = data['SearchResults']['totalNoResults'];
                     object2['Search']['answerTime'] = data['SearchResults']['answerTime'] ? data['SearchResults']['answerTime'] : "";
@@ -262,7 +262,7 @@ function saveLogData(tabId, logTable, data) {
 
                 }
                 break;
-            case 'Event':
+            case TABLE_EVENT:
                 var timestamp = new Date().toJSON();
                 switch (data.EventType) {
                     case 'copy':
@@ -271,9 +271,14 @@ function saveLogData(tabId, logTable, data) {
                     case 'find':
                         object2['Events'].push({EventType: 'find', EventTimestamp: timestamp});
                         break;
-
+                    case 'SwitchSE':
+                        console.log("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+                        console.log("Saving SwitchSE " + hash);
+                        object2['Events'].push({EventType: 'SwitchSE', EventTimestamp: timestamp, from: data.from, to: data.to});
+                        break;
 
                 }
+
                 break;
             default:
                 toSave = false;
