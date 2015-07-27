@@ -280,9 +280,14 @@ function saveLogData(tabId, logTable, data) {
                             from: data.from, to: data.to});
                         break;
                     case 'ClickSuggestion':
-                    case 'ClickSERelatedSearch':
+                    case 'ClickSERelatedS' +
+                    'gearch':
                         object2['Events'].push({EventType: data.EventType, EventTimestamp: timestamp,
                             linkText: data.linkText, button: data.button, suggestion: data.suggestion});
+                        break;
+                    case 'ClickSearchResult':
+                        object2['Events'].push({EventType: data.EventType, EventTimestamp: timestamp,
+                            linkText: data.linkText, button: data.button, title: data.title, link: data.link});
                         break;
                     //ShowSugBoard etc
                 }

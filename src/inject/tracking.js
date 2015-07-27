@@ -375,26 +375,27 @@
             .on('click',function(e){
                 var title = $(this).text();
                 var url = $(this).attr("href");
+                var button = e.which;
 
                 if (url.indexOf('http://r.search.yahoo.com/') === 0) {
                     console.log($(this).parent().tagName);
                     console.log($(this).parent().parent().attr("class"));
                     url = $(this).parent().parent().find("div > span.wr-bw").text();
                 }
-                console.log("trackSERPClicks (Results): " + title + " -> " + url + " - " + e.which);
+                console.log("trackSERPClicks (Results): " + title + " -> " + url + " - " + button);
+                sendData(TABLE_EVENT, {EventType: 'ClickSearchResult', linkText: title, button: button, title: title, link: url});
             });
 
         //bing, bing, google, yahoo
         $("ol#b_context ul.b_vList > li > a, div.b_rs > div.b_rich > div.b_vlist2col > ul > li > a, " +
             "div#brs > div > div > p > a," +
             "div.dd.AlsoTry > table tr > td > a").on('click', function(e) {
-            var linkText = $(this).attr('href');
-            linkText = linkText.indexOf('/') == 0 ? ENGINE_BASE_URL[searchEngineBeingUsed] + linkText : linkText;
+            //var linkText = $(this).attr('href');
+            //linkText = linkText.indexOf('/') === 0 ? ENGINE_BASE_URL[searchEngineBeingUsed] + linkText : linkText;
             var suggestion = $(this).text();
             var button = e.which;
 
-            sendData(TABLE_EVENT, {EventType: 'ClickSERelatedSearch', linkText: linkText, button: button,
-                suggestion: suggestion});
+            sendData(TABLE_EVENT, {EventType: 'ClickSERelatedSearch', linkText: suggestion, button: button, suggestion: suggestion});
             console.log("trackSERPClicks (Suggestions): " + suggestion + " - " + linkText + " - " + button);
         });
     };
@@ -406,7 +407,7 @@
 
         console.log("trackPanelSuggestions: " + term + " (" + type +
             ", " + lang +")");
-        sendData(TABLE_EVENT, {EventType: 'ClickSuggestion', linkText: e.attr('href'), button: button, suggestion: {term: term, lang: lang, type: type}})
+        sendData(TABLE_EVENT, {EventType: 'ClickSuggestion', linkText: term, button: button, suggestion: {term: term, lang: lang, type: type}})
     };
 
     TrackingSystem.logPanelSwitchSearchEngine = function(e, currentEngine) {
