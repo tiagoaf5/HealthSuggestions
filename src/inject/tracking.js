@@ -489,7 +489,7 @@
 
     //AUXILIARY
     function sendData(table, data) {
-        chrome.runtime.sendMessage({action: LOG, logTable: table, data: data});
+        chrome.runtime.sendMessage({action: LOG, logTable: table, global: TrackingSystem.options.globalProperties, data: data});
     };
 
     function extractNumbers(results) {

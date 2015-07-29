@@ -181,7 +181,7 @@ chrome.runtime.onMessage.addListener(
                 break;
             case LOG:
 
-                saveLogData(sender.tab.id, request.logTable, request.data);
+                saveLogData(sender.tab.id, request.logTable, request.global, request.data);
 
                 break;
             default:
@@ -229,7 +229,7 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
     });
 });
 
-function saveLogData(tabId, logTable, data) {
+function saveLogData(tabId, logTable, global, data) {
     console.log("table: " + logTable + ", data: " + JSON.stringify(data));
 
     getLogSavedData(tabId, function(object, hash) {
@@ -267,27 +267,26 @@ function saveLogData(tabId, logTable, data) {
                 var timestamp = new Date().toJSON();
                 switch (data.EventType) {
                     case 'copy':
-                        object2['Events'].push({EventType: 'copy', EventTimestamp: timestamp, copyText: data.copyText});
+                        object2['Events'].push({EventType: 'copy', EventTimestamp: timestamp, copyText: data.copyText, url: global.page_url});
                         break;
                     case 'find':
                     case 'ShowSugBoard':
                     case 'HideSugBoard':
                     case 'CloseSugBoard':
-                        object2['Events'].push({EventType: data.EventType, EventTimestamp: timestamp});
+                        object2['Events'].push({EventType: data.EventType, EventTimestamp: timestamp, url: global.page_url});
                         break;
                     case 'SwitchSE':
                         object2['Events'].push({EventType: 'SwitchSE', EventTimestamp: timestamp,
-                            from: data.from, to: data.to});
+                            from: data.from, to: data.to, url: global.page_url});
                         break;
                     case 'ClickSuggestion':
-                    case 'ClickSERelatedS' +
-                    'gearch':
+                    case 'ClickSERelatedSearch':
                         object2['Events'].push({EventType: data.EventType, EventTimestamp: timestamp,
-                            linkText: data.linkText, button: data.button, suggestion: data.suggestion});
+                            linkText: data.linkText, button: data.button, suggestion: data.suggestion, url: global.page_url});
                         break;
                     case 'ClickSearchResult':
                         object2['Events'].push({EventType: data.EventType, EventTimestamp: timestamp,
-                            linkText: data.linkText, button: data.button, title: data.title, link: data.link});
+                            linkText: data.linkText, button: data.button, title: data.title, link: data.link, url: global.page_url});
                         break;
                     //ShowSugBoard etc
                 }
