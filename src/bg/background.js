@@ -229,11 +229,14 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
                 var hash = result[TAB + details.sourceTabId][HASH];
                 logObj[hash] = null;
 
-                chrome.storage.local.get(logObj, function(logResult) {
-                    logResult[hash][TABS_SEARCH] = logResult[hash][TABS_SEARCH].concat(details.tabId);
-                    chrome.storage.local.set(logResult);
-                    //console.log("hash_after_new_window: " + JSON.stringify(logResult));
-                });
+                //Sleep to avoid race conditions
+                setTimeout(function() {
+                    chrome.storage.local.get(logObj, function(logResult) {
+                        logResult[hash][TABS_SEARCH] = logResult[hash][TABS_SEARCH].concat(details.tabId);
+                        chrome.storage.local.set(logResult);
+                        //console.log("hash_after_new_window: " + JSON.stringify(logResult));
+                    });
+                }, 1000);
             }
             console.log("new tab result: " + JSON.stringify(newO));
             chrome.storage.local.set(newO);
@@ -346,6 +349,8 @@ function getLogSavedData(tabId, callback) {
                     callback(ERROR);
             });
         }
+        else
+            callback(ERROR);
     });
 }
 
@@ -376,35 +381,35 @@ chrome.tabs.onRemoved.addListener( function(tabId) {
     removeTabFromHash(tabId);
 
     /*var obj = {};
-    obj[TAB + tabId] = null;
+     obj[TAB + tabId] = null;
 
-    //Check logging
-    chrome.storage.local.get(obj, function(result) {
-        if(result[TAB + tabId] != null) {
-            var hash = result[TAB + tabId][HASH];
+     //Check logging
+     chrome.storage.local.get(obj, function(result) {
+     if(result[TAB + tabId] != null) {
+     var hash = result[TAB + tabId][HASH];
 
-            var logObj = {};
-            logObj[hash] = null;
+     var logObj = {};
+     logObj[hash] = null;
 
-            chrome.storage.local.get(logObj, function(logResult) {
-                var index = logResult[hash][TABS_SEARCH].indexOf(tabId);
+     chrome.storage.local.get(logObj, function(logResult) {
+     var index = logResult[hash][TABS_SEARCH].indexOf(tabId);
 
-                if(index !== -1) {
-                    logResult[hash][TABS_SEARCH].splice(index, 1);
-                }
+     if(index !== -1) {
+     logResult[hash][TABS_SEARCH].splice(index, 1);
+     }
 
-                console.log("hash_after_remove_window: " + JSON.stringify(logResult));
+     console.log("hash_after_remove_window: " + JSON.stringify(logResult));
 
-                if(logResult[hash][TABS_SEARCH].length === 0) {
-                    //TODO: Send data to server
-                    console.log("Sending data to server : " + JSON.stringify(logResult[hash]));
-                    chrome.storage.local.remove(hash);
-                } else {
-                    chrome.storage.local.set(logResult);
-                }
-            });
-        }
-    });*/
+     if(logResult[hash][TABS_SEARCH].length === 0) {
+     //TODO: Send data to server
+     console.log("Sending data to server : " + JSON.stringify(logResult[hash]));
+     chrome.storage.local.remove(hash);
+     } else {
+     chrome.storage.local.set(logResult);
+     }
+     });
+     }
+     });*/
 
     chrome.storage.local.remove(TAB + tabId);
 
