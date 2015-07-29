@@ -102,10 +102,6 @@ chrome.runtime.onMessage.addListener(
                 break;
             case 'getSuggestions':
 
-
-
-
-
                 var obj0 = {};
                 obj0[TAB + sender.tab.id] = null;
                 chrome.storage.local.get(obj0, function(result) {
@@ -134,58 +130,59 @@ chrome.runtime.onMessage.addListener(
                             chrome.tabs.sendMessage(sender.tab.id, {action: "closeWidget"});
                             return;
                         }
+                        //TODO: If query different from de current one check for tabs in the hash. If only this one left send data to server
+                        //TODO: Remove tab from hash
+                        //if (result[TAB + sender.tab.id] == null) {
 
-                        if (result[TAB + sender.tab.id] == null) {
+                        //create tab object
+                        var obj = {};
+                        obj[tab] = {};
+                        obj[tab][SEARCH] = request.query;
+                        obj[tab][MINIMIZED] = false;
+                        obj[tab][CLOSED] = false;
+                        obj[tab][SUGGESTION] = sugg;
+                        obj[tab][SEARCH_ENGINE] = request.search_engine;
+                        var nowMilliseconds = new Date();
+                        var hash = CryptoJS.SHA1(request.query + nowMilliseconds.toUTCString());
+                        hash = hash.toString();
+                        obj[tab][HASH] = hash;
 
-                            //create tab object
-                            var obj = {};
-                            obj[tab] = {};
-                            obj[tab][SEARCH] = request.query;
-                            obj[tab][MINIMIZED] = false;
-                            obj[tab][CLOSED] = false;
-                            obj[tab][SUGGESTION] = sugg;
-                            obj[tab][SEARCH_ENGINE] = request.search_engine;
-                            var nowMilliseconds = new Date();
-                            var hash = CryptoJS.SHA1(request.query + nowMilliseconds.toUTCString());
-                            hash = hash.toString();
-                            obj[tab][HASH] = hash;
+                        console.log("-tab->" + JSON.stringify(obj));
+                        chrome.storage.local.set(obj);
+                        //create object to hold search's logging
 
-                            console.log("-tab->" + JSON.stringify(obj));
-                            chrome.storage.local.set(obj);
-                            //create object to hold search's logging
+                        if (SETTINGS.get('logging') === true) {
+                            var logObj = {};
+                            logObj[hash] = {};
+                            logObj[hash][TABS_SEARCH] = [sender.tab.id];
 
-                            if (SETTINGS.get('logging') === true) {
-                                var logObj = {};
-                                logObj[hash] = {};
-                                logObj[hash][TABS_SEARCH] = [sender.tab.id];
+                            //Search Table
+                            //[hash][table][key]
+                            logObj[hash]['Search'] = {};
+                            logObj[hash]['Search']['query'] = request.query;
+                            logObj[hash]['Search']['Suggestions'] = sugg;
+                            logObj[hash]['Search']['queryInputTimestamp'] = nowMilliseconds.toJSON();
+                            logObj[hash]['Search']['totalNoResults'] = "";
+                            logObj[hash]['Search']['answerTime'] = "";
+                            logObj[hash]['Events'] = [];
+                            logObj[hash]['WebPages'] = [];
 
-                                //Search Table
-                                //[hash][table][key]
-                                logObj[hash]['Search'] = {};
-                                logObj[hash]['Search']['query'] = request.query;
-                                logObj[hash]['Search']['Suggestions'] = sugg;
-                                logObj[hash]['Search']['queryInputTimestamp'] = nowMilliseconds.toJSON();
-                                logObj[hash]['Search']['totalNoResults'] = "";
-                                logObj[hash]['Search']['answerTime'] = "";
-                                logObj[hash]['Events'] = [];
-                                logObj[hash]['WebPages'] = [];
-
-                                console.log("-log->" + JSON.stringify(logObj));
-                                chrome.storage.local.set(logObj);
-                            }
-
-                        } else {
-                            //TODO: CHECK IF PARENT STILL ALIVE && WITH SAME SEARCH
-                            //TODO: SEND TO THE SERVER PREVIOUS SEARCH
-
-                            result[tab][SEARCH_ENGINE] = request.search_engine;
-                            result[tab][SUGGESTION] = sugg;
-                            result[tab][SEARCH] = request.query;
-                            result[tab][CLOSED] = false;
-                            console.log("-->" + JSON.stringify(result));
-                            chrome.storage.local.set(result);
-                            //chrome.tabs.sendMessage(sender.tab.id, {action: "setData", data: result[tab]});
+                            console.log("-log->" + JSON.stringify(logObj));
+                            chrome.storage.local.set(logObj);
                         }
+
+                        /*} else {
+                         //TODO: CHECK IF PARENT STILL ALIVE && WITH SAME SEARCH
+                         //TODO: SEND TO THE SERVER PREVIOUS SEARCH
+
+                         result[tab][SEARCH_ENGINE] = request.search_engine;
+                         result[tab][SUGGESTION] = sugg;
+                         result[tab][SEARCH] = request.query;
+                         result[tab][CLOSED] = false;
+                         console.log("-->" + JSON.stringify(result));
+                         chrome.storage.local.set(result);
+                         //chrome.tabs.sendMessage(sender.tab.id, {action: "setData", data: result[tab]});
+                         }*/
                         loadWidget(sender.tab.id);
                     });
                 });
