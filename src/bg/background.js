@@ -246,7 +246,7 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
 });
 
 function saveLogData(tabId, logTable, global, data) {
-    console.log("table: " + logTable + ", data: " + JSON.stringify(data));
+    console.log("table: " + logTable +", global: " + JSON.stringify(global) +  ", data: " + JSON.stringify(data));
 
     getLogSavedData(tabId, function(object, hash) {
         if (object === ERROR) return;
@@ -326,6 +326,11 @@ function getHash(tabId, callback) {
     obj0[TAB + tabId] = null;
 
     chrome.storage.local.get(obj0, function(result) {
+        if( result[TAB + tabId] === null){
+            callback(ERROR);
+            return;
+        }
+
         var hash = result[TAB + tabId][HASH];
         if(hash)
             callback(hash);
@@ -343,7 +348,7 @@ function getLogSavedData(tabId, callback) {
             obj0[hash] = null;
 
             chrome.storage.local.get(obj0, function(result){
-                if (result)
+                if (result[hash] !== null)
                     callback(result, hash);
                 else
                     callback(ERROR);
@@ -355,8 +360,13 @@ function getLogSavedData(tabId, callback) {
 }
 
 //Removes tab from hash and if list of tabs is empty send data to server
-function removeTabFromHash(tabId) {
+function removeTabFromHash(tabId, callback) {
     getLogSavedData(tabId, function (result, hash) {
+
+        if (result === ERROR) {
+            callback(false);
+            return;
+        }
         var index = result[hash][TABS_SEARCH].indexOf(tabId);
 
         if (index !== -1) {
@@ -372,13 +382,24 @@ function removeTabFromHash(tabId) {
         } else {
             chrome.storage.local.set(result);
         }
+        callback(true);
     });
 }
 
 chrome.tabs.onRemoved.addListener( function(tabId) {
     console.log("Removing tabID: " + tabId + "....");
 
-    removeTabFromHash(tabId);
+    removeTabFromHash(tabId, function(removed) {
+        console.log("---->" +  removed);
+
+        if(removed) {
+        //TODO: trigger close tab event
+            /*chrome.tabs.get(tabId, function(tab) {
+
+            saveLogData(tabId, TABLE_EVENT,{page_url: tab.url}, {EventType: 'RmTab'});
+            });*/
+        }
+    });
 
     /*var obj = {};
      obj[TAB + tabId] = null;
