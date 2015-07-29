@@ -130,8 +130,12 @@ chrome.runtime.onMessage.addListener(
                             chrome.tabs.sendMessage(sender.tab.id, {action: "closeWidget"});
                             return;
                         }
-                        //TODO: If query different from de current one check for tabs in the hash. If only this one left send data to server
-                        //TODO: Remove tab from hash
+
+                        // if a different search but there is data saved in this tab
+                        // remove tab from hash and deal with it
+                        if (result[TAB + sender.tab.id] != null) {
+                            removeTabFromHash(sender.tab.id);
+                        }
                         //if (result[TAB + sender.tab.id] == null) {
 
                         //create tab object
@@ -149,8 +153,8 @@ chrome.runtime.onMessage.addListener(
 
                         console.log("-tab->" + JSON.stringify(obj));
                         chrome.storage.local.set(obj);
-                        //create object to hold search's logging
 
+                        //create object to hold search's logging
                         if (SETTINGS.get('logging') === true) {
                             var logObj = {};
                             logObj[hash] = {};
@@ -172,9 +176,6 @@ chrome.runtime.onMessage.addListener(
                         }
 
                         /*} else {
-                         //TODO: CHECK IF PARENT STILL ALIVE && WITH SAME SEARCH
-                         //TODO: SEND TO THE SERVER PREVIOUS SEARCH
-
                          result[tab][SEARCH_ENGINE] = request.search_engine;
                          result[tab][SUGGESTION] = sugg;
                          result[tab][SEARCH] = request.query;
@@ -220,7 +221,7 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
         if(result[TAB + details.sourceTabId] != null) {
             var newO = {};
             newO[TAB + details.tabId] = result[TAB + details.sourceTabId];
-            newO[TAB + details.tabId][PARENT] = details.sourceTabId;
+            //newO[TAB + details.tabId][PARENT] = details.sourceTabId;
 
             // if logging -> add the tab to the list of tabs in logging object
             if(SETTINGS.get('logging') === true) {
@@ -230,9 +231,8 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
 
                 chrome.storage.local.get(logObj, function(logResult) {
                     logResult[hash][TABS_SEARCH] = logResult[hash][TABS_SEARCH].concat(details.tabId);
-                    console.log("hash_after_new_window: " + JSON.stringify(logResult));
                     chrome.storage.local.set(logResult);
-
+                    //console.log("hash_after_new_window: " + JSON.stringify(logResult));
                 });
             }
             console.log("new tab result: " + JSON.stringify(newO));
@@ -294,6 +294,7 @@ function saveLogData(tabId, logTable, global, data) {
                         break;
                     case 'ClickSuggestion':
                     case 'ClickSERelatedSearch':
+                        console.log("^^^^^^^^^^^^^^^^^^^^^^^^^");
                         object2['Events'].push({EventType: data.EventType, EventTimestamp: timestamp,
                             linkText: data.linkText, button: data.button, suggestion: data.suggestion, url: global.page_url});
                         break;
@@ -348,10 +349,33 @@ function getLogSavedData(tabId, callback) {
     });
 }
 
+//Removes tab from hash and if list of tabs is empty send data to server
+function removeTabFromHash(tabId) {
+    getLogSavedData(tabId, function (result, hash) {
+        var index = result[hash][TABS_SEARCH].indexOf(tabId);
+
+        if (index !== -1) {
+            result[hash][TABS_SEARCH].splice(index, 1);
+        }
+
+        console.log("hash_after_remove_window: " + JSON.stringify(result));
+
+        if (result[hash][TABS_SEARCH].length === 0) {
+            //TODO: Send data to server
+            console.log("Sending data to server : " + JSON.stringify(result[hash]));
+            chrome.storage.local.remove(hash);
+        } else {
+            chrome.storage.local.set(result);
+        }
+    });
+}
+
 chrome.tabs.onRemoved.addListener( function(tabId) {
     console.log("Removing tabID: " + tabId + "....");
 
-    var obj = {};
+    removeTabFromHash(tabId);
+
+    /*var obj = {};
     obj[TAB + tabId] = null;
 
     //Check logging
@@ -380,7 +404,7 @@ chrome.tabs.onRemoved.addListener( function(tabId) {
                 }
             });
         }
-    });
+    });*/
 
     chrome.storage.local.remove(TAB + tabId);
 
