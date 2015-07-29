@@ -101,27 +101,39 @@ chrome.runtime.onMessage.addListener(
                 });
                 break;
             case 'getSuggestions':
-                console.info("Getting suggestions...");
-                console.log('getSuggestions: ' + request.query);
-                var language = getLanguage(request.query)
-                console.log("Language: " + language);
-                var query = split(removeDiacritics(request.query)); //need to remove any accentuation and then split
-                var words = processWords(query, language); //remove Stop Words and stem them
-                console.log("getSuggestions: words: " + words);
 
-                DB.getStringList(words, language, function (sugg) {
-                    //chrome.tabs.sendMessage(sender.tab.id, {action: "updateSuggestions", suggestions: sugg});
 
-                    if (sugg.length == 0) {
-                        console.log("No suggestions");
-                        chrome.tabs.sendMessage(sender.tab.id, {action: "closeWidget"});
+
+
+
+                var obj0 = {};
+                obj0[TAB + sender.tab.id] = null;
+                chrome.storage.local.get(obj0, function(result) {
+                    var tab = TAB + sender.tab.id;
+
+                    if (result[TAB + sender.tab.id] != null && result[tab][SEARCH] === request.query &&
+                        result[tab][SEARCH_ENGINE] === request.search_engine)
+                    {
+                        console.info("Providing suggestions... (same search)");
+                        loadWidget(sender.tab.id);
                         return;
                     }
-                    var obj0 = {};
-                    obj0[TAB + sender.tab.id] = null;
 
-                    chrome.storage.local.get(obj0, function(result) {
-                        var tab = TAB + sender.tab.id;
+                    console.info("Getting suggestions...");
+                    console.log('getSuggestions: ' + request.query);
+
+                    var language = getLanguage(request.query)
+                    var query = split(removeDiacritics(request.query)); //need to remove any accentuation and then split
+                    var words = processWords(query, language); //remove Stop Words and stem them
+
+                    DB.getStringList(words, language, function (sugg) {
+                        //chrome.tabs.sendMessage(sender.tab.id, {action: "updateSuggestions", suggestions: sugg});
+
+                        if (sugg.length == 0) {
+                            console.log("No suggestions");
+                            chrome.tabs.sendMessage(sender.tab.id, {action: "closeWidget"});
+                            return;
+                        }
 
                         if (result[TAB + sender.tab.id] == null) {
 
@@ -177,6 +189,10 @@ chrome.runtime.onMessage.addListener(
                         loadWidget(sender.tab.id);
                     });
                 });
+
+
+
+
 
                 break;
             case LOG:
