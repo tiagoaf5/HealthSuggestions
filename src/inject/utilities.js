@@ -159,3 +159,9 @@ function widgetClose(updateData) {
 function replaceAll(find, replace, str) {
     return str.replace(new RegExp(find, 'g'), replace);
 }
+
+function computePageLoadTime() {
+    var now = new Date().getTime();
+    pageLoadTime = now - performance.timing.navigationStart;
+    console.log("User-perceived page loading time: " + pageLoadTime + "ms");
+}

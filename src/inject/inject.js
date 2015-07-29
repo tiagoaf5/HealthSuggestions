@@ -8,6 +8,7 @@ var queryYahooId = "#yschsp";
 
 
 var searchEngineBeingUsed = undefined;
+var pageLoadTime = 0;
 
 
 /**
@@ -16,11 +17,17 @@ var searchEngineBeingUsed = undefined;
 $(document).ready(function() {
     var url = window.location.href;
 
-    /*CommonWeb.Callback = function(collection, properties, callback) {
-        console.log("collectin: " + collection);
-        console.log("properties: " + JSON.stringify(properties));
-    };
-    CommonWeb.trackClicksPassive($("a"));*/
+    computePageLoadTime();
+    TimeMe.setIdleDurationInSeconds(30);
+    TimeMe.setCurrentPageName(url);
+
+    TimeMe.initialize();
+
+
+    $(window).unload(function() {
+        var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
+        chrome.runtime.sendMessage({time: timeSpentOnPage});
+    });
 
 
     //if it's google
