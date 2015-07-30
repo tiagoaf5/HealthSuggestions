@@ -25,8 +25,7 @@ $(document).ready(function() {
 
 
     $(window).unload(function() {
-        var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
-        chrome.runtime.sendMessage({time: timeSpentOnPage});
+        TrackingSystem.logTimeOnPage();
     });
 
 

@@ -161,7 +161,9 @@ function replaceAll(find, replace, str) {
 }
 
 function computePageLoadTime() {
-    var now = new Date().getTime();
+    var date = new Date();
+    var now = date.getTime();
     pageLoadTime = now - performance.timing.navigationStart;
-    console.log("User-perceived page loading time: " + pageLoadTime + "ms");
+    //console.log("User-perceived page loading time: " + pageLoadTime + "ms");
+    TrackingSystem.logPageLoadTime(date, pageLoadTime);
 }

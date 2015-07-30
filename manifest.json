@@ -38,8 +38,8 @@
         "src/Constants.js",
         "js/jQuery/jquery-2.1.3.js",
         "js/TimeMe/ifvisible_timeme.js",
-        "src/inject/utilities.js",
         "src/inject/tracking.js",
+        "src/inject/utilities.js",
         "src/inject/inject.js"
       ],
       "css": [

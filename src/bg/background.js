@@ -304,6 +304,26 @@ function saveLogData(tabId, logTable, global, data) {
                     case 'ClickSearchResult':
                         object2['Events'].push({EventType: data.EventType, EventTimestamp: timestamp,
                             linkText: data.linkText, button: data.button, title: data.title, link: data.link, url: global.page_url});
+                        var webpages = object2['WebPages'];
+
+                        var alreadyExists = false;
+                        for (var i = 0; i < webpages.length; i++) {
+                            if(webpages[i].url === global.page_url) {
+                                alreadyExists = true;
+                                break;
+                            }
+                        }
+
+                        if(!alreadyExists) {
+                            webpages.push(
+                                {url: data.link, referrerUrl: global.url,
+                                    searchResult: {link: data.link, title: data.title}, pageLoadTimestamp: "",
+                                    timeOnPage: "", numScrollEvents: ""});
+                        }
+
+
+                        break;
+                    case 'cenas': //receber dados das webpages
                         break;
                     //ShowSugBoard etc
                 }
@@ -393,11 +413,11 @@ chrome.tabs.onRemoved.addListener( function(tabId) {
         console.log("---->" +  removed);
 
         if(removed) {
-        //TODO: trigger close tab event
+            //TODO: trigger close tab event
             /*chrome.tabs.get(tabId, function(tab) {
 
-            saveLogData(tabId, TABLE_EVENT,{page_url: tab.url}, {EventType: 'RmTab'});
-            });*/
+             saveLogData(tabId, TABLE_EVENT,{page_url: tab.url}, {EventType: 'RmTab'});
+             });*/
         }
     });
 

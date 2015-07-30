@@ -346,7 +346,16 @@
         }
     };
 
-    //TrackingSystem.logPa
+    TrackingSystem.logPageLoadTime = function(timestamp, time) {
+        console.log("logPageLoadTime: " + timestamp.toJSON() + " : " + time + "ms");
+    };
+
+    TrackingSystem.logTimeOnPage = function(time) {
+        var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
+        console.log("logTimeOnPage: " + time + "s");
+
+        chrome.runtime.sendMessage({time: timeSpentOnPage, url: TimeMe.currentPageName});
+    };
 
     TrackingSystem.logSuggestionBoard = function(action) {
         switch (action) {
