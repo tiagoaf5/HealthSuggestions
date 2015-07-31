@@ -34,7 +34,9 @@ var PARENT = "parent";
 var HASH = "query_hash";
 
 var LOG = "log";
+var LOG_DB = "healthSuggestionsLogDB";
 var TABLE_EVENT = 'Event';
+var TABLE_WEBPAGE = 'Webpage';
 var TABLE_SEARCH_PAGE = 'SearchPage';
 
 var ERROR = "generic_error";

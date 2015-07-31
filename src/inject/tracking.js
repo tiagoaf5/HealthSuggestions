@@ -347,14 +347,18 @@
     };
 
     TrackingSystem.logPageLoadTime = function(timestamp, time) {
-        console.log("logPageLoadTime: " + timestamp.toJSON() + " : " + time + "ms");
+        console.log("logPageLoadTime: " + timestamp.toJSON() + " : " + time / 1000.0 + "s");
+        sendData(TABLE_WEBPAGE, {type: "logPageLoadTime", url: TrackingSystem.options.globalProperties.page_url,
+            pageLoadTimestamp: timestamp.toJSON(), pageLoadTime: time / 1000.0});
     };
 
-    TrackingSystem.logTimeOnPage = function(time) {
+    TrackingSystem.logTimeOnPageAndScrolls = function() {
+        //TODO: get number of scrolls
         var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
-        console.log("logTimeOnPage: " + time + "s");
+        console.log("logTimeOnPageAndScrolls: " + timeSpentOnPage + "s");
 
-        chrome.runtime.sendMessage({time: timeSpentOnPage, url: TimeMe.currentPageName});
+        chrome.runtime.sendMessage(TABLE_WEBPAGE, {type: logTimeOnPageAndScrolls, url: TrackingSystem.options.globalProperties.page_url,
+            timeOnPage: timeSpentOnPage, numScrollEvents: 1});
     };
 
     TrackingSystem.logSuggestionBoard = function(action) {

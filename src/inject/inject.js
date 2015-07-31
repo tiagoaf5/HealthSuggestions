@@ -25,7 +25,7 @@ $(document).ready(function() {
 
 
     $(window).unload(function() {
-        TrackingSystem.logTimeOnPage();
+        TrackingSystem.logTimeOnPageAndScrolls();
     });
 
 

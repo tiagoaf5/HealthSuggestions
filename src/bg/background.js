@@ -194,8 +194,9 @@ chrome.runtime.onMessage.addListener(
 
                 break;
             case LOG:
-
-                saveLogData(sender.tab.id, request.logTable, request.global, request.data);
+                setTimeout(function() {
+                    saveLogData(sender.tab.id, request.logTable, request.global, request.data);
+                }, Math.floor((Math.random() * 1000) + 1));
 
                 break;
             default:
@@ -245,8 +246,83 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
     });
 });
 
+function addWebpage(object2, global, data) {
+    console.log("------------------------------------");
+    console.log("Adding webpage");
+    console.log(JSON.stringify(global));
+    console.log(JSON.stringify(data));
+    var webpages = object2['WebPages'];
+
+    var alreadyExists = false;
+    var referrerWebPage;
+    for (var i = 0; i < webpages.length; i++) {
+        if (webpages[i].url === global.page_url) {
+            alreadyExists = true;
+            break;
+        } else if (webpages[i].url === global.referrer_url) {
+            referrerWebPage = webpages[i];
+        }
+    }
+
+    console.log("referrerWebPage: " + JSON.stringify(referrerWebPage));
+
+    //don't want to add pages if user moves to a new page by changing the address bar url
+    if (global.referrerUrl === "")
+        alreadyExists = true;
+
+    if (!alreadyExists) {
+        console.log("doesn't exist");
+        var searchResult;
+        var pageLoadTimestamp = data.pageLoadTimestamp ? data.pageLoadTimestamp : "";
+        var url;
+        var referrerURL;
+
+        //if it comes from a SERPSuggestionClick it brings the searchResult
+        if (data.link) {
+            searchResult = {link: data.link};
+            url = data.link;
+            referrerURL = global.page_url;
+        } else { //Otherwise we must look for parent's searchResult
+            url = global.page_url;
+            referrerURL = global.referrer_url;
+            if (referrerWebPage.searchResult) {
+                searchResult = {link: referrerWebPage.searchResult.link};
+            }
+        }
+
+        var newObject = {
+            url: url, referrerUrl: referrerURL,
+            searchResult: searchResult, pageLoadTimestamp: pageLoadTimestamp,
+            timeOnPage: 0, numScrollEvents: 0
+        };
+
+        console.log(newObject);
+        webpages.push(newObject);
+
+    console.log("------------------------------------");
+        return true;
+    }
+    console.log("------------------------------------");
+
+    return false;
+
+}
+function updateWebpage(object2, global, data) {
+    var webpages = object2['WebPages'];
+    var found = false;
+    for (var i = 0; i < webpages.length; i++) {
+        if (webpages[i].url === global.page_url) {
+            found = true;
+            webpages[i].numScrollEvents = webpages[i].numScrollEvents + data.numScrollEvents;
+            webpages[i].timeOnPage = webpages[i].timeOnPage + data.timeOnPage;
+            break;
+        }
+    }
+    return found;
+}
 function saveLogData(tabId, logTable, global, data) {
-    console.log("table: " + logTable +", global: " + JSON.stringify(global) +  ", data: " + JSON.stringify(data));
+    console.log("table: " + logTable +", global: " + JSON.stringify(global) +  ", data: ");
+    console.dir(data);
 
     getLogSavedData(tabId, function(object, hash) {
         if (object === ERROR) return;
@@ -304,39 +380,43 @@ function saveLogData(tabId, logTable, global, data) {
                     case 'ClickSearchResult':
                         object2['Events'].push({EventType: data.EventType, EventTimestamp: timestamp,
                             linkText: data.linkText, button: data.button, title: data.title, link: data.link, url: global.page_url});
-                        var webpages = object2['WebPages'];
 
-                        var alreadyExists = false;
-                        for (var i = 0; i < webpages.length; i++) {
-                            if(webpages[i].url === global.page_url) {
-                                alreadyExists = true;
-                                break;
-                            }
-                        }
-
-                        if(!alreadyExists) {
-                            webpages.push(
-                                {url: data.link, referrerUrl: global.url,
-                                    searchResult: {link: data.link, title: data.title}, pageLoadTimestamp: "",
-                                    timeOnPage: "", numScrollEvents: ""});
-                        }
-
-
+                        addWebpage(object2, global, data);
                         break;
                     case 'cenas': //receber dados das webpages
+                        break;
+
+                    default :
+                        toSave = false;
                         break;
                     //ShowSugBoard etc
                 }
 
                 break;
+            case TABLE_WEBPAGE:
+                switch (data.type) {
+                    case 'logPageLoadTime':
+                        toSave = addWebpage(object2, global, data);
+                        break;
+                    case 'logTimeOnPageAndScrolls':
+                        toSave = updateWebpage(object2, global, data);
+                        break;
+                    default :
+                        toSave = false;
+                        break;
+                }
+                break;
             default:
                 toSave = false;
         }
 
-        console.log('-object->' + JSON.stringify(object));
-
-        if (toSave)
+        if (toSave) {
             chrome.storage.local.set(object);
+            console.log('-object-save->' + JSON.stringify(object));
+        }
+        else
+            console.log('-object->' + JSON.stringify(object));
+
 
     });
 };
@@ -409,56 +489,28 @@ function removeTabFromHash(tabId, callback) {
 chrome.tabs.onRemoved.addListener( function(tabId) {
     console.log("Removing tabID: " + tabId + "....");
 
-    removeTabFromHash(tabId, function(removed) {
-        console.log("---->" +  removed);
+    setTimeout(function () {
+        removeTabFromHash(tabId, function(removed) {
+            console.log("---->" +  removed);
 
-        if(removed) {
-            //TODO: trigger close tab event
-            /*chrome.tabs.get(tabId, function(tab) {
+            if(removed) {
+                //TODO: trigger close tab event
+                /*chrome.tabs.get(tabId, function(tab) {
 
-             saveLogData(tabId, TABLE_EVENT,{page_url: tab.url}, {EventType: 'RmTab'});
-             });*/
-        }
-    });
+                 saveLogData(tabId, TABLE_EVENT,{page_url: tab.url}, {EventType: 'RmTab'});
+                 });*/
+            }
+        });
 
-    /*var obj = {};
-     obj[TAB + tabId] = null;
+        chrome.storage.local.remove(TAB + tabId);
 
-     //Check logging
-     chrome.storage.local.get(obj, function(result) {
-     if(result[TAB + tabId] != null) {
-     var hash = result[TAB + tabId][HASH];
-
-     var logObj = {};
-     logObj[hash] = null;
-
-     chrome.storage.local.get(logObj, function(logResult) {
-     var index = logResult[hash][TABS_SEARCH].indexOf(tabId);
-
-     if(index !== -1) {
-     logResult[hash][TABS_SEARCH].splice(index, 1);
-     }
-
-     console.log("hash_after_remove_window: " + JSON.stringify(logResult));
-
-     if(logResult[hash][TABS_SEARCH].length === 0) {
-     //TODO: Send data to server
-     console.log("Sending data to server : " + JSON.stringify(logResult[hash]));
-     chrome.storage.local.remove(hash);
-     } else {
-     chrome.storage.local.set(logResult);
-     }
-     });
-     }
-     });*/
-
-    chrome.storage.local.remove(TAB + tabId);
-
-    chrome.storage.local.get(null, function (items) {
-        console.log("items: " + JSON.stringify(items));
-    });
-
+        chrome.storage.local.get(null, function (items) {
+            console.log("items: " + JSON.stringify(items));
+        });
     //chrome.storage.local.clear();
+    }, 2000);
+
+
 });
 
 function loadWidget(id) {
@@ -500,3 +552,10 @@ chrome.browserAction.onClicked.addListener(function() {
     })
 });
 
+/*
+ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+ console.info("TAB " + tabId + " updated");
+ console.log("ChangeInfo: " + JSON.stringify(changeInfo));
+ console.log("tab: " + JSON.stringify(tab))
+
+ });*/
