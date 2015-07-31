@@ -200,7 +200,12 @@ chrome.runtime.onMessage.addListener(
 
                 break;
             case LOG:
-                saveLogData(sender.tab.id, request.logTable, request.global, request.data);
+                getHash(sender.tab.id, function(hash){
+                   if (hash !== ERROR) {
+                       logDB.saveLogData(hash,request.logTable, request.global, request.data);
+                   }
+                });
+                //saveLogData(sender.tab.id, request.logTable, request.global, request.data);
                 break;
             default:
                 console.warn('Unknown request: ', request);

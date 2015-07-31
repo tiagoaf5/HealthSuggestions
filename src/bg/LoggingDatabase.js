@@ -117,7 +117,7 @@ var logDB = (function () {
     };
 
     tDB.saveLogData =  function (hash, logTable, global, data) {
-        console.log("table: " + logTable +", global: " + JSON.stringify(global) +  ", data: ");
+        console.log("tDB.saveLogData-> table: " + logTable +", global: " + JSON.stringify(global) +  ", data: " + JSON.stringify(data));
 
 
         var transaction = datastore.transaction([LOG_DB], "readwrite");
@@ -128,8 +128,8 @@ var logDB = (function () {
 
         ob.onsuccess = function(e) {
             var result = e.target.result;
-            console.log("Result::");
-            console.dir(result);
+            //console.log("Result::");
+            //console.dir(result);
 
 
             var toSave = true;
@@ -206,10 +206,12 @@ var logDB = (function () {
                             var webpages = result['WebPages'];
 
                             var alreadyExists = false;
+                            var alreadyExistsWebpage;
                             var referrerWebPage;
                             for (var i = 0; i < webpages.length; i++) {
                                 if (webpages[i].url === global.page_url) {
                                     alreadyExists = true;
+                                    alreadyExistsWebpage = webpages[i];
                                     break;
                                 } else if (webpages[i].url === global.referrer_url) {
                                     referrerWebPage = webpages[i];
@@ -249,8 +251,14 @@ var logDB = (function () {
                                 console.log(newObject);
                                 webpages.push(newObject);
                             }
-                            else
-                                toSave = false;
+                            else { //check if already has pageLoadTimestamp
+                                if(alreadyExistsWebpage.pageLoadTimestamp === "") {
+                                    if(data.pageLoadTimestamp)
+                                        alreadyExistsWebpage.pageLoadTimestamp = data.pageLoadTimestamp;
+                                    else
+                                        toSave = false;
+                                }
+                            }
 
                             console.log("------------------------------------");
 
@@ -268,8 +276,8 @@ var logDB = (function () {
                                     break;
                                 }
                             }
-
                             toSave = found;
+                            console.log("LoggingDB logTimeOnPageAndScrolls: " + toSave);
 
                             break;
                         default :

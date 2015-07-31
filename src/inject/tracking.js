@@ -357,7 +357,7 @@
         var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
         console.log("logTimeOnPageAndScrolls: " + timeSpentOnPage + "s");
 
-        chrome.runtime.sendMessage(TABLE_WEBPAGE, {type: logTimeOnPageAndScrolls, url: TrackingSystem.options.globalProperties.page_url,
+        sendData(TABLE_WEBPAGE, {type: 'logTimeOnPageAndScrolls', url: TrackingSystem.options.globalProperties.page_url,
             timeOnPage: timeSpentOnPage, numScrollEvents: 1});
     };
 
