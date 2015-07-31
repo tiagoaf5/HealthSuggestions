@@ -11,7 +11,8 @@
         },
         sessionProperties : {
             ip: ""
-        }
+        },
+        numScrolls : 0
     };
 
     // create a common namespace with options
@@ -343,6 +344,7 @@
     TrackingSystem.trackScroll = function() {
         window.onscroll = function (e) {
             console.log("scroll");
+            TrackingSystem.options.numScrolls++;
         }
     };
 
@@ -358,7 +360,7 @@
         console.log("logTimeOnPageAndScrolls: " + timeSpentOnPage + "s");
 
         sendData(TABLE_WEBPAGE, {type: 'logTimeOnPageAndScrolls', url: TrackingSystem.options.globalProperties.page_url,
-            timeOnPage: timeSpentOnPage, numScrollEvents: 1});
+            timeOnPage: timeSpentOnPage, numScrollEvents: TrackingSystem.options.numScrolls});
     };
 
     TrackingSystem.logSuggestionBoard = function(action) {

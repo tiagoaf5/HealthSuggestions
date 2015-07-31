@@ -24,8 +24,10 @@ var logDB = (function () {
         }
 
         //don't want to add pages if user moves to a new page by changing the address bar url
-        if (global.referrerUrl === "")
-            alreadyExists = true;
+        if (global.referrerUrl === "") {
+            //TODO: Consider do something when user uses the same tab but moves away from the search
+            return false;
+        }
 
         if (!alreadyExists) {
             console.log("doesn't exist");
