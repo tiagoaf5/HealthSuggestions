@@ -160,25 +160,21 @@ chrome.runtime.onMessage.addListener(
                         //create object to hold search's logging
                         if (SETTINGS.get('logging') === true) {
                             var logObj = {};
-                            logObj[hash] = {};
-                            logObj[hash][TABS_SEARCH] = [sender.tab.id];
+                            logObj[TABS_SEARCH] = [sender.tab.id];
 
                             //Search Table
-                            //[hash][table][key]
-                            logObj[hash]['hash'] = hash;
-                            logObj[hash]['Search'] = {};
-                            //logObj[hash]['Search']['hash'] = hash;
-                            logObj[hash]['Search']['query'] = request.query;
-                            logObj[hash]['Search']['Suggestions'] = sugg;
-                            logObj[hash]['Search']['queryInputTimestamp'] = nowMilliseconds.toJSON();
-                            logObj[hash]['Search']['totalNoResults'] = "";
-                            logObj[hash]['Search']['answerTime'] = "";
-                            logObj[hash]['Events'] = [];
-                            logObj[hash]['WebPages'] = [];
+                            logObj['hash'] = hash;
+                            logObj['Search'] = {};
+                            logObj['Search']['query'] = request.query;
+                            logObj['Search']['Suggestions'] = sugg;
+                            logObj['Search']['queryInputTimestamp'] = nowMilliseconds.toJSON();
+                            logObj['Search']['totalNoResults'] = "";
+                            logObj['Search']['answerTime'] = "";
+                            logObj['Events'] = [];
+                            logObj['WebPages'] = [];
 
-                            logDB.createEntry(hash, logObj[hash]);
+                            logDB.createEntry(hash, logObj);
                             console.log("-log->" + JSON.stringify(logObj));
-                            chrome.storage.local.set(logObj);
                         }
 
                         /*} else {
@@ -230,24 +226,12 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
         if(result[TAB + details.sourceTabId] != null) {
             var newO = {};
             newO[TAB + details.tabId] = result[TAB + details.sourceTabId];
-            //newO[TAB + details.tabId][PARENT] = details.sourceTabId;
 
             // if logging -> add the tab to the list of tabs in logging object
             if(SETTINGS.get('logging') === true) {
-                var logObj = {};
-                var hash = result[TAB + details.sourceTabId][HASH];
-                logObj[hash] = null;
-
-                    chrome.storage.local.get(logObj, function(logResult) {
-                        logResult[hash][TABS_SEARCH] = logResult[hash][TABS_SEARCH].concat(details.tabId);
-                        chrome.storage.local.set(logResult);
-                        //console.log("hash_after_new_window: " + JSON.stringify(logResult));
-                    });
-
-                logDB.editTabs(hash, details.tabId, true, function() {
-                    console.log("Added tab");
+                logDB.editTabs(result[TAB + details.sourceTabId][HASH], details.tabId, true, function() {
+                    console.log("Added tab to logDB");
                 });
-
             }
             console.log("new tab result: " + JSON.stringify(newO));
             chrome.storage.local.set(newO);
@@ -256,183 +240,6 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
     });
 });
 
-function addWebpage(object2, global, data) {
-    console.log("------------------------------------");
-    console.log("Adding webpage");
-    console.log(JSON.stringify(global));
-    console.log(JSON.stringify(data));
-    var webpages = object2['WebPages'];
-
-    var alreadyExists = false;
-    var referrerWebPage;
-    for (var i = 0; i < webpages.length; i++) {
-        if (webpages[i].url === global.page_url) {
-            alreadyExists = true;
-            break;
-        } else if (webpages[i].url === global.referrer_url) {
-            referrerWebPage = webpages[i];
-        }
-    }
-
-    console.log("referrerWebPage: " + JSON.stringify(referrerWebPage));
-
-    //don't want to add pages if user moves to a new page by changing the address bar url
-    if (global.referrerUrl === "")
-        alreadyExists = true;
-
-    if (!alreadyExists) {
-        console.log("doesn't exist");
-        var searchResult;
-        var pageLoadTimestamp = data.pageLoadTimestamp ? data.pageLoadTimestamp : "";
-        var url;
-        var referrerURL;
-
-        //if it comes from a SERPSuggestionClick it brings the searchResult
-        if (data.link) {
-            searchResult = {link: data.link};
-            url = data.link;
-            referrerURL = global.page_url;
-        } else { //Otherwise we must look for parent's searchResult
-            url = global.page_url;
-            referrerURL = global.referrer_url;
-            if (referrerWebPage.searchResult) {
-                searchResult = {link: referrerWebPage.searchResult.link};
-            }
-        }
-
-        var newObject = {
-            url: url, referrerUrl: referrerURL,
-            searchResult: searchResult, pageLoadTimestamp: pageLoadTimestamp,
-            timeOnPage: 0, numScrollEvents: 0
-        };
-
-        console.log(newObject);
-        webpages.push(newObject);
-
-        console.log("------------------------------------");
-        return true;
-    }
-    console.log("------------------------------------");
-
-    return false;
-
-}
-function updateWebpage(object2, global, data) {
-    var webpages = object2['WebPages'];
-    var found = false;
-    for (var i = 0; i < webpages.length; i++) {
-        if (webpages[i].url === global.page_url) {
-            found = true;
-            webpages[i].numScrollEvents = webpages[i].numScrollEvents + data.numScrollEvents;
-            webpages[i].timeOnPage = webpages[i].timeOnPage + data.timeOnPage;
-            break;
-        }
-    }
-    return found;
-}
-function saveLogData(tabId, logTable, global, data) {
-    console.log("table: " + logTable +", global: " + JSON.stringify(global) +  ", data: ");
-    console.dir(data);
-
-    getLogSavedData(tabId, function(object, hash) {
-        if (object === ERROR) return;
-
-        logDB.saveLogData(hash, logTable, global, data);
-
-        var object2 = object[hash];
-
-        var toSave = true;
-
-        switch (logTable)  {
-            case 'Session':
-                if(!object2[logTable])
-                    object2[logTable] = {};
-
-                object2[logTable] = data;
-                chrome.storage.local.set(object);
-
-                break;
-            case TABLE_SEARCH_PAGE:
-                if(data['SERPOrder'] == 1) {
-                    object2['Search']['totalNoResults'] = data['SearchResults']['totalNoResults'];
-                    object2['Search']['answerTime'] = data['SearchResults']['answerTime'] ? data['SearchResults']['answerTime'] : "";
-                    object2['Search']['SearchPages'] = [{SERPOrder: data['SERPOrder'],
-                        totalTimeOverSearchPage: data['totalTimeOverSearchPage'],
-                        totalTimeOverSuggestionBoard: data['totalTimeOverSuggestionBoard'],
-                        timestamp: data['timestamp'],
-                        url: data['url'],
-                        SearchResults: data['SearchResults']['results']
-                    }];
-                    object2['Search']['SearchEngine'] = data['SearchEngine'];
-                    object2['Search']['SERelatedSearches'] = data['SearchResults']['SERelatedSearches'];
-
-                }
-                break;
-            case TABLE_EVENT:
-                var timestamp = new Date().toJSON();
-                switch (data.EventType) {
-                    case 'copy':
-                        object2['Events'].push({EventType: 'copy', EventTimestamp: timestamp, copyText: data.copyText, url: global.page_url});
-                        break;
-                    case 'find':
-                    case 'ShowSugBoard':
-                    case 'HideSugBoard':
-                    case 'CloseSugBoard':
-                        object2['Events'].push({EventType: data.EventType, EventTimestamp: timestamp, url: global.page_url});
-                        break;
-                    case 'SwitchSE':
-                        object2['Events'].push({EventType: 'SwitchSE', EventTimestamp: timestamp,
-                            from: data.from, to: data.to, url: global.page_url});
-                        break;
-                    case 'ClickSuggestion':
-                    case 'ClickSERelatedSearch':
-                        console.log("^^^^^^^^^^^^^^^^^^^^^^^^^");
-                        object2['Events'].push({EventType: data.EventType, EventTimestamp: timestamp,
-                            linkText: data.linkText, button: data.button, suggestion: data.suggestion, url: global.page_url});
-                        break;
-                    case 'ClickSearchResult':
-                        object2['Events'].push({EventType: data.EventType, EventTimestamp: timestamp,
-                            linkText: data.linkText, button: data.button, title: data.title, link: data.link, url: global.page_url});
-
-                        addWebpage(object2, global, data);
-                        break;
-                    case 'cenas': //receber dados das webpages
-                        break;
-
-                    default :
-                        toSave = false;
-                        break;
-                    //ShowSugBoard etc
-                }
-
-                break;
-            case TABLE_WEBPAGE:
-                switch (data.type) {
-                    case 'logPageLoadTime':
-                        toSave = addWebpage(object2, global, data);
-                        break;
-                    case 'logTimeOnPageAndScrolls':
-                        toSave = updateWebpage(object2, global, data);
-                        break;
-                    default :
-                        toSave = false;
-                        break;
-                }
-                break;
-            default:
-                toSave = false;
-        }
-
-        if (toSave) {
-            chrome.storage.local.set(object);
-            console.log('-object-save->' + JSON.stringify(object));
-        }
-        else
-            console.log('-object->' + JSON.stringify(object));
-
-
-    });
-};
 
 function getHash(tabId, callback) {
     var obj0 = {};
@@ -453,78 +260,39 @@ function getHash(tabId, callback) {
 
 }
 
-function getLogSavedData(tabId, callback) {
-    getHash(tabId, function(hash) {
-        if (hash !== ERROR) {
-
-            var obj0 = {};
-            obj0[hash] = null;
-
-            chrome.storage.local.get(obj0, function(result){
-                if (result[hash] !== null)
-                    callback(result, hash);
-                else
-                    callback(ERROR);
-            });
-        }
-        else
-            callback(ERROR);
-    });
-}
 
 //Removes tab from hash and if list of tabs is empty send data to server
 function removeTabFromHash(tabId, callback) {
-    getLogSavedData(tabId, function (result, hash) {
-
-        if (result === ERROR) {
-            callback(false);
-            return;
-        }
-        var index = result[hash][TABS_SEARCH].indexOf(tabId);
-
-        if (index !== -1) {
-            result[hash][TABS_SEARCH].splice(index, 1);
-        }
-
-        console.log("hash_after_remove_window: " + JSON.stringify(result));
-
-        if (result[hash][TABS_SEARCH].length === 0) {
-            //TODO: Send data to server
-            console.log("Sending data to server : " + JSON.stringify(result[hash]));
-            chrome.storage.local.remove(hash);
-        } else {
-            chrome.storage.local.set(result);
-        }
-        callback(true);
-    });
-}
-
-chrome.tabs.onRemoved.addListener( function(tabId) {
-    console.log("Removing tabID: " + tabId + "....");
-
-
-        removeTabFromHash(tabId, function(removed) {
-            console.log("---->" +  removed);
-
-            if(removed) {
-
-
-            }
-        });
 
     getHash(tabId, function (e) {
-        if(e != ERROR) {
-            logDB.editTabs(e, tabId, false, function () {
-                console.log("removed tab");
+        if (e != ERROR) {
+            logDB.editTabs(e, tabId, false, function (result) {
+
+                console.log("removed tab from loggingDB");
 
                 //TODO: trigger close tab event
                 /*chrome.tabs.get(tabId, function(tab) {
 
                  saveLogData(tabId, TABLE_EVENT,{page_url: tab.url}, {EventType: 'RmTab'});
                  });*/
+
+                if (result[TABS_SEARCH].length === 0) {
+                    //TODO: Send data to server
+                    console.log("Sending data to server : " + JSON.stringify(result));
+                    logDB.removeEntry(result.hash, function () {
+                        callback();
+                    }); //after sending to server, remove from database
+                }
+                else callback();
             });
         }
+    });
+}
 
+chrome.tabs.onRemoved.addListener( function(tabId) {
+    console.log("Removing tabID: " + tabId + "....");
+
+    removeTabFromHash(tabId, function() {
         chrome.storage.local.remove(TAB + tabId);
 
         chrome.storage.local.get(null, function (items) {
@@ -541,29 +309,6 @@ function loadWidget(id) {
         'action': 'loadWidget', logging: SETTINGS.get('logging'), enabled: SETTINGS.get('enabled')
     });
 }
-/*
- function updateStorageProperties(tabid, properties) {
-
- var obj0 = {};
- obj0[TAB + tabid] = null;
-
- chrome.storage.local.get(obj0, function(result) {
- var tab = TAB + tabid;
-
- if (result[tab] != null) {
- var obj = {};
- obj[tab] = {};
- obj[tab][SEARCH] = request.query;
- obj[tab][MINIMIZED] = false;
- obj[tab][CLOSED] = false;
- obj[tab][SUGGESTION] = sugg;
-
- console.log("-->" + JSON.stringify(obj));
- chrome.storage.local.set(obj);
- //chrome.tabs.sendMessage(tabid, {action: "setData", data: obj[tab]});
- }
- });
- }*/
 
 
 chrome.browserAction.onClicked.addListener(function() {
@@ -572,11 +317,3 @@ chrome.browserAction.onClicked.addListener(function() {
             alert("Something went wrong! :(");
     })
 });
-
-/*
- chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
- console.info("TAB " + tabId + " updated");
- console.log("ChangeInfo: " + JSON.stringify(changeInfo));
- console.log("tab: " + JSON.stringify(tab))
-
- });*/

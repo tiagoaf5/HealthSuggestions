@@ -3,6 +3,71 @@ var logDB = (function () {
     var datastore = null;
     var version = 1;         // Database version.
 
+    var addWebpage = function(result, global, data) {
+        console.log("------------------------------------");
+        console.log("Adding webpage");
+        console.log(JSON.stringify(global));
+        console.log(JSON.stringify(data));
+        var webpages = result['WebPages'];
+
+        var alreadyExists = false;
+        var alreadyExistsWebpage;
+        var referrerWebPage;
+        for (var i = 0; i < webpages.length; i++) {
+            if (webpages[i].url === global.page_url) {
+                alreadyExists = true;
+                alreadyExistsWebpage = webpages[i];
+                break;
+            } else if (webpages[i].url === global.referrer_url) {
+                referrerWebPage = webpages[i];
+            }
+        }
+
+        //don't want to add pages if user moves to a new page by changing the address bar url
+        if (global.referrerUrl === "")
+            alreadyExists = true;
+
+        if (!alreadyExists) {
+            console.log("doesn't exist");
+            var searchResult;
+            var pageLoadTimestamp = data.pageLoadTimestamp ? data.pageLoadTimestamp : "";
+            var url;
+            var referrerURL;
+
+            //if it comes from a SERPSuggestionClick it brings the searchResult
+            if (data.link) {
+                searchResult = {link: data.link};
+                url = data.link;
+                referrerURL = global.page_url;
+            } else { //Otherwise we must look for parent's searchResult
+                url = global.page_url;
+                referrerURL = global.referrer_url;
+                if (referrerWebPage.searchResult) {
+                    searchResult = {link: referrerWebPage.searchResult.link};
+                }
+            }
+
+            var newObject = {
+                url: url, referrerUrl: referrerURL,
+                searchResult: searchResult, pageLoadTimestamp: pageLoadTimestamp,
+                timeOnPage: 0, numScrollEvents: 0
+            };
+
+            console.log(newObject);
+            webpages.push(newObject);
+        }
+        else { //check if already has pageLoadTimestamp
+            if(alreadyExistsWebpage.pageLoadTimestamp === "") {
+                if(data.pageLoadTimestamp)
+                    alreadyExistsWebpage.pageLoadTimestamp = data.pageLoadTimestamp;
+                else
+                    return false;
+            }
+        }
+        console.log("------------------------------------");
+        return true;
+    };
+
 
     /**
      * Open a connection to the datastore.
@@ -73,9 +138,26 @@ var logDB = (function () {
 
         request.onsuccess = function(e) {
             console.log("Woot! Did it");
-            tDB.saveLogData(hash);
         }
 
+    };
+
+    tDB.removeEntry = function(hash, callback) {
+        console.log("tDB.removeEntry: " + hash);
+        var transaction = datastore.transaction([LOG_DB], "readwrite");
+        var store = transaction.objectStore(LOG_DB);
+
+        var request = store.delete(hash);
+
+        request.onerror = function(e) {
+            console.log("Error", e.target.error.name);
+            //some type of error handler
+        }
+
+        request.onsuccess = function(e) {
+            console.log("Woot! Did it");
+            callback();
+        }
     };
 
     tDB.editTabs = function(hash, tabid, add, callback) {
@@ -105,7 +187,7 @@ var logDB = (function () {
             update.onsuccess = function (ev) {
                 var todoName = ev.target.result;
                 console.log('Successfully edited key ' + todoName);
-                callback();
+                callback(result);
             };
 
             update.onerror = function (ev) {
@@ -198,71 +280,7 @@ var logDB = (function () {
                 case TABLE_WEBPAGE:
                     switch (data.type) {
                         case 'logPageLoadTime':
-
-                            console.log("------------------------------------");
-                            console.log("Adding webpage");
-                            console.log(JSON.stringify(global));
-                            console.log(JSON.stringify(data));
-                            var webpages = result['WebPages'];
-
-                            var alreadyExists = false;
-                            var alreadyExistsWebpage;
-                            var referrerWebPage;
-                            for (var i = 0; i < webpages.length; i++) {
-                                if (webpages[i].url === global.page_url) {
-                                    alreadyExists = true;
-                                    alreadyExistsWebpage = webpages[i];
-                                    break;
-                                } else if (webpages[i].url === global.referrer_url) {
-                                    referrerWebPage = webpages[i];
-                                }
-                            }
-
-                            //don't want to add pages if user moves to a new page by changing the address bar url
-                            if (global.referrerUrl === "")
-                                alreadyExists = true;
-
-                            if (!alreadyExists) {
-                                console.log("doesn't exist");
-                                var searchResult;
-                                var pageLoadTimestamp = data.pageLoadTimestamp ? data.pageLoadTimestamp : "";
-                                var url;
-                                var referrerURL;
-
-                                //if it comes from a SERPSuggestionClick it brings the searchResult
-                                if (data.link) {
-                                    searchResult = {link: data.link};
-                                    url = data.link;
-                                    referrerURL = global.page_url;
-                                } else { //Otherwise we must look for parent's searchResult
-                                    url = global.page_url;
-                                    referrerURL = global.referrer_url;
-                                    if (referrerWebPage.searchResult) {
-                                        searchResult = {link: referrerWebPage.searchResult.link};
-                                    }
-                                }
-
-                                var newObject = {
-                                    url: url, referrerUrl: referrerURL,
-                                    searchResult: searchResult, pageLoadTimestamp: pageLoadTimestamp,
-                                    timeOnPage: 0, numScrollEvents: 0
-                                };
-
-                                console.log(newObject);
-                                webpages.push(newObject);
-                            }
-                            else { //check if already has pageLoadTimestamp
-                                if(alreadyExistsWebpage.pageLoadTimestamp === "") {
-                                    if(data.pageLoadTimestamp)
-                                        alreadyExistsWebpage.pageLoadTimestamp = data.pageLoadTimestamp;
-                                    else
-                                        toSave = false;
-                                }
-                            }
-
-                            console.log("------------------------------------");
-
-
+                            toSave = addWebpage(result, global, data);
                             break;
                         case 'logTimeOnPageAndScrolls':
                             console.log("LoggingDB logTimeOnPageAndScrolls");
