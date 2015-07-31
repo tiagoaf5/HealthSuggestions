@@ -15,7 +15,10 @@ chrome.runtime.onInstalled.addListener(function(details){
         console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
 
         //DB.openDatabase();
-
+        logDB.deleteDatabase();
+        logDB.open(function () {
+            console.info("logDB opened");
+        });
         chrome.storage.local.clear();
     }
 });
@@ -162,7 +165,9 @@ chrome.runtime.onMessage.addListener(
 
                             //Search Table
                             //[hash][table][key]
+                            logObj[hash]['hash'] = hash;
                             logObj[hash]['Search'] = {};
+                            //logObj[hash]['Search']['hash'] = hash;
                             logObj[hash]['Search']['query'] = request.query;
                             logObj[hash]['Search']['Suggestions'] = sugg;
                             logObj[hash]['Search']['queryInputTimestamp'] = nowMilliseconds.toJSON();
@@ -171,6 +176,7 @@ chrome.runtime.onMessage.addListener(
                             logObj[hash]['Events'] = [];
                             logObj[hash]['WebPages'] = [];
 
+                            logDB.createEntry(hash, logObj[hash]);
                             console.log("-log->" + JSON.stringify(logObj));
                             chrome.storage.local.set(logObj);
                         }
@@ -194,10 +200,7 @@ chrome.runtime.onMessage.addListener(
 
                 break;
             case LOG:
-                setTimeout(function() {
-                    saveLogData(sender.tab.id, request.logTable, request.global, request.data);
-                }, Math.floor((Math.random() * 1000) + 1));
-
+                saveLogData(sender.tab.id, request.logTable, request.global, request.data);
                 break;
             default:
                 console.warn('Unknown request: ', request);
@@ -230,14 +233,16 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
                 var hash = result[TAB + details.sourceTabId][HASH];
                 logObj[hash] = null;
 
-                //Sleep to avoid race conditions
-                setTimeout(function() {
                     chrome.storage.local.get(logObj, function(logResult) {
                         logResult[hash][TABS_SEARCH] = logResult[hash][TABS_SEARCH].concat(details.tabId);
                         chrome.storage.local.set(logResult);
                         //console.log("hash_after_new_window: " + JSON.stringify(logResult));
                     });
-                }, 1000);
+
+                logDB.editTabs(hash, details.tabId, true, function() {
+                    console.log("Added tab");
+                });
+
             }
             console.log("new tab result: " + JSON.stringify(newO));
             chrome.storage.local.set(newO);
@@ -299,7 +304,7 @@ function addWebpage(object2, global, data) {
         console.log(newObject);
         webpages.push(newObject);
 
-    console.log("------------------------------------");
+        console.log("------------------------------------");
         return true;
     }
     console.log("------------------------------------");
@@ -326,6 +331,9 @@ function saveLogData(tabId, logTable, global, data) {
 
     getLogSavedData(tabId, function(object, hash) {
         if (object === ERROR) return;
+
+        logDB.saveLogData(hash, logTable, global, data);
+
         var object2 = object[hash];
 
         var toSave = true;
@@ -489,28 +497,36 @@ function removeTabFromHash(tabId, callback) {
 chrome.tabs.onRemoved.addListener( function(tabId) {
     console.log("Removing tabID: " + tabId + "....");
 
-    setTimeout(function () {
+
         removeTabFromHash(tabId, function(removed) {
             console.log("---->" +  removed);
 
             if(removed) {
+
+
+            }
+        });
+
+    getHash(tabId, function (e) {
+        if(e != ERROR) {
+            logDB.editTabs(e, tabId, false, function () {
+                console.log("removed tab");
+
                 //TODO: trigger close tab event
                 /*chrome.tabs.get(tabId, function(tab) {
 
                  saveLogData(tabId, TABLE_EVENT,{page_url: tab.url}, {EventType: 'RmTab'});
                  });*/
-            }
-        });
+            });
+        }
 
         chrome.storage.local.remove(TAB + tabId);
 
         chrome.storage.local.get(null, function (items) {
             console.log("items: " + JSON.stringify(items));
         });
-    //chrome.storage.local.clear();
-    }, 2000);
-
-
+        //chrome.storage.local.clear();
+    });
 });
 
 function loadWidget(id) {
