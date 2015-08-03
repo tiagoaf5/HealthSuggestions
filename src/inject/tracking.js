@@ -360,8 +360,9 @@
 
     TrackingSystem.logPageLoadTime = function(timestamp, time) {
         console.log("logPageLoadTime: " + timestamp.toJSON() + " : " + time / 1000.0 + "s");
-        sendData(TABLE_WEBPAGE, {type: "logPageLoadTime", url: TrackingSystem.options.globalProperties.page_url,
-            pageLoadTimestamp: timestamp.toJSON(), pageLoadTime: time / 1000.0});
+        if(!searchEngineBeingUsedBool) //TODO: check this out - strange fix
+            sendData(TABLE_WEBPAGE, {type: "logPageLoadTime", url: TrackingSystem.options.globalProperties.page_url,
+                pageLoadTimestamp: timestamp.toJSON(), pageLoadTime: time / 1000.0});
     };
 
     TrackingSystem.logOnCloseWebpageData = function(se) {
@@ -525,7 +526,7 @@
     //AUXILIARY
     function sendData(table, data) {
         //If in a SearchPage provide the SERPOrder
-        if (searchEngineBeingUsed !== undefined && data !== undefined) {
+        if (searchEngineBeingUsedBool && data !== undefined) {
             data = $.extend(true, data, {SERPOrder: getCurrentSearchPage(searchEngineBeingUsed)});
             chrome.runtime.sendMessage({action: LOG, logTable: table, global: TrackingSystem.options.globalProperties, data: data});
         }

@@ -38,14 +38,14 @@ var logDB = (function () {
 
             //if it comes from a SERPSuggestionClick it brings the searchResult
             if (data.link) {
-                searchResult = {link: data.link};
+                searchResult = {link: data.link, SERPOrder: data.SERPOrder};
                 url = data.link;
                 referrerURL = global.page_url;
             } else if (referrerWebPage != undefined){ //Otherwise we must look for parent's searchResult
                 url = global.page_url;
                 referrerURL = global.referrer_url;
                 if (referrerWebPage.searchResult) {
-                    searchResult = {link: referrerWebPage.searchResult.link};
+                    searchResult = {link: referrerWebPage.searchResult.link, SERPOrder: referrerWebPage.searchResult.SERPOrder};
                 }
             }
 
@@ -226,10 +226,8 @@ var logDB = (function () {
                     result[logTable] = data;
                     break;
                 case TABLE_SEARCH_PAGE:
-                    console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^");
                     var SERPOrder = data['SERPOrder'];
                     console.log(SERPOrder);
-                    console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
                     for(var i = 0; i < result['Search']['SearchPages'].length; i++) {
                         if(result['Search']['SearchPages'][i]['SERPOrder'] === SERPOrder) {
@@ -307,7 +305,10 @@ var logDB = (function () {
                 case TABLE_WEBPAGE:
                     switch (data.type) {
                         case 'logPageLoadTime':
+                            console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+                            console.dir(data);
                             toSave = addWebpage(result, global, data);
+                            console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
                             break;
                         case 'logOnCloseWebpageData':
                             console.log("LoggingDB logOnCloseWebpageData");

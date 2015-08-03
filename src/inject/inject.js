@@ -9,6 +9,7 @@ var queryYahooId = "#yschsp";
 
 
 var searchEngineBeingUsed = undefined;
+var searchEngineBeingUsedBool = true;
 var pageLoadTime = 0;
 
 
@@ -77,7 +78,10 @@ $(document).ready(function() {
 
     }
     else //if it's another page ask background script if the widget should be inserted
+    {
+        searchEngineBeingUsedBool = false;
         chrome.runtime.sendMessage({action: "ready"});
+    }
 
 
 });
