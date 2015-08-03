@@ -41,7 +41,7 @@ var logDB = (function () {
                 searchResult = {link: data.link};
                 url = data.link;
                 referrerURL = global.page_url;
-            } else { //Otherwise we must look for parent's searchResult
+            } else if (referrerWebPage != undefined){ //Otherwise we must look for parent's searchResult
                 url = global.page_url;
                 referrerURL = global.referrer_url;
                 if (referrerWebPage.searchResult) {
@@ -226,46 +226,71 @@ var logDB = (function () {
                     result[logTable] = data;
                     break;
                 case TABLE_SEARCH_PAGE:
-                    if(data['SERPOrder'] == 1) {
-                        result['Search']['totalNoResults'] = data['SearchResults']['totalNoResults'];
-                        result['Search']['answerTime'] = data['SearchResults']['answerTime'] ? data['SearchResults']['answerTime'] : "";
-                        result['Search']['SearchPages'] = [{SERPOrder: data['SERPOrder'],
+                    console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+                    var SERPOrder = data['SERPOrder'];
+                    console.log(SERPOrder);
+                    console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+
+                    for(var i = 0; i < result['Search']['SearchPages'].length; i++) {
+                        if(result['Search']['SearchPages'][i]['SERPOrder'] === SERPOrder) {
+                            toSave = false;
+                            break;
+                        }
+                    }
+
+                    if(toSave){
+
+                        if(result['Search']['SearchPages'].length === 0) {
+                            result['Search']['totalNoResults'] = data['SearchResults']['totalNoResults'];
+                            result['Search']['answerTime'] = data['SearchResults']['answerTime'] ? data['SearchResults']['answerTime'] : "";
+                            result['Search']['SearchEngine'] = data['SearchEngine'];
+                            result['Search']['SERelatedSearches'] = data['SearchResults']['SERelatedSearches'];
+                        }
+
+                        result['Search']['SearchPages'].push({SERPOrder: SERPOrder,
                             totalTimeOverSearchPage: data['totalTimeOverSearchPage'],
                             totalTimeOverSuggestionBoard: data['totalTimeOverSuggestionBoard'],
                             timestamp: data['timestamp'],
                             url: data['url'],
+                            numScrollEvents: data['numScrollEvents'],
                             SearchResults: data['SearchResults']['results']
-                        }];
-                        result['Search']['SearchEngine'] = data['SearchEngine'];
-                        result['Search']['SERelatedSearches'] = data['SearchResults']['SERelatedSearches'];
-
+                        });
                     }
+
                     break;
                 case TABLE_EVENT:
                     var timestamp = new Date().toJSON();
+                    var buildObject = function (obj) {
+                        if (data.SERPOrder === undefined)
+                            return obj;
+
+                        return $.extend(true, obj, {SERPOrder: data.SERPOrder});
+                    };
+
                     switch (data.EventType) {
                         case 'copy':
-                            result['Events'].push({EventType: 'copy', EventTimestamp: timestamp, copyText: data.copyText, url: global.page_url});
+                            result['Events'].push(
+                                buildObject({EventType: 'copy', EventTimestamp: timestamp, copyText: data.copyText,
+                                    url: global.page_url}));
                             break;
                         case 'find':
                         case 'ShowSugBoard':
                         case 'HideSugBoard':
                         case 'CloseSugBoard':
-                            result['Events'].push({EventType: data.EventType, EventTimestamp: timestamp, url: global.page_url});
+                            result['Events'].push(buildObject({EventType: data.EventType, EventTimestamp: timestamp, url: global.page_url}));
                             break;
                         case 'SwitchSE':
-                            result['Events'].push({EventType: 'SwitchSE', EventTimestamp: timestamp,
-                                from: data.from, to: data.to, url: global.page_url});
+                            result['Events'].push(buildObject({EventType: 'SwitchSE', EventTimestamp: timestamp,
+                                from: data.from, to: data.to, url: global.page_url}));
                             break;
                         case 'ClickSuggestion':
                         case 'ClickSERelatedSearch':
-                            console.log("^^^^^^^^^^^^^^^^^^^^^^^^^");
-                            result['Events'].push({EventType: data.EventType, EventTimestamp: timestamp,
-                                linkText: data.linkText, button: data.button, suggestion: data.suggestion, url: global.page_url});
+                            result['Events'].push(buildObject({EventType: data.EventType, EventTimestamp: timestamp,
+                                linkText: data.linkText, button: data.button, suggestion: data.suggestion, url: global.page_url}));
                             break;
                         case 'ClickSearchResult':
-                            result['Events'].push({EventType: data.EventType, EventTimestamp: timestamp,
-                                linkText: data.linkText, button: data.button, title: data.title, link: data.link, url: global.page_url});
+                            result['Events'].push(buildObject({EventType: data.EventType, EventTimestamp: timestamp,
+                                linkText: data.linkText, button: data.button, title: data.title, link: data.link, url: global.page_url}));
 
                             addWebpage(result, global, data);
                             break;
@@ -284,8 +309,8 @@ var logDB = (function () {
                         case 'logPageLoadTime':
                             toSave = addWebpage(result, global, data);
                             break;
-                        case 'logTimeOnPageAndScrolls':
-                            console.log("LoggingDB logTimeOnPageAndScrolls");
+                        case 'logOnCloseWebpageData':
+                            console.log("LoggingDB logOnCloseWebpageData");
                             var webpages = result['WebPages'];
                             var found = false;
                             for (var i = 0; i < webpages.length; i++) {
@@ -296,14 +321,32 @@ var logDB = (function () {
                                     break;
                                 }
                             }
-                            toSave = found;
-                            console.log("LoggingDB logTimeOnPageAndScrolls: " + toSave);
 
+                            if (data.totalTimeOverSuggestionBoard !== 0) {
+                                //TODO: Save it in the correct SearchPage
+                            }
+                            toSave = found;
+                            console.log("LoggingDB logOnCloseWebpageData: " + toSave);
+
+                            break;
+                        case 'logOnCloseSearchPageData':
+                            var SERPOrder = data['SERPOrder'];
+
+                            toSave = false;
+                            for(var i = 0; i < result['Search']['SearchPages'].length; i++) {
+                                if(result['Search']['SearchPages'][i]['SERPOrder'] === SERPOrder) {
+                                    result['Search']['SearchPages'][i]['totalTimeOverSearchPage'] += data.totalTimeOverSearchPage;
+                                    result['Search']['SearchPages'][i]['totalTimeOverSuggestionBoard'] += data.totalTimeOverSuggestionBoard;
+                                    result['Search']['SearchPages'][i]['numScrollEvents'] += data.numScrollEvents;
+                                    toSave = true;
+                                    break;
+                                }
+                            }
                             break;
                         default :
                             toSave = false;
                             break;
-                    }
+                    };
                     break;
                 default:
                     toSave = false;

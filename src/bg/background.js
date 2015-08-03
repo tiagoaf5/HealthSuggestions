@@ -137,7 +137,7 @@ chrome.runtime.onMessage.addListener(
                         // if a different search but there is data saved in this tab
                         // remove tab from hash and deal with it
                         if (result[TAB + sender.tab.id] != null) {
-                            removeTabFromHash(sender.tab.id);
+                            removeTabFromHash(sender.tab.id, function () {});
                         }
                         //if (result[TAB + sender.tab.id] == null) {
 
@@ -170,6 +170,8 @@ chrome.runtime.onMessage.addListener(
                             logObj['Search']['queryInputTimestamp'] = nowMilliseconds.toJSON();
                             logObj['Search']['totalNoResults'] = "";
                             logObj['Search']['answerTime'] = "";
+                            logObj['Search']['SearchPages'] = [];
+
                             logObj['Events'] = [];
                             logObj['WebPages'] = [];
 
@@ -197,9 +199,9 @@ chrome.runtime.onMessage.addListener(
                 break;
             case LOG:
                 getHash(sender.tab.id, function(hash){
-                   if (hash !== ERROR) {
-                       logDB.saveLogData(hash,request.logTable, request.global, request.data);
-                   }
+                    if (hash !== ERROR) {
+                        logDB.saveLogData(hash,request.logTable, request.global, request.data);
+                    }
                 });
                 //saveLogData(sender.tab.id, request.logTable, request.global, request.data);
                 break;

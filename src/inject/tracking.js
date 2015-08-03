@@ -12,7 +12,9 @@
         sessionProperties : {
             ip: ""
         },
-        numScrolls : 0
+        numScrolls : 0,
+        timeOnSuggestionBoard: 0,
+        enterTime: 0
     };
 
     // create a common namespace with options
@@ -24,7 +26,15 @@
         $.extend(TrackingSystem.options.globalProperties, properties);
     };
 
-
+    TrackingSystem.logTimeOnSuggestionBoard = function(enter) {
+        var date = new Date();
+        if(enter) {
+            options.enterTime = date;
+        }else {
+            options.timeOnSuggestionBoard += date - options.enterTime;
+        }
+        console.log("-+->" + options.timeOnSuggestionBoard);
+    } ;
 
     TrackingSystem.trackSearch = function(callback) {
         chrome.storage.local.get('healthSuggestions_guid', function(result) {
@@ -354,13 +364,21 @@
             pageLoadTimestamp: timestamp.toJSON(), pageLoadTime: time / 1000.0});
     };
 
-    TrackingSystem.logTimeOnPageAndScrolls = function() {
-        //TODO: get number of scrolls
+    TrackingSystem.logOnCloseWebpageData = function(se) {
         var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
-        console.log("logTimeOnPageAndScrolls: " + timeSpentOnPage + "s");
+        console.log("logOnCloseWebpageData: " + timeSpentOnPage + "s");
+        console.log(se);
+        if(se !== undefined) {
+            var timeOnSuggestionBoard = (options.timeOnSuggestionBoard / 1000.0);
+            sendData(TABLE_WEBPAGE, {type: 'logOnCloseSearchPageData',
+                totalTimeOverSearchPage: timeSpentOnPage - timeOnSuggestionBoard,
+                numScrollEvents: TrackingSystem.options.numScrolls, totalTimeOverSuggestionBoard: timeOnSuggestionBoard});
+        } else {
+            sendData(TABLE_WEBPAGE, {type: 'logOnCloseWebpageData', url: TrackingSystem.options.globalProperties.page_url,
+                timeOnPage: timeSpentOnPage, numScrollEvents: TrackingSystem.options.numScrolls,
+                totalTimeOverSuggestionBoard: options.timeOnSuggestionBoard});
+        }
 
-        sendData(TABLE_WEBPAGE, {type: 'logTimeOnPageAndScrolls', url: TrackingSystem.options.globalProperties.page_url,
-            timeOnPage: timeSpentOnPage, numScrollEvents: TrackingSystem.options.numScrolls});
     };
 
     TrackingSystem.logSuggestionBoard = function(action) {
@@ -412,7 +430,7 @@
             var button = e.which;
 
             sendData(TABLE_EVENT, {EventType: 'ClickSERelatedSearch', linkText: suggestion, button: button, suggestion: suggestion});
-            console.log("trackSERPClicks (Suggestions): " + suggestion + " - " + linkText + " - " + button);
+            console.log("trackSERPClicks (Suggestions): " + suggestion + " - " + suggestion + " - " + button);
         });
     };
 
@@ -465,9 +483,10 @@
         searchEngine['name'] = se;
 
         var searchPages = {};
-        searchPages['SERPOrder'] = 1; //TODO: think about it
-        searchPages['totalTimeOverSearchPage'] = "";
-        searchPages['totalTimeOverSuggestionBoard'] = "";
+        searchPages['SERPOrder'] = getCurrentSearchPage(se); //TODO: think about it
+        searchPages['totalTimeOverSearchPage'] = 0;
+        searchPages['totalTimeOverSuggestionBoard'] = 0;
+        searchPages['numScrollEvents'] = 0;
         searchPages['timestamp'] = new Date().toJSON();
         searchPages['url'] = TrackingSystem.options.globalProperties.page_url;
 
@@ -505,7 +524,13 @@
 
     //AUXILIARY
     function sendData(table, data) {
-        chrome.runtime.sendMessage({action: LOG, logTable: table, global: TrackingSystem.options.globalProperties, data: data});
+        //If in a SearchPage provide the SERPOrder
+        if (searchEngineBeingUsed !== undefined && data !== undefined) {
+            data = $.extend(true, data, {SERPOrder: getCurrentSearchPage(searchEngineBeingUsed)});
+            chrome.runtime.sendMessage({action: LOG, logTable: table, global: TrackingSystem.options.globalProperties, data: data});
+        }
+        else
+            chrome.runtime.sendMessage({action: LOG, logTable: table, global: TrackingSystem.options.globalProperties, data: data});
     };
 
     function extractNumbers(results) {

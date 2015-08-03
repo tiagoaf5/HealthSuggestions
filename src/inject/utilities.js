@@ -1,6 +1,3 @@
-/**
- * Created by tiago on 28/02/15.
- */
 
 function getWidget() {
     return $("." + widgetContentClass);
@@ -8,6 +5,11 @@ function getWidget() {
 
 function getWidgetContent() {
     return $("." + widgetContentClass).contents();
+}
+
+function getWidgetPanel() {
+    return $("#" + panelId);
+
 }
 
 
@@ -27,6 +29,8 @@ function loadWidget() {
         "right": "15px"/*,
          "display": "none"*/});
     widget.addClass(widgetClass);
+    widget.attr("id", panelId);
+
 
     //widget.load(chrome.runtime.getURL('src/inject/layout.html'));
     $(document.body).append(widget);
@@ -104,14 +108,22 @@ function loadWidget() {
     $contentFrame.contents().find('body').attr('id','myExtension');
     $contentFrame.contents().find('body').append($contents);
 
+    var addedWidget = getWidget();
+    var addedPanel = getWidgetPanel();
     //actions onclick
-    $(".widgetContentClass").contents().find("#window-action-minimize").on("click", widgetMinimize);
-    $(".widgetContentClass").contents().find("#window-action-close").on("click", widgetClose);
-    $(".widgetContentClass").contents().on("click", "#suggestions > li > a", function(e) {
+    addedWidget.contents().find("#window-action-minimize").on("click", widgetMinimize);
+    addedWidget.contents().find("#window-action-close").on("click", widgetClose);
+    addedWidget.contents().on("click", "#suggestions > li > a", function(e) {
         TrackingSystem.logPanelSuggestions($(this), e.which);
     });
-    $(".widgetContentClass").contents().on("click", "ul.search-engine > li > a.search-engine-item", function() {
+    addedWidget.contents().on("click", "ul.search-engine > li > a.search-engine-item", function() {
         TrackingSystem.logPanelSwitchSearchEngine($(this), searchEngineBeingUsed);
+    });
+    addedPanel.on("mouseenter", function () {
+        TrackingSystem.logTimeOnSuggestionBoard(true);
+    });
+    addedPanel.on("mouseleave", function () {
+        TrackingSystem.logTimeOnSuggestionBoard(false);
     });
 
 }
@@ -125,7 +137,7 @@ function widgetMinimize() {
     var isMaximized = i.hasClass("icon-arrows-compress");
 
     console.log("widgetMinimize" + isMaximized);
-    $(".widgetClass").animate({
+    $("." + widgetClass).animate({
         bottom: isMaximized ? '-190px' : '0px'
     }, 400, function () {
         if(isMaximized) {
@@ -166,4 +178,32 @@ function computePageLoadTime() {
     pageLoadTime = now - performance.timing.navigationStart;
     //console.log("User-perceived page loading time: " + pageLoadTime + "ms");
     TrackingSystem.logPageLoadTime(date, pageLoadTime);
+}
+
+function getCurrentSearchPage(engine) {
+    var index = 1;
+
+    switch(engine) {
+        case GOOGLE:
+            index = Number($("div#navcnt tr > td.cur").text());
+            break;
+        case BING:
+            $("li.b_pag ul").children("li").each(function(i) {
+                if($(this).children(":first").attr('href') === undefined)
+                    index = $(this).children(":first").text(); //when page 1 there isn't the back row so we need to add 1
+            });
+            break;
+        case YAHOO:
+            $("ol.searchBottom div.compPagination").children().each(function(i) {
+                if($(this).prop('tagName') === "STRONG")
+                    index = $(this).text(); //when page 1 there isn't the back row so we need to add 1
+            });
+            break;
+        default:
+            index = -1;
+            break;
+    }
+
+    console.log("getCurrentSearchPage: " + index);
+    return index;
 }

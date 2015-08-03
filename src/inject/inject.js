@@ -1,5 +1,6 @@
-var widgetClass = "widgetClass";
-var widgetContentClass = "widgetContentClass";
+var widgetClass = "healthSuggestionsWidgetClass"; //"widgetClass";
+var widgetContentClass = "healthSuggestionsWidgetContentClass"//"widgetContentClass";
+var panelId = "healthSuggestionsPanel";
 
 
 var queryGoogleId = "#lst-ib";//"#gbqfq";
@@ -25,7 +26,7 @@ $(document).ready(function() {
 
 
     $(window).unload(function() {
-        TrackingSystem.logTimeOnPageAndScrolls();
+        TrackingSystem.logOnCloseWebpageData(searchEngineBeingUsed);
     });
 
 
@@ -57,7 +58,6 @@ $(document).ready(function() {
         console.log("It's bing here!");
         searchEngineBeingUsed = BING;
 
-
         setTimeout(function(){
             var query = $(queryBingId).val();
             updateSearchQuery(query);
@@ -78,6 +78,7 @@ $(document).ready(function() {
     }
     else //if it's another page ask background script if the widget should be inserted
         chrome.runtime.sendMessage({action: "ready"});
+
 
 });
 
@@ -118,7 +119,6 @@ chrome.extension.onMessage.addListener(
                             TrackingSystem.trackScroll();
                             //TrackingSystem.trackClicks();
                             TrackingSystem.trackSERPClicks();
-                            TrackingSystem.trackCopy();
                         });
                     }
                     else {
@@ -127,7 +127,6 @@ chrome.extension.onMessage.addListener(
                         TrackingSystem.trackFind();
                         TrackingSystem.trackScroll();
                         TrackingSystem.trackClicks();
-                        TrackingSystem.trackCopy();
                     }
                 }
 
