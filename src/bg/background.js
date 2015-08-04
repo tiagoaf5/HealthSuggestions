@@ -30,11 +30,15 @@ chrome.runtime.onInstalled.addListener(function(details){
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
 
+        console.log("s-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#");
         console.log(sender.tab ?
         "from a content script:" + sender.tab.url :
             "from the extension");
 
-        console.log("request: " + JSON.stringify(request));
+        console.dir(request);
+
+        console.log("e-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#");
+
 
         if (!request.action) {
             console.warn('invalid command: ', request);

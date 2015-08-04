@@ -223,7 +223,9 @@ var logDB = (function () {
                     if(!result[logTable])
                         result[logTable] = {};
 
-                    result[logTable] = data;
+                    result[logTable]['browser'] = data.browser;
+                    result[logTable]['guid'] = data.guid;
+                    result[logTable]['os'] = data.os;
                     break;
                 case TABLE_SEARCH_PAGE:
                     var SERPOrder = data['SERPOrder'];

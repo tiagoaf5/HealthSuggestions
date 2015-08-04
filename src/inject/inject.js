@@ -18,16 +18,15 @@ var pageLoadTime = 0;
  */
 $(document).ready(function() {
     var url = window.location.href;
+    var now = new Date();
 
-    computePageLoadTime();
     TimeMe.setIdleDurationInSeconds(30);
     TimeMe.setCurrentPageName(url);
-
     TimeMe.initialize();
 
 
     $(window).unload(function() {
-        TrackingSystem.logOnCloseWebpageData(searchEngineBeingUsed);
+        TrackingSystem.logOnCloseWebpageData();
     });
 
 
@@ -83,7 +82,8 @@ $(document).ready(function() {
         chrome.runtime.sendMessage({action: "ready"});
     }
 
-
+    //already defined searchEngineBeingUsedBool
+    computePageLoadTime(now);
 });
 
 

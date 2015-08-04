@@ -172,8 +172,7 @@ function replaceAll(find, replace, str) {
     return str.replace(new RegExp(find, 'g'), replace);
 }
 
-function computePageLoadTime() {
-    var date = new Date();
+function computePageLoadTime(date) {
     var now = date.getTime();
     pageLoadTime = now - performance.timing.navigationStart;
     //console.log("User-perceived page loading time: " + pageLoadTime + "ms");

@@ -360,16 +360,17 @@
 
     TrackingSystem.logPageLoadTime = function(timestamp, time) {
         console.log("logPageLoadTime: " + timestamp.toJSON() + " : " + time / 1000.0 + "s");
-        if(!searchEngineBeingUsedBool) //TODO: check this out - strange fix
+        if(!searchEngineBeingUsedBool) { //TODO: check this out - strange fix
             sendData(TABLE_WEBPAGE, {type: "logPageLoadTime", url: TrackingSystem.options.globalProperties.page_url,
-                pageLoadTimestamp: timestamp.toJSON(), pageLoadTime: time / 1000.0});
+            pageLoadTimestamp: timestamp.toJSON(), pageLoadTime: time / 1000.0});
+        }
+
     };
 
-    TrackingSystem.logOnCloseWebpageData = function(se) {
+    TrackingSystem.logOnCloseWebpageData = function() {
         var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
         console.log("logOnCloseWebpageData: " + timeSpentOnPage + "s");
-        console.log(se);
-        if(se !== undefined) {
+        if(searchEngineBeingUsedBool) {
             var timeOnSuggestionBoard = (options.timeOnSuggestionBoard / 1000.0);
             sendData(TABLE_WEBPAGE, {type: 'logOnCloseSearchPageData',
                 totalTimeOverSearchPage: timeSpentOnPage - timeOnSuggestionBoard,
