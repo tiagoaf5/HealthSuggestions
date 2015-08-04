@@ -113,7 +113,7 @@ chrome.extension.onMessage.addListener(
                 }
 
                 if(request.logging === true) {
-                    if(searchEngineBeingUsed != undefined) {
+                    if(searchEngineBeingUsedBool) {
 
                         TrackingSystem.trackSearch( function () {
                             TrackingSystem.getSEResults(searchEngineBeingUsed);
@@ -126,7 +126,7 @@ chrome.extension.onMessage.addListener(
                         });
                     }
                     else {
-                        TrackingSystem.trackPageView();
+                        //TrackingSystem.trackPageView();
                         TrackingSystem.trackCopy();
                         TrackingSystem.trackFind();
                         TrackingSystem.trackScroll();

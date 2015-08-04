@@ -360,9 +360,10 @@
 
     TrackingSystem.logPageLoadTime = function(timestamp, time) {
         console.log("logPageLoadTime: " + timestamp.toJSON() + " : " + time / 1000.0 + "s");
-        if(!searchEngineBeingUsedBool) { //TODO: check this out - strange fix
+        //only if not in a search engine and not a yahoo redirect
+        if(!searchEngineBeingUsedBool && !(TrackingSystem.options.globalProperties.page_url.indexOf('http://r.search.yahoo.com/') === 0)) {
             sendData(TABLE_WEBPAGE, {type: "logPageLoadTime", url: TrackingSystem.options.globalProperties.page_url,
-            pageLoadTimestamp: timestamp.toJSON(), pageLoadTime: time / 1000.0});
+                pageLoadTimestamp: timestamp.toJSON(), pageLoadTime: time / 1000.0});
         }
 
     };
@@ -401,7 +402,13 @@
 
     TrackingSystem.trackClicks = function() {
         $(document).on('click', 'a', function(e) {
-            console.log("trackClick: " + $(this).text() + " url: " + e.target + " button: " + e.which);
+            var title = $(this).text();
+            var url = (e.target).toString();
+            var button = e.which;
+            console.log("trackClick: " + title + " url: " + url + " button: " + button);
+
+            sendData(TABLE_EVENT, {EventType: 'ClickUrl', linkText: title, button: button, link: url});
+
         });
     };
 
@@ -413,10 +420,9 @@
                 var url = $(this).attr("href");
                 var button = e.which;
 
-                if (url.indexOf('http://r.search.yahoo.com/') === 0) {
-                    console.log($(this).parent().tagName);
-                    console.log($(this).parent().parent().attr("class"));
-                    url = $(this).parent().parent().find("div > span.wr-bw").text();
+                if (url.indexOf('http://r.search.yahoo.com/') === 0) { //yahoo needs some magic
+                    var regex = /(?=RU=).+(?=\/RK=0)/;
+                    url = decodeURIComponent(url.match(regex).toString().substr(3));
                 }
                 console.log("trackSERPClicks (Results): " + title + " -> " + url + " - " + button);
                 sendData(TABLE_EVENT, {EventType: 'ClickSearchResult', linkText: title, button: button, title: title, link: url});

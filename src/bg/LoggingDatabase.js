@@ -38,13 +38,15 @@ var logDB = (function () {
 
             //if it comes from a SERPSuggestionClick it brings the searchResult
             if (data.link) {
+                console.log("SERPSuggestionClick");
                 searchResult = {link: data.link, SERPOrder: data.SERPOrder};
                 url = data.link;
                 referrerURL = global.page_url;
-            } else if (referrerWebPage != undefined){ //Otherwise we must look for parent's searchResult
+            } else { //Otherwise we must look for parent's searchResult
+                console.log("NOT SERPSuggestionClick");
                 url = global.page_url;
                 referrerURL = global.referrer_url;
-                if (referrerWebPage.searchResult) {
+                if (referrerWebPage != undefined && referrerWebPage.searchResult) {
                     searchResult = {link: referrerWebPage.searchResult.link, SERPOrder: referrerWebPage.searchResult.SERPOrder};
                 }
             }
@@ -294,9 +296,10 @@ var logDB = (function () {
 
                             addWebpage(result, global, data);
                             break;
-                        case 'cenas': //receber dados das webpages
+                        case 'ClickUrl':
+                            result['Events'].push(buildObject({EventType: data.EventType, EventTimestamp: timestamp,
+                                linkText: data.linkText, button: data.button, link: data.link, url: global.page_url}));
                             break;
-
                         default :
                             toSave = false;
                             break;
