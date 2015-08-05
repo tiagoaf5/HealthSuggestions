@@ -212,7 +212,12 @@ var logDB = (function () {
 
         tDB.open(function () {
             console.log("tDB.saveLogData-> table: " + logTable + ", global: " + JSON.stringify(global) + ", data: " + JSON.stringify(data));
+            var buildObject = function (obj) {
+                if (data.SERPOrder === undefined)
+                    return obj;
 
+                return $.extend(true, obj, {SERPOrder: data.SERPOrder});
+            };
 
             var transaction = datastore.transaction([LOG_DB], "readwrite");
             var objectStore = transaction.objectStore(LOG_DB);
@@ -271,12 +276,7 @@ var logDB = (function () {
                         break;
                     case TABLE_EVENT:
                         var timestamp = new Date().toJSON();
-                        var buildObject = function (obj) {
-                            if (data.SERPOrder === undefined)
-                                return obj;
 
-                            return $.extend(true, obj, {SERPOrder: data.SERPOrder});
-                        };
 
                         switch (data.EventType) {
                             case 'copy':
@@ -342,10 +342,15 @@ var logDB = (function () {
                     case TABLE_WEBPAGE:
                         switch (data.type) {
                             case 'logPageLoadTime':
-                                console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-                                console.dir(data);
+                                //console.dir(data);
+
+                                /*//event added because can't track go back without messing with user navigation
+                                result['Events'].push(buildObject({
+                                    EventType: 'PageLoad', EventTimestamp: timestamp,
+                                    url: global.page_url, referrerUrl: global.referrer_url
+                                }));*/
+
                                 toSave = addWebpage(result, global, data);
-                                console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
                                 break;
                             case 'logOnCloseWebpageData':
                                 console.log("LoggingDB logOnCloseWebpageData");

@@ -466,30 +466,28 @@
         }
     };
 
-    //TODO: fix trackGoBack
+    /*//TODO: fix trackGoBack
     TrackingSystem.trackGoBack = function() {
 
-        if (window.history && window.history.pushState) {
-            $(window).on('popstate', function() {
+         if (window.history && window.history.pushState) {
+         $(window).on('popstate', function() {
 
-                var hashLocation = location.hash;
-                var hashSplit = hashLocation.split("#!/");
-                var hashName = hashSplit[1];
+         var hashLocation = location.hash;
+         var hashSplit = hashLocation.split("#!/");
+         var hashName = hashSplit[1];
 
-                if (hashName !== '') {
-                    var hash = window.location.hash;
-                    if (hash === '') {
-                        console.log('trackGoBack: Back button was pressed.');
-                    }
-                }
-                window.history.back();
-            });
+         if (hashName !== '') {
+         var hash = window.location.hash;
+         if (hash === '') {
+         console.log('trackGoBack: Back button was pressed.');
+         }
+         }
+         window.history.back();
+         });
 
-            window.history.pushState('forward', null, './#forward');
-        }
-
-
-    };
+         window.history.pushState('forward', null, './#forward');
+         }
+    };*/
 
     TrackingSystem.getSEResults = function (se) {
         console.log("getSEResults");

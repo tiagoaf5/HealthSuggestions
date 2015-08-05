@@ -29,7 +29,6 @@ $(document).ready(function() {
         TrackingSystem.logOnCloseWebpageData();
     });
 
-console.log("new page");
     //if it's google
     if(/^https?:\/\/www\.google\.\w{1,3}(\/.*)?/.test(url) && url.indexOf("newtab") == -1) {
         console.log("It's google here!");
@@ -116,11 +115,11 @@ chrome.extension.onMessage.addListener(
                 if(request.logging === true) {
                     if(searchEngineBeingUsedBool) {
                         console.log("<--->");
-                        if (searchEngineBeingUsed === GOOGLE) {
+                        if (searchEngineBeingUsed === GOOGLE) { //because google loads results dynamically
                             setTimeout(function () {
                                 TrackingSystem.trackSearch( function () {
                                     TrackingSystem.getSEResults(searchEngineBeingUsed);
-                                    TrackingSystem.trackPageView();
+                                    //TrackingSystem.trackPageView();
                                     TrackingSystem.trackCopy();
                                     TrackingSystem.trackFind();
                                     TrackingSystem.trackScroll();
@@ -132,7 +131,7 @@ chrome.extension.onMessage.addListener(
                         else {
                             TrackingSystem.trackSearch( function () {
                                 TrackingSystem.getSEResults(searchEngineBeingUsed);
-                                TrackingSystem.trackPageView();
+                                //TrackingSystem.trackPageView();
                                 TrackingSystem.trackCopy();
                                 TrackingSystem.trackFind();
                                 TrackingSystem.trackScroll();
