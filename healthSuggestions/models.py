@@ -20,6 +20,12 @@ class CHVStemmedIndexPT(models.Model):
     stringlist = models.TextField()
 
 
+class CHVStemmedIndexEN(models.Model):
+    term = models.TextField(primary_key=True)
+    idf = models.FloatField()
+    stringlist = models.TextField()
+
+
 class CHVString(models.Model):
     id = models.PositiveIntegerField(primary_key=True)
     en = models.TextField(blank=True)

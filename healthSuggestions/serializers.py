@@ -19,6 +19,12 @@ class CHVStemmedIndexPTSerializer(serializers.ModelSerializer):
         fields = ('term', 'idf', 'stringlist')
 
 
+class CHVStemmedIndexENSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CHVStemmedIndexEN
+        fields = ('term', 'idf', 'stringlist')
+
+
 class CHVStringSerializer(serializers.ModelSerializer):
     class Meta:
         model = CHVString

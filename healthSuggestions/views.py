@@ -24,6 +24,12 @@ class CHVStemmedIndexPTView(generics.ListAPIView):
     paginate_by = 100
 
 
+class CHVStemmedIndexENView(generics.ListAPIView):
+    queryset = CHVStemmedIndexEN.objects.all()
+    serializer_class = CHVStemmedIndexENSerializer
+    paginate_by = 100
+
+
 class CHVStringView(generics.ListAPIView):
     queryset = CHVString.objects.all()
     serializer_class = CHVStringSerializer
