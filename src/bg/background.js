@@ -178,7 +178,6 @@ chrome.runtime.onMessage.addListener(
 
                             logObj['Events'] = [];
                             logObj['WebPages'] = [];
-
                             logDB.createEntry(hash, logObj);
                             console.log("-log->" + JSON.stringify(logObj));
                         }
@@ -284,7 +283,7 @@ function removeTabFromHash(tabId, callback) {
 
                 if (result[TABS_SEARCH].length === 0) {
                     //TODO: Send data to server
-                    console.log("Sending data to server : " + JSON.stringify(result));
+                    console.info("Sending data to server : " + JSON.stringify(result));
                     logDB.removeEntry(result.hash, function () {
                         callback();
                     }); //after sending to server, remove from database

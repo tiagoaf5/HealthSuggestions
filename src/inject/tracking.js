@@ -37,6 +37,7 @@
     } ;
 
     TrackingSystem.trackSearch = function(callback) {
+        console.log("trackSearch");
         chrome.storage.local.get('healthSuggestions_guid', function(result) {
             var guid = null;
 
@@ -79,6 +80,7 @@
 
                     sendData('Session', $.extend(true, {guid: TrackingSystem.options.globalProperties.guid},
                         TrackingSystem.options.sessionProperties));
+
 
                     if (typeof(callback) === "function")
                         callback(guid);
@@ -278,6 +280,8 @@
                 $.extend(TrackingSystem.options.sessionProperties, get_user_info());
                 getLocalIPs(); //asynchronous call -> calls setIP when done
             }
+            else
+                callback(guid);
 
 
         });
@@ -414,7 +418,7 @@
 
     TrackingSystem.trackSERPClicks = function() {
         //bing, google, yahoo
-        $("ol#b_results > li.b_algo > div.b_title > h2 > a, div.srg > li h3.r a, .dd.algo div.compTitle > h3.title > a")
+        $("ol#b_results > li.b_algo > div.b_title > h2 > a, div.srg > div.g h3.r a, .dd.algo div.compTitle > h3.title > a")
             .on('click',function(e){
                 var title = $(this).text();
                 var url = $(this).attr("href");
@@ -423,6 +427,8 @@
                 if (url.indexOf('http://r.search.yahoo.com/') === 0) { //yahoo needs some magic
                     var regex = /(?=RU=).+(?=\/RK=0)/;
                     url = decodeURIComponent(url.match(regex).toString().substr(3));
+                } else if (searchEngineBeingUsed === GOOGLE) {
+                    url = $(this).attr("data-href");
                 }
                 console.log("trackSERPClicks (Results): " + title + " -> " + url + " - " + button);
                 sendData(TABLE_EVENT, {EventType: 'ClickSearchResult', linkText: title, button: button, title: title, link: url});
@@ -486,6 +492,7 @@
     };
 
     TrackingSystem.getSEResults = function (se) {
+        console.log("getSEResults");
         var results = undefined;
         var searchEngine = {};
         searchEngine['name'] = se;
@@ -558,12 +565,10 @@
         var data = {totalNoResults: n_results, answerTime: time, results: []};
         var data_results = data.results;
 
-        $("div.srg > li").each(function (index) {
+        $("div.srg > div.g").each(function (index) {
             var title = $(this).find("h3.r a").text();
             var url = $(this).find("h3.r a").attr("href");
             var snippet = $(this).find("span.st").text();
-            //console.log(snippet);
-            //console.log(index + ": " + title + " -> " + url);
             data_results.push({index: index, title: title, snippet: snippet, url: url});
         });
 
@@ -571,7 +576,6 @@
         console.log(":::SERelatedSearch")
         $("div#brs > div > div > p > a").each(function(index) {
             data['SERelatedSearches'].push($(this).text());
-            console.log(index + ": " + $(this).text());
         });
 
         return data;

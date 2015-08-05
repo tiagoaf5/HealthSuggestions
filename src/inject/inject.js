@@ -29,7 +29,7 @@ $(document).ready(function() {
         TrackingSystem.logOnCloseWebpageData();
     });
 
-
+console.log("new page");
     //if it's google
     if(/^https?:\/\/www\.google\.\w{1,3}(\/.*)?/.test(url) && url.indexOf("newtab") == -1) {
         console.log("It's google here!");
@@ -49,6 +49,7 @@ $(document).ready(function() {
         })();
 
         $(window).bind('hashchange', function() {
+            TrackingSystem.logOnCloseWebpageData(); //It's like changing page
             var query = $(queryGoogleId).val();
             updateSearchQuery(query);
         });
@@ -114,16 +115,32 @@ chrome.extension.onMessage.addListener(
 
                 if(request.logging === true) {
                     if(searchEngineBeingUsedBool) {
+                        console.log("<--->");
+                        if (searchEngineBeingUsed === GOOGLE) {
+                            setTimeout(function () {
+                                TrackingSystem.trackSearch( function () {
+                                    TrackingSystem.getSEResults(searchEngineBeingUsed);
+                                    TrackingSystem.trackPageView();
+                                    TrackingSystem.trackCopy();
+                                    TrackingSystem.trackFind();
+                                    TrackingSystem.trackScroll();
+                                    //TrackingSystem.trackClicks();
+                                    TrackingSystem.trackSERPClicks();
+                                });
+                            }, 1000)
+                        }
+                        else {
+                            TrackingSystem.trackSearch( function () {
+                                TrackingSystem.getSEResults(searchEngineBeingUsed);
+                                TrackingSystem.trackPageView();
+                                TrackingSystem.trackCopy();
+                                TrackingSystem.trackFind();
+                                TrackingSystem.trackScroll();
+                                //TrackingSystem.trackClicks();
+                                TrackingSystem.trackSERPClicks();
+                            });
+                        }
 
-                        TrackingSystem.trackSearch( function () {
-                            TrackingSystem.getSEResults(searchEngineBeingUsed);
-                            TrackingSystem.trackPageView();
-                            TrackingSystem.trackCopy();
-                            TrackingSystem.trackFind();
-                            TrackingSystem.trackScroll();
-                            //TrackingSystem.trackClicks();
-                            TrackingSystem.trackSERPClicks();
-                        });
                     }
                     else {
                         //TrackingSystem.trackPageView();
