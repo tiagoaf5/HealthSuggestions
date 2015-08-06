@@ -10,6 +10,12 @@ chrome.runtime.onInstalled.addListener(function(details){
 
          console.log("populating database...");
          DB.populateDatabase();*/
+
+        chrome.runtime.openOptionsPage(function(){
+            if(chrome.runtime.lastError)
+                alert("Something went wrong! :(");
+        });
+
     } else if(details.reason == "update"){
         var thisVersion = chrome.runtime.getManifest().version;
         console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
@@ -99,12 +105,14 @@ chrome.runtime.onMessage.addListener(
                 chrome.storage.local.get(obj, function(result) {
                     console.log("loadData result: " + JSON.stringify(result));
                     var data = result[TAB + sender.tab.id];
-
-                    //IF it's closed don't make the call and widget won't be displayed
                     if (data != null && !data[CLOSED])
                         chrome.tabs.sendMessage(sender.tab.id, {action: "setData", data: data});
-                    else
+                    else { //IF it's closed don't make the call and widget won't be displayed
+                        //there was a case that widget opened with no content so tell it to close itself
+                        chrome.tabs.sendMessage(sender.tab.id, {action: "closeWidget"});
                         console.log("loadData error");
+                    }
+
                 });
                 break;
             case 'getSuggestions':

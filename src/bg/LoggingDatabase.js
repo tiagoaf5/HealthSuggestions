@@ -66,7 +66,13 @@ var logDB = (function () {
                     alreadyExistsWebpage.pageLoadTimestamp = data.pageLoadTimestamp;
                 else
                     return false;
-            }
+            } /*else { //TODO: maybe delete this
+                result['Events'].push({
+                    EventType: "GoBackEvent",
+                    EventTimestamp: data.pageLoadTimestamp,
+                    to:global.page_url
+                });
+            }*/
         }
         console.log("------------------------------------");
         return true;
@@ -248,6 +254,14 @@ var logDB = (function () {
 
                         for (var i = 0; i < result['Search']['SearchPages'].length; i++) {
                             if (result['Search']['SearchPages'][i]['SERPOrder'] === SERPOrder) {
+
+                                //TODO: consider delete this GoBackEvent
+                                /*result['Events'].push({
+                                    EventType: "GoBackEvent",
+                                    EventTimestamp: data['timestamp'],
+                                    to: global.page_url
+                                });*/
+
                                 toSave = false;
                                 break;
                             }

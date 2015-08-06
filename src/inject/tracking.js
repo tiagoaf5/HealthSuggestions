@@ -38,7 +38,7 @@
 
     TrackingSystem.trackSearch = function(callback) {
         console.log("trackSearch");
-        chrome.storage.local.get('healthSuggestions_guid', function(result) {
+        chrome.storage.sync.get('healthSuggestions_guid', function(result) {
             var guid = null;
 
             if ($.isEmptyObject((result))) {
@@ -52,7 +52,7 @@
                     genSub() + "-" + genSub() + "-" + genSub() + genSub() + genSub();
 
 
-                chrome.storage.local.set({'healthSuggestions_guid': guid});
+                chrome.storage.sync.set({'healthSuggestions_guid': guid});
             }
             else {
                 guid = result['healthSuggestions_guid'];
