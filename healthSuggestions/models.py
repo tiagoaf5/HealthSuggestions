@@ -6,6 +6,7 @@ from django.db import models
 #   Indexes for extension   #
 #############################
 
+
 class CHVConcept(models.Model):
     CUI = models.TextField(primary_key=True)
     CHV_Pref_EN = models.TextField(blank=True)
@@ -30,9 +31,11 @@ class CHVString(models.Model):
     id = models.PositiveIntegerField(primary_key=True)
     en = models.TextField(blank=True)
     pt = models.TextField(blank=True)
+    en_stemmed = models.TextField(blank=True)
     pt_stemmed = models.TextField(blank=True)
     en_count = models.PositiveSmallIntegerField(blank=True)
     pt_count = models.PositiveSmallIntegerField(blank=True)
+    en_stemmed_count = models.PositiveSmallIntegerField(blank=True)
     pt_stemmed_count = models.PositiveSmallIntegerField(blank=True)
     cui = models.ForeignKey('CHVConcept')
 

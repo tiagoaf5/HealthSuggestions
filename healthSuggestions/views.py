@@ -1,13 +1,15 @@
 import json
 from rest_framework.views import APIView
-from healthSuggestions.serializers import CHVConceptSerializer, CHVStemmedIndexPTSerializer, CHVStringSerializer
-from healthSuggestions.models import CHVConcept, CHVStemmedIndexPT, CHVString
+from healthSuggestions.serializers import CHVConceptSerializer, CHVStemmedIndexPTSerializer, \
+    CHVStemmedIndexENSerializer, CHVStringSerializer
+from healthSuggestions.models import CHVConcept, CHVStemmedIndexPT, CHVStemmedIndexEN, CHVString
 from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
 from rest_framework.reverse import reverse
+
 
 # Create your views here.
 
@@ -37,14 +39,15 @@ class CHVStringView(generics.ListAPIView):
 
 
 class GetConceptView(APIView):
-    def get(self, request, data, format=None):
-        print "->" + str(data)
-        # print "-->" + str(request)
-        terms = str(data).split("+")
+    def get(self, request, language, query, format=None):
+        print "->" + str(query)
+        print "-->" + str(language)
+        terms = str(query).split("+")
         objects = {}
 
         for term in terms:
-            entry = CHVStemmedIndexPT.objects.get(term=term)
+            entry = CHVStemmedIndexPT.objects.get(term=term) if language.lower() == 'por' \
+                else CHVStemmedIndexEN.objects.get(term=term)
             idf = entry.idf
             stringlist = entry.stringlist.split(";")
 
@@ -79,9 +82,6 @@ class GetConceptView(APIView):
         print "minimumwords: " + str(minimumwords)
         print "minimumCui: " + str(minimumCui.CUI)
 
-
-
-
         return Response(data=CHVConceptSerializer(minimumCui).data, status=status.HTTP_200_OK)
 
 
@@ -91,6 +91,5 @@ def api_root(request, format=None):
         'CHVConcept': reverse('CHVConcept', request=request, format=format),
         'CHVStemmedIndexPT': reverse('CHVStemmedIndexPT', request=request, format=format),
         'CHVString': reverse('CHVString', request=request, format=format),
-        'GetConceptView': reverse('GetConceptView', request=request, format=format),
+        # 'GetConceptView': reverse('GetConceptView', request=request, format=format),
     })
-

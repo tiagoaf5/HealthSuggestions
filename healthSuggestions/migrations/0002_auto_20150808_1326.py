@@ -7,7 +7,8 @@ import os
 from django.db import migrations
 import sys
 
-from healthSuggestions.serializers import CHVConceptSerializer, CHVStemmedIndexPTSerializer, CHVStringSerializer
+from healthSuggestions.serializers import CHVConceptSerializer, CHVStemmedIndexPTSerializer, \
+    CHVStemmedIndexENSerializer, CHVStringSerializer
 
 
 fixture_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../initial_data'))

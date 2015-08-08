@@ -28,7 +28,8 @@ class CHVStemmedIndexENSerializer(serializers.ModelSerializer):
 class CHVStringSerializer(serializers.ModelSerializer):
     class Meta:
         model = CHVString
-        fields = ('id', 'en', 'pt', 'pt_stemmed', 'cui', 'en_count', 'pt_count', 'pt_stemmed_count')
+        fields = ('id', 'en', 'pt', 'en_stemmed', 'pt_stemmed', 'en_count', 'pt_count', 'en_stemmed_count',
+                  'pt_stemmed_count', 'cui')
 
 
 ########################################
