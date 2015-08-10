@@ -29,6 +29,8 @@ urlpatterns = [
     url(r'^GetConceptView/(?P<language>[a-zA-z]{3})/(?P<query>([a-z0-9]+\+)*([a-z0-9])+)$',
         views.GetConceptView.as_view(), name='GetConceptViewData'),
     # url(r'^GetConceptView/', views.GetConceptView.as_view(), name='GetConceptView'),
+    url(r'^LogData/', views.LogData.as_view(), name='LogData'),
+
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

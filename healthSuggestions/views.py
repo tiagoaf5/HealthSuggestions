@@ -2,13 +2,15 @@ import json
 from rest_framework.views import APIView
 from healthSuggestions.serializers import CHVConceptSerializer, CHVStemmedIndexPTSerializer, \
     CHVStemmedIndexENSerializer, CHVStringSerializer
-from healthSuggestions.models import CHVConcept, CHVStemmedIndexPT, CHVStemmedIndexEN, CHVString
+from healthSuggestions.models import *
 from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
 from rest_framework.reverse import reverse
+from ipware.ip import get_ip
+import datetime as dt
 
 
 # Create your views here.
@@ -83,6 +85,88 @@ class GetConceptView(APIView):
         print "minimumCui: " + str(minimumCui.CUI)
 
         return Response(data=CHVConceptSerializer(minimumCui).data, status=status.HTTP_200_OK)
+
+
+class LogData(APIView):
+    def post(self, request):
+        data = request.data
+        d_session = data['Session']
+        d_search = data['Search']
+
+        user = TestUser.objects.filter(guid=d_session["guid"])
+        ip = get_ip(request)
+
+        if Search.objects.filter(hash=data['hash']).exists():
+            return Response({"message": "Got some data! But already exists!", "data": request.data})
+
+        if ip is not None:
+            print "we have an IP address for user", ip
+        else:
+            print "we don't have an IP address for user"
+
+        # user and session
+        if len(user) > 0:
+            user = user[0]
+            print 'has user:', user.guid, user.registerDate
+
+            print "<<", data['Search']['queryInputTimestamp']
+            d_sessionTimestamp = dt.datetime.strptime(d_search['queryInputTimestamp'], '%Y-%m-%dT%H:%M:%S.%fZ')
+            print "<<", d_sessionTimestamp
+
+            for s in user.sessions.order_by('-startTimestamp'):
+                print ">>", s.startTimestamp
+                diff = (d_sessionTimestamp - s.startTimestamp.replace(tzinfo=None)).total_seconds()
+                if diff < 3600:
+                    session = s
+                    break
+                else:
+                    break
+
+            if not session:
+                session = Session(guid=user, ip=ip, browser=d_session['browser'], os=d_session['os'],
+                                  startTimestamp=d_search['queryInputTimestamp'])
+                session.save()
+
+        else:
+            user = TestUser(guid=d_session["guid"])
+            user.save()
+            session = Session(guid=user, ip=ip, browser=d_session['browser'], os=d_session['os'],
+                              startTimestamp=d_search['queryInputTimestamp'])
+            session.save()
+            print 'creating user: ', user.guid, user.registerDate
+
+        searchEngine = SearchEngine.objects.get(name=d_search['SearchEngine']['name'])
+
+        search = Search(query=d_search['query'], queryInputTimestamp=d_search['queryInputTimestamp'],
+                        totalNoResults=d_search['totalNoResults'], hash=data['hash'],
+                        answerTime=(-1 if d_search['answerTime'] == "" else float(d_search['answerTime'])),
+                        session=session, searchEngine=searchEngine)
+        search.save()
+
+        d_seRelatedSearch = d_search['SERelatedSearches']
+        d_suggestions = d_search['Suggestions']
+
+        for i in d_seRelatedSearch:
+            temp = SERelatedSearch.objects.filter(suggestion=i)
+            if len(temp) > 0:
+                search.seRelatedSearches.add(temp[0])
+            else:
+                temp = SERelatedSearch(suggestion=i)
+                temp.save()
+                search.seRelatedSearches.add(temp)
+
+        for i in d_suggestions:
+            temp = Suggestion.objects.filter(suggestion=i['term'], suggestiontype__type=i['type'],
+                                             suggestionlanguage_iso6391=i['lang'])
+            if len(temp) > 0:
+                search.suggestions.add(temp[0])
+            else:
+
+                temp = SERelatedSearch(suggestion=i)
+                temp.save()
+                search.seRelatedSearches.add(temp)
+
+        return Response({"message": "Got some data!", "data": request.data})
 
 
 @api_view(('GET',))

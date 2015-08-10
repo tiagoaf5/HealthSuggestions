@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 
@@ -47,16 +48,17 @@ class CHVString(models.Model):
 
 
 class TestUser(models.Model):
-    cookieID = models.UUIDField(primary_key=True)
+    guid = models.UUIDField(primary_key=True)
     registerDate = models.DateTimeField(auto_now_add=True)
-    browser = models.CharField(max_length=50, blank=True)
-    os = models.CharField(max_length=50, blank=True)
+
 
 
 class Session(models.Model):
-    cookieID = models.ForeignKey('TestUser')
+    guid = models.ForeignKey('TestUser', related_name='sessions')
     ip = models.GenericIPAddressField()
-    startTimestamp = models.DateTimeField(auto_now_add=True)
+    startTimestamp = models.DateTimeField(default=timezone.now)
+    browser = models.CharField(max_length=50, blank=True)
+    os = models.CharField(max_length=50, blank=True)
 
 #############################
 #         Suggestions       #
@@ -64,8 +66,8 @@ class Session(models.Model):
 
 
 class SuggestionLanguage(models.Model):
+    iso6391 = models.CharField(max_length=2, primary_key=True)
     language = models.CharField(max_length=20, unique=True)
-    iso6391 = models.CharField(max_length=2, unique=True)
 
 
 class SuggestionType(models.Model):
@@ -94,8 +96,9 @@ class SERelatedSearch(models.Model):
 
 class Search(models.Model):
     query = models.CharField(max_length=120)
-    queryInputTimestamp = models.DateTimeField(auto_now_add=True)
-    totalNoResults = models.PositiveIntegerField(blank=True)
+    queryInputTimestamp = models.DateTimeField(default=timezone.now)
+    hash = models.CharField(max_length=40)
+    totalNoResults = models.CharField(max_length=16)
     answerTime = models.FloatField(blank=True)
     session = models.ForeignKey('Session', related_name='searches')
     suggestions = models.ManyToManyField('Suggestion', related_name='searches')
@@ -107,7 +110,7 @@ class SearchPage(models.Model):
     SERPOrder = models.PositiveSmallIntegerField()
     totalTimeOverSearchPage = models.FloatField(blank=True)  # in seconds
     totalTimeOverSuggestionsBoard = models.FloatField(blank=True)  # in seconds
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(default=timezone.now)
     url = models.URLField()
     search = models.ForeignKey('Search', related_name='searchPages')
 
@@ -121,7 +124,7 @@ class SearchResult(models.Model):
 
 
 class WebPage(models.Model):
-    pageLoadTimestamp = models.DateTimeField(auto_now_add=True)
+    pageLoadTimestamp = models.DateTimeField(default=timezone.now)
     timeOnPage = models.FloatField(blank=True)
     numScrollEvents = models.PositiveSmallIntegerField(blank=True)
     searchResults = models.ManyToManyField('SearchResult', related_name='webPages')
@@ -134,7 +137,7 @@ class WebPage(models.Model):
 
 class Event(models.Model):
     id = models.AutoField(primary_key=True)
-    eventTimestamp = models.DateTimeField(auto_now_add=True)
+    eventTimestamp = models.DateTimeField(default=timezone.now)
     type = models.ForeignKey('EventType', related_name='events')
     searchPage = models.ForeignKey('SearchPage', related_name='events', blank=True, null=True)
     webPage = models.ForeignKey('WebPage', related_name='events', blank=True, null=True)

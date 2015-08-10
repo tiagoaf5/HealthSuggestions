@@ -33,7 +33,7 @@ class CHVStringSerializer(serializers.ModelSerializer):
 
 
 ########################################
-#    LOGGING DATABASE SERIZLIZERS      #
+#    LOGGING DATABASE SERIALIZERS      #
 #                                      #
 #        User and Sessions             #
 ########################################
@@ -41,13 +41,13 @@ class CHVStringSerializer(serializers.ModelSerializer):
 class TestUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = TestUser
-        fields = ('cookieId', 'registerDate', 'browser', 'os')  # missing the sessions
+        fields = ('guid', 'registerDate')  # missing the sessions
 
 
 class SessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Session
-        fields = ('ip', 'startTimestamp')  # missing the /lastEventTimestamp
+        fields = ('ip', 'startTimestamp', 'browser', 'os')  # missing the /lastEventTimestamp
 
 
 #############################
@@ -57,13 +57,13 @@ class SessionSerializer(serializers.ModelSerializer):
 class SuggestionLanguageSerializer(serializers.ModelSerializer):  # be populated initially
     class Meta:
         model = SuggestionLanguage
-        fields = ('id', 'language', 'iso6391')
+        fields = ('language', 'iso6391')
 
 
 class SuggestionTypeSerializer(serializers.ModelSerializer):  # be populated initially
     class Meta:
         model = SuggestionType
-        fields = ('id', 'type')
+        field = 'type'
 
 
 class SuggestionSerializer(serializers.ModelSerializer):
@@ -104,7 +104,7 @@ class SearchSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Search
-        fields = ('query', 'queryInputTimestamp', 'totalNoResults', 'answerTime', 'session', 'searchEngine')
+        fields = ('query', 'queryInputTimestamp', 'totalNoResults', 'answerTime', 'session', 'searchEngine', 'hash')
 
 
 class SearchPageSerializer(serializers.ModelSerializer):
