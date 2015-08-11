@@ -109,7 +109,7 @@ class Search(models.Model):
 class SearchPage(models.Model):
     SERPOrder = models.PositiveSmallIntegerField()
     totalTimeOverSearchPage = models.FloatField(blank=True)  # in seconds
-    totalTimeOverSuggestionsBoard = models.FloatField(blank=True)  # in seconds
+    totalTimeOverSuggestionBoard = models.FloatField(blank=True)  # in seconds
     timestamp = models.DateTimeField(default=timezone.now)
     url = models.URLField()
     search = models.ForeignKey('Search', related_name='searchPages')
@@ -117,7 +117,7 @@ class SearchPage(models.Model):
 
 class SearchResult(models.Model):
     rank = models.PositiveSmallIntegerField()
-    link = models.URLField()
+    url = models.URLField()
     title = models.CharField(max_length=100)
     snippet = models.TextField(blank=True)
     searchPage = models.ForeignKey('SearchPage', related_name='searchResults')

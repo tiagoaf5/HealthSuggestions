@@ -112,7 +112,7 @@ class SearchPageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SearchPage
-        fields = ('SERPOrder', 'totalTimeOverSearchPage', 'totalTimeOverSuggestionsBoard', 'timestamp', 'url', 'search')
+        fields = ('SERPOrder', 'totalTimeOverSearchPage', 'totalTimeOverSuggestionBoard', 'timestamp', 'url', 'search')
 
 
 class SearchResultSerializer(serializers.ModelSerializer):
@@ -120,7 +120,7 @@ class SearchResultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SearchResult
-        fields = ('rank', 'link', 'title', 'snippet', 'searchPage')
+        fields = ('rank', 'url', 'title', 'snippet', 'searchPage')
 
 
 class WebPageSerializer(serializers.ModelSerializer):

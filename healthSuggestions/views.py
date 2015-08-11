@@ -144,27 +144,50 @@ class LogData(APIView):
         search.save()
 
         d_seRelatedSearch = d_search['SERelatedSearches']
-        d_suggestions = d_search['Suggestions']
-
-        for i in d_seRelatedSearch:
-            temp = SERelatedSearch.objects.filter(suggestion=i)
+        for item in d_seRelatedSearch:
+            temp = SERelatedSearch.objects.filter(suggestion=item)
             if len(temp) > 0:
                 search.seRelatedSearches.add(temp[0])
             else:
-                temp = SERelatedSearch(suggestion=i)
+                temp = SERelatedSearch(suggestion=item)
                 temp.save()
                 search.seRelatedSearches.add(temp)
 
-        for i in d_suggestions:
-            temp = Suggestion.objects.filter(suggestion=i['term'], suggestiontype__type=i['type'],
-                                             suggestionlanguage_iso6391=i['lang'])
+        d_suggestions = d_search['Suggestions']
+        for item in d_suggestions:
+            temp = Suggestion.objects.filter(suggestion=item['term'], suggestionType__type=item['type'],
+                                             suggestionLanguage__iso6391=item['lang'])
             if len(temp) > 0:
+                print 'Suggestion doesnt exist'
                 search.suggestions.add(temp[0])
             else:
-
-                temp = SERelatedSearch(suggestion=i)
+                print 'Suggestion exists'
+                suggestionType = SuggestionType.objects.get(type=item['type'])
+                suggestionType.save()
+                suggestionLanguage = SuggestionLanguage.objects.get(iso6391=item['lang'])
+                suggestionLanguage.save()
+                temp = Suggestion(suggestion=item['term'], suggestionLanguage=suggestionLanguage,
+                                  suggestionType=suggestionType)
                 temp.save()
-                search.seRelatedSearches.add(temp)
+
+                search.suggestions.add(temp)
+
+        d_searchPages = d_search['SearchPages']
+
+        for item in d_searchPages:
+            searchPage = SearchPage(SERPOrder=item['SERPOrder'],
+                                    totalTimeOverSearchPage=item['totalTimeOverSearchPage'],
+                                    totalTimeOverSuggestionBoard=item['totalTimeOverSuggestionBoard'],
+                                    timestamp=item['timestamp'],
+                                    url=item['url'],
+                                    search=search)
+            searchPage.save()
+
+            for result in item['SearchResults']:
+                # print ",-,>", vars(result)
+                searchResult = SearchResult(rank=result['index'], url=result['url'] if 'url' in result else "",
+                                            title=result['title'], snippet=result['snippet'], searchPage=searchPage)
+                searchResult.save()
 
         return Response({"message": "Got some data!", "data": request.data})
 
