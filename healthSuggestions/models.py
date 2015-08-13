@@ -127,6 +127,7 @@ class WebPage(models.Model):
     pageLoadTimestamp = models.DateTimeField(default=timezone.now)
     timeOnPage = models.FloatField(blank=True)
     numScrollEvents = models.PositiveSmallIntegerField(blank=True)
+    url = models.URLField()
     searchResults = models.ManyToManyField('SearchResult', related_name='webPages')
 
 

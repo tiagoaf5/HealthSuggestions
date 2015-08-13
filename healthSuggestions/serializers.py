@@ -128,7 +128,7 @@ class WebPageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WebPage
-        fields = ('pageLoadTimestamp', 'timeOnPage', 'numScrollEvents')
+        fields = ('pageLoadTimestamp', 'timeOnPage', 'numScrollEvents', 'url')
 
 
 class EventSerializer(serializers.ModelSerializer):

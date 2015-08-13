@@ -158,10 +158,10 @@ class LogData(APIView):
             temp = Suggestion.objects.filter(suggestion=item['term'], suggestionType__type=item['type'],
                                              suggestionLanguage__iso6391=item['lang'])
             if len(temp) > 0:
-                print 'Suggestion doesnt exist'
+                print 'Suggestion exists'
                 search.suggestions.add(temp[0])
             else:
-                print 'Suggestion exists'
+                print 'Suggestion doesnt exist'
                 suggestionType = SuggestionType.objects.get(type=item['type'])
                 suggestionType.save()
                 suggestionLanguage = SuggestionLanguage.objects.get(iso6391=item['lang'])
@@ -188,6 +188,27 @@ class LogData(APIView):
                 searchResult = SearchResult(rank=result['index'], url=result['url'] if 'url' in result else "",
                                             title=result['title'], snippet=result['snippet'], searchPage=searchPage)
                 searchResult.save()
+
+        d_webPages = data['WebPages']
+
+        for item in d_webPages:
+            webpage = WebPage.objects.filter(url=item["url"], searchResults__searchPage__search=search)
+
+            webpageSearchResult = SearchResult.objects.get(url=item['searchResult']['link'],
+                                                           searchPage__SERPOrder=item['searchResult']['SERPOrder'],
+                                                           searchPage__search=search)
+
+            if len(webpage) > 0:
+                print 'Webpage exists'
+                webpage[0].searchResults.add(webpageSearchResult)
+            else:
+                print 'Webpage doesnt exist'
+                webpage = WebPage(url=item['url'], pageLoadTimestamp=item['pageLoadTimestamp'],
+                                  timeOnPage=item['timeOnPage'], numScrollEvents=item['numScrollEvents'])
+                print "->", item
+
+                webpage.save()
+                webpage.searchResults.add(webpageSearchResult)
 
         return Response({"message": "Got some data!", "data": request.data})
 
