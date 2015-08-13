@@ -1,7 +1,7 @@
 var DB =  new function() {
     var baseUrl = "../../data/";
-    //var baseRemoteUrl = "http://127.0.0.1:8000/GetConceptView/";
-    var baseRemoteUrl = "http://irlab.fe.up.pt/p/healthsuggestions/GetConceptView/";
+    var baseRemoteUrl = "http://127.0.0.1:8000/GetConceptView/";
+    //var baseRemoteUrl = "http://irlab.fe.up.pt/p/healthsuggestions/GetConceptView/";
     var db = this;
 
     db.openDatabase = function() {
@@ -196,7 +196,7 @@ var DB =  new function() {
 
             $.ajax({
                 type: "GET",
-                url: baseRemoteUrl + tosend,
+                url: baseRemoteUrl + language + "/"+ tosend,
                 dataType: "json",
                 success: function(result){
                     /*console.log("DATA received from server: " + JSON.stringify(result));

@@ -623,9 +623,15 @@
 
         $(".dd.algo").each(function (index) {
             var title = $(this).find("div.compTitle > h3.title > a").text();
-            var url = $(this).find("div.compTitle > div > span.wr-bw").text();
+            var url = $(this).find("div.compTitle > h3.title > a").attr("href");
+
+            if (url.indexOf('http://r.search.yahoo.com/') === 0) {
+                var regex = /(?=RU=).+(?=\/RK=0)/;
+                url = decodeURIComponent(url.match(regex).toString().substr(3));
+            }
+
             var snippet = $(this).find("div.compText > p").text();
-            //console.log(index + ": " + title + " -> " + url);
+            console.log(index + ": " + title + " -> " + url);
             //console.log(snippet);
             data_results.push({index: index, title: title, snippet: snippet, url: url});
 
