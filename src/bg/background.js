@@ -290,11 +290,31 @@ function removeTabFromHash(tabId, callback) {
                  });*/
 
                 if (result[TABS_SEARCH].length === 0) {
-                    //TODO: Send data to server
+                    // Send data to server
                     console.info("Sending data to server : " + JSON.stringify(result));
-                    logDB.removeEntry(result.hash, function () {
-                        callback();
-                    }); //after sending to server, remove from database
+
+                    $.ajax({
+                        type: "POST",
+                        url: "http://127.0.0.1:8000/LogData/",
+                        data: JSON.stringify(result),
+                        contentType: "application/json",
+                        success: function(r) {
+                            console.info("Success: " + r);
+
+                            logDB.removeEntry(result.hash, function () {
+                                callback();
+                            }); //after sending to server, remove from database
+
+                        },
+                        error: function(a,b,c) {
+                            console.error("error");
+                            console.log(a.responseText);
+                            console.error(a);
+                            console.error(b);
+                            console.error(c);
+                        },
+                        dataType: "json"
+                    });
                 }
                 else callback();
             });

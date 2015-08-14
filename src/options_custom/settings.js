@@ -56,9 +56,9 @@ window.addEvent("domready", function () {
         settings.manifest.enabled.addEvent("action", function() {
             var bkg = chrome.extension.getBackgroundPage();
             if(bkg.SETTINGS.get("enabled"))
-                chrome.browserAction.setIcon({path: "../../icons/bing.png"});
+                chrome.browserAction.setIcon({path: "../../icons/hearth19.png"});
             else
-                chrome.browserAction.setIcon({path: "../../icons/yahoo.png"});
+                chrome.browserAction.setIcon({path: "../../icons/hearth19d.png"});
         });
 
     });
