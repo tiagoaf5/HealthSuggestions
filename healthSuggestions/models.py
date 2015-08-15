@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
+
 # Create your models here.
 
 #############################
@@ -40,6 +41,7 @@ class CHVString(models.Model):
     pt_stemmed_count = models.PositiveSmallIntegerField(blank=True)
     cui = models.ForeignKey('CHVConcept')
 
+
 #############################
 #      LOGGING DATABASE     #
 #                           #
@@ -52,13 +54,13 @@ class TestUser(models.Model):
     registerDate = models.DateTimeField(auto_now_add=True)
 
 
-
 class Session(models.Model):
     guid = models.ForeignKey('TestUser', related_name='sessions')
     ip = models.GenericIPAddressField()
     startTimestamp = models.DateTimeField(default=timezone.now)
-    browser = models.CharField(max_length=50, blank=True)
-    os = models.CharField(max_length=50, blank=True)
+    browser = models.CharField(max_length=50)
+    os = models.CharField(max_length=50)
+
 
 #############################
 #         Suggestions       #
@@ -97,9 +99,9 @@ class SERelatedSearch(models.Model):
 class Search(models.Model):
     query = models.CharField(max_length=120)
     queryInputTimestamp = models.DateTimeField(default=timezone.now)
-    hash = models.CharField(max_length=40)
+    hash = models.CharField(max_length=40, unique=True)
     totalNoResults = models.CharField(max_length=16)
-    answerTime = models.FloatField(blank=True)
+    answerTime = models.FloatField(blank=True, null=True)
     session = models.ForeignKey('Session', related_name='searches')
     suggestions = models.ManyToManyField('Suggestion', related_name='searches')
     searchEngine = models.ForeignKey('SearchEngine')
@@ -108,8 +110,8 @@ class Search(models.Model):
 
 class SearchPage(models.Model):
     SERPOrder = models.PositiveSmallIntegerField()
-    totalTimeOverSearchPage = models.FloatField(blank=True)  # in seconds
-    totalTimeOverSuggestionBoard = models.FloatField(blank=True)  # in seconds
+    totalTimeOverSearchPage = models.FloatField(blank=True, null=True)  # in seconds
+    totalTimeOverSuggestionBoard = models.FloatField(blank=True, null=True)  # in seconds
     timestamp = models.DateTimeField(default=timezone.now)
     url = models.URLField()
     search = models.ForeignKey('Search', related_name='searchPages')
@@ -119,15 +121,15 @@ class SearchResult(models.Model):
     rank = models.PositiveSmallIntegerField()
     url = models.URLField()
     title = models.CharField(max_length=100)
-    snippet = models.TextField(blank=True)
+    snippet = models.TextField(blank=True, null=True)
     searchPage = models.ForeignKey('SearchPage', related_name='searchResults')
 
 
 class WebPage(models.Model):
-    pageLoadTimestamp = models.DateTimeField(default=timezone.now)
-    timeOnPage = models.FloatField(blank=True)
-    numScrollEvents = models.PositiveSmallIntegerField(blank=True)
-    url = models.URLField()
+    pageLoadTimestamp = models.DateTimeField(default=timezone.now, blank=True, null=True)
+    timeOnPage = models.FloatField(blank=True, null=True)
+    numScrollEvents = models.PositiveSmallIntegerField(blank=True, null=True)
+    url = models.URLField(max_length=400)
     searchResults = models.ManyToManyField('SearchResult', related_name='webPages')
 
 
@@ -155,7 +157,7 @@ class Copy(models.Model):
 
 class Find(models.Model):
     id = models.OneToOneField(Event, primary_key=True)
-    findText = models.CharField(max_length=50)
+    findText = models.CharField(max_length=50, blank=True, null=True)
 
 
 class SwitchSE(models.Model):
@@ -166,7 +168,8 @@ class SwitchSE(models.Model):
 
 class Click(models.Model):
     id = models.OneToOneField(Event, primary_key=True)
-    linkText = models.URLField(blank=True)
+    linkText = models.CharField(max_length=200, blank=True, null=True)
     searchResult = models.ForeignKey('SearchResult', blank=True, null=True)
     seRelatedSearch = models.ForeignKey('SERelatedSearch', blank=True, null=True)
-    Suggestion = models.ForeignKey('Suggestion', blank=True, null=True)
+    suggestion = models.ForeignKey('Suggestion', blank=True, null=True)
+    webPage = models.ForeignKey('WebPage', blank=True, null=True)

@@ -140,7 +140,7 @@ class EventSerializer(serializers.ModelSerializer):
 class EventTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventType
-        fields = 'type'
+        field = 'type'
 
 
 class CopySerializer(serializers.ModelSerializer):
