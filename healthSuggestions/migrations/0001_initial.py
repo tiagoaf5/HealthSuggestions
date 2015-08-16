@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import django.utils.timezone
 
 
 class Migration(migrations.Migration):
@@ -55,7 +56,7 @@ class Migration(migrations.Migration):
             name='Event',
             fields=[
                 ('id', models.AutoField(serialize=False, primary_key=True)),
-                ('eventTimestamp', models.DateTimeField(auto_now_add=True)),
+                ('eventTimestamp', models.DateTimeField(default=django.utils.timezone.now)),
             ],
         ),
         migrations.CreateModel(
@@ -70,9 +71,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('query', models.CharField(max_length=120)),
-                ('queryInputTimestamp', models.DateTimeField(auto_now_add=True)),
-                ('totalNoResults', models.PositiveIntegerField(blank=True)),
-                ('answerTime', models.FloatField(blank=True)),
+                ('queryInputTimestamp', models.DateTimeField(default=django.utils.timezone.now)),
+                ('hash', models.CharField(unique=True, max_length=40)),
+                ('totalNoResults', models.CharField(max_length=16)),
+                ('answerTime', models.FloatField(null=True, blank=True)),
             ],
         ),
         migrations.CreateModel(
@@ -88,9 +90,9 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('SERPOrder', models.PositiveSmallIntegerField()),
-                ('totalTimeOverSearchPage', models.FloatField(blank=True)),
-                ('totalTimeOverSuggestionsBoard', models.FloatField(blank=True)),
-                ('timestamp', models.DateTimeField(auto_now_add=True)),
+                ('totalTimeOverSearchPage', models.FloatField(null=True, blank=True)),
+                ('totalTimeOverSuggestionBoard', models.FloatField(null=True, blank=True)),
+                ('timestamp', models.DateTimeField(default=django.utils.timezone.now)),
                 ('url', models.URLField()),
                 ('search', models.ForeignKey(related_name='searchPages', to='healthSuggestions.Search')),
             ],
@@ -100,9 +102,9 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('rank', models.PositiveSmallIntegerField()),
-                ('link', models.URLField()),
+                ('url', models.URLField()),
                 ('title', models.CharField(max_length=100)),
-                ('snippet', models.TextField(blank=True)),
+                ('snippet', models.TextField(null=True, blank=True)),
                 ('searchPage', models.ForeignKey(related_name='searchResults', to='healthSuggestions.SearchPage')),
             ],
         ),
@@ -118,7 +120,9 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('ip', models.GenericIPAddressField()),
-                ('startTimestamp', models.DateTimeField(auto_now_add=True)),
+                ('startTimestamp', models.DateTimeField(default=django.utils.timezone.now)),
+                ('browser', models.CharField(max_length=50)),
+                ('os', models.CharField(max_length=50)),
             ],
         ),
         migrations.CreateModel(
@@ -131,9 +135,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SuggestionLanguage',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('iso6391', models.CharField(max_length=2, serialize=False, primary_key=True)),
                 ('language', models.CharField(unique=True, max_length=20)),
-                ('iso6391', models.CharField(unique=True, max_length=2)),
             ],
         ),
         migrations.CreateModel(
@@ -146,19 +149,18 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TestUser',
             fields=[
-                ('cookieID', models.UUIDField(serialize=False, primary_key=True)),
+                ('guid', models.UUIDField(serialize=False, primary_key=True)),
                 ('registerDate', models.DateTimeField(auto_now_add=True)),
-                ('browser', models.CharField(max_length=50, blank=True)),
-                ('os', models.CharField(max_length=50, blank=True)),
             ],
         ),
         migrations.CreateModel(
             name='WebPage',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('pageLoadTimestamp', models.DateTimeField(auto_now_add=True)),
-                ('timeOnPage', models.FloatField(blank=True)),
-                ('numScrollEvents', models.PositiveSmallIntegerField(blank=True)),
+                ('pageLoadTimestamp', models.DateTimeField(default=django.utils.timezone.now, null=True, blank=True)),
+                ('timeOnPage', models.FloatField(null=True, blank=True)),
+                ('numScrollEvents', models.PositiveSmallIntegerField(null=True, blank=True)),
+                ('url', models.URLField(max_length=400)),
                 ('searchResults', models.ManyToManyField(related_name='webPages', to='healthSuggestions.SearchResult')),
             ],
         ),
@@ -166,7 +168,9 @@ class Migration(migrations.Migration):
             name='Click',
             fields=[
                 ('id', models.OneToOneField(primary_key=True, serialize=False, to='healthSuggestions.Event')),
-                ('linkText', models.URLField(blank=True)),
+                ('linkText', models.CharField(max_length=200, null=True, blank=True)),
+                ('seRelatedSearch', models.ForeignKey(blank=True, to='healthSuggestions.SERelatedSearch', null=True)),
+                ('searchResult', models.ForeignKey(blank=True, to='healthSuggestions.SearchResult', null=True)),
             ],
         ),
         migrations.CreateModel(
@@ -180,15 +184,14 @@ class Migration(migrations.Migration):
             name='Find',
             fields=[
                 ('id', models.OneToOneField(primary_key=True, serialize=False, to='healthSuggestions.Event')),
-                ('findText', models.CharField(max_length=50)),
+                ('findText', models.CharField(max_length=50, null=True, blank=True)),
             ],
         ),
         migrations.CreateModel(
             name='SwitchSE',
             fields=[
                 ('id', models.OneToOneField(primary_key=True, serialize=False, to='healthSuggestions.Event')),
-                ('destination',
-                 models.ForeignKey(related_name='engine_destination', to='healthSuggestions.SearchEngine')),
+                ('destination', models.ForeignKey(related_name='engine_destination', to='healthSuggestions.SearchEngine')),
                 ('origin', models.ForeignKey(related_name='engine_origin', to='healthSuggestions.SearchEngine')),
             ],
         ),
@@ -204,8 +207,8 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='session',
-            name='cookieID',
-            field=models.ForeignKey(to='healthSuggestions.TestUser'),
+            name='guid',
+            field=models.ForeignKey(related_name='sessions', to='healthSuggestions.TestUser'),
         ),
         migrations.AddField(
             model_name='search',
@@ -244,17 +247,12 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='click',
-            name='Suggestion',
+            name='suggestion',
             field=models.ForeignKey(blank=True, to='healthSuggestions.Suggestion', null=True),
         ),
         migrations.AddField(
             model_name='click',
-            name='seRelatedSearch',
-            field=models.ForeignKey(blank=True, to='healthSuggestions.SERelatedSearch', null=True),
-        ),
-        migrations.AddField(
-            model_name='click',
-            name='searchResult',
-            field=models.ForeignKey(blank=True, to='healthSuggestions.SearchResult', null=True),
+            name='webPage',
+            field=models.ForeignKey(blank=True, to='healthSuggestions.WebPage', null=True),
         ),
     ]
