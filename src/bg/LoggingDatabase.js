@@ -5,7 +5,12 @@ var logDB = (function () {
 
     var addWebpage = function(result, global, data) {
         console.log("------------------------------------");
-        console.log("Adding webpage");
+        if (data.link) {
+            console.log("Adding webpage: ", global.page_url, data.link);
+
+        }
+        else
+            console.log("Adding webpage: ", global.page_url);
         console.log(JSON.stringify(global));
         console.log(JSON.stringify(data));
         var webpages = result['WebPages'];
@@ -14,11 +19,12 @@ var logDB = (function () {
         var alreadyExistsWebpage;
         var referrerWebPage;
         for (var i = 0; i < webpages.length; i++) {
-            if (webpages[i].url === global.page_url) {
+            console.log(webpages[i].url + "==" + global.page_url);
+            if ((webpages[i].url).toLowerCase() == (global.page_url).toLowerCase()) {
                 alreadyExists = true;
                 alreadyExistsWebpage = webpages[i];
                 break;
-            } else if (webpages[i].url === global.referrer_url) {
+            } else if (webpages[i].url == global.referrer_url) {
                 referrerWebPage = webpages[i];
             }
         }
@@ -67,12 +73,12 @@ var logDB = (function () {
                 else
                     return false;
             } /*else { //TODO: maybe delete this
-                result['Events'].push({
-                    EventType: "GoBackEvent",
-                    EventTimestamp: data.pageLoadTimestamp,
-                    to:global.page_url
-                });
-            }*/
+             result['Events'].push({
+             EventType: "GoBackEvent",
+             EventTimestamp: data.pageLoadTimestamp,
+             to:global.page_url
+             });
+             }*/
         }
         console.log("------------------------------------");
         return true;
@@ -257,10 +263,10 @@ var logDB = (function () {
 
                                 //TODO: consider delete this GoBackEvent
                                 /*result['Events'].push({
-                                    EventType: "GoBackEvent",
-                                    EventTimestamp: data['timestamp'],
-                                    to: global.page_url
-                                });*/
+                                 EventType: "GoBackEvent",
+                                 EventTimestamp: data['timestamp'],
+                                 to: global.page_url
+                                 });*/
 
                                 toSave = false;
                                 break;
@@ -359,10 +365,10 @@ var logDB = (function () {
                                 //console.dir(data);
 
                                 /*//event added because can't track go back without messing with user navigation
-                                result['Events'].push(buildObject({
-                                    EventType: 'PageLoad', EventTimestamp: timestamp,
-                                    url: global.page_url, referrerUrl: global.referrer_url
-                                }));*/
+                                 result['Events'].push(buildObject({
+                                 EventType: 'PageLoad', EventTimestamp: timestamp,
+                                 url: global.page_url, referrerUrl: global.referrer_url
+                                 }));*/
 
                                 toSave = addWebpage(result, global, data);
                                 break;

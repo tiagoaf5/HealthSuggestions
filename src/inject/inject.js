@@ -49,8 +49,12 @@ $(document).ready(function() {
 
         $(window).bind('hashchange', function() {
             TrackingSystem.logOnCloseWebpageData(); //It's like changing page
-            var query = $(queryGoogleId).val();
-            updateSearchQuery(query);
+
+            setTimeout(function () {
+                var query = $(queryGoogleId).val();
+                console.log("--->", query);
+                updateSearchQuery(query);
+            }, 400)
         });
     }
     //if it's bing
