@@ -209,11 +209,13 @@ chrome.runtime.onMessage.addListener(
 
                 break;
             case LOG:
-                getHash(sender.tab.id, function(hash){
-                    if (hash !== ERROR) {
-                        logDB.saveLogData(hash,request.logTable, request.global, request.data);
-                    }
-                });
+                if (SETTINGS.get('logging') === true) {
+                    getHash(sender.tab.id, function (hash) {
+                        if (hash !== ERROR) {
+                            logDB.saveLogData(hash, request.logTable, request.global, request.data);
+                        }
+                    });
+                }
                 //saveLogData(sender.tab.id, request.logTable, request.global, request.data);
                 break;
             default:

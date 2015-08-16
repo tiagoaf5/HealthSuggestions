@@ -40,21 +40,10 @@ this.i18n = {
         "pt": "10 - 18 caracteres"
     },
     "description": {
-        "en": "This is a description. You can write any text inside of this.<br>\
-        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut\
-        labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores\
-        et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem\
-        ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et\
-        dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.\
-        Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+        "en": "By allowing logging you agree that:<br>Your activity logs are saved so that a study can later be done addressing how the extension is being used and how typically a user performs a search.",
         
-        "pt": "Das ist eine Beschreibung. Du kannst hier beliebigen Text einfügen.<br>\
-        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut\
-        labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores\
-        et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem\
-        ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et\
-        dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.\
-        Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+        "pt": "Permitindo o registo de atividade aceita que:<br>\
+        Os teus registos de atividade são guardados para que um estudo possa ser feito brevemente contemplando como a extensão está a ser usada e como um utilizador realiza tipicamente uma pesquisa."
     },
     "logout": {
         "en": "Logout",
@@ -118,21 +107,9 @@ this.i18n = {
         "pt": "Português"
     },
     "descriptionAbout": {
-        "en": "This is a description. You can write any text inside of this.<br>\
-        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut\
-        labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores\
-        et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem\
-        ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et\
-        dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.\
-        Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+        "en": "HealthSuggestions is a Google Chrome extension to assist people searching for health related subjects in the main three Search Engines (Google, Bing and Yahoo). It suggests additional search queries, both lay and medico-scientific, related with the original query. The extension is presented has a panel in the right bottom corner, the suggestions are shown there and actions like searching those suggested queries or switching search engine are all reachable from this panel that follows the user across the web navigation.",
 
-        "pt": "Das ist eine Beschreibung. Du kannst hier beliebigen Text einfügen.<br>\
-        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut\
-        labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores\
-        et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem\
-        ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et\
-        dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.\
-        Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+        "pt": "HealthSuggestions é uma extensão para o Google Chrome para ajudar as pessoas a pesquisarem sobre assuntos relacionados com saúde usando um dos três principais motores de pesquisa (Google, Bing e Yahoo). Sugere termos de pesquisa adicionais quer leigos quer médico-científicos relacionados com a pesquisa original. A extensão apresenta-se como um painel no canto inferior direito, onde são apresentadas as sugestões e ações como pesquisar essas sugestões ou mudar de motor de pesquisa estão acessíveis neste painel que segue o utilizador ao longo da navegação"
     },
     "extension": {
         "en": "Extension",

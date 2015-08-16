@@ -117,13 +117,12 @@ chrome.extension.onMessage.addListener(
                 }
 
                 if(request.logging === true) {
+                    console.log("Logging enabled!")
                     if(searchEngineBeingUsedBool) {
-                        console.log("<--->");
                         if (searchEngineBeingUsed === GOOGLE) { //because google loads results dynamically
                             setTimeout(function () {
                                 TrackingSystem.trackSearch( function () {
                                     TrackingSystem.getSEResults(searchEngineBeingUsed);
-                                    //TrackingSystem.trackPageView();
                                     TrackingSystem.trackCopy();
                                     TrackingSystem.trackFind();
                                     TrackingSystem.trackScroll();
@@ -135,7 +134,6 @@ chrome.extension.onMessage.addListener(
                         else {
                             TrackingSystem.trackSearch( function () {
                                 TrackingSystem.getSEResults(searchEngineBeingUsed);
-                                //TrackingSystem.trackPageView();
                                 TrackingSystem.trackCopy();
                                 TrackingSystem.trackFind();
                                 TrackingSystem.trackScroll();
@@ -146,7 +144,6 @@ chrome.extension.onMessage.addListener(
 
                     }
                     else {
-                        //TrackingSystem.trackPageView();
                         TrackingSystem.trackCopy();
                         TrackingSystem.trackFind();
                         TrackingSystem.trackScroll();
