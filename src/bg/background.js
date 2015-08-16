@@ -4,12 +4,12 @@
 chrome.runtime.onInstalled.addListener(function(details){
     if(details.reason == "install"){
         console.log("This is a first install!");
-        /*console.log("creating database...");
-         DB.createDatabase();
-         console.log("done creating database...");
 
-         console.log("populating database...");
-         DB.populateDatabase();*/
+
+         SETTINGS.set("logging", true);
+         SETTINGS.set("database", "remote");
+         SETTINGS.set("queryLanguage", "auto");
+         SETTINGS.set("enabled", "true");
 
         chrome.runtime.openOptionsPage(function(){
             if(chrome.runtime.lastError)
@@ -20,13 +20,19 @@ chrome.runtime.onInstalled.addListener(function(details){
         var thisVersion = chrome.runtime.getManifest().version;
         console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
 
-        //DB.openDatabase();
         logDB.deleteDatabase();
-        logDB.open(function () {
-            console.info("logDB opened");
-        });
-        chrome.storage.local.clear();
+
+        if(SETTINGS.get("enabled"))
+            chrome.browserAction.setIcon({path: "../../icons/hearth19.png"});
+        else
+            chrome.browserAction.setIcon({path: "../../icons/hearth19d.png"});
     }
+
+    logDB.open(function () {
+        console.info("logDB opened");
+    });
+
+    chrome.storage.local.clear();
 });
 
 
@@ -36,14 +42,14 @@ chrome.runtime.onInstalled.addListener(function(details){
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
 
-        console.log("s-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#");
+        console.log("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
         console.log(sender.tab ?
         "from a content script:" + sender.tab.url :
             "from the extension");
 
         console.dir(request);
 
-        console.log("e-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#");
+        console.log("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 
 
         if (!request.action) {

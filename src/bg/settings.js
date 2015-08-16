@@ -5,7 +5,9 @@ var SETTINGS = new Store("settings", {
     "enabled": true
 });
 
+//removed because when updating was over-riding already saved
+/*
 SETTINGS.set("logging", true);
 SETTINGS.set("database", "local");
 SETTINGS.set("queryLanguage", "auto");
-SETTINGS.set("enabled", "true");
+SETTINGS.set("enabled", "true");*/
