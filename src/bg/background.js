@@ -6,10 +6,10 @@ chrome.runtime.onInstalled.addListener(function(details){
         console.log("This is a first install!");
 
 
-         SETTINGS.set("logging", true);
-         SETTINGS.set("database", "remote");
-         SETTINGS.set("queryLanguage", "auto");
-         SETTINGS.set("enabled", "true");
+        SETTINGS.set("logging", true);
+        SETTINGS.set("database", "remote");
+        SETTINGS.set("queryLanguage", "auto");
+        SETTINGS.set("enabled", "true");
 
         chrome.runtime.openOptionsPage(function(){
             if(chrome.runtime.lastError)
@@ -101,6 +101,10 @@ chrome.runtime.onMessage.addListener(
                     result[TAB + sender.tab.id][CLOSED] = request.close;
                     chrome.storage.local.set(result);
                 });
+
+                /*removeTabFromHash(sender.tab.id, function() {
+                    console.log("Removed TABID " + sender.tab.id + " from list of tabs");
+                });*/
 
                 break;
             case 'loadData':
@@ -209,10 +213,6 @@ chrome.runtime.onMessage.addListener(
                     });
                 });
 
-
-
-
-
                 break;
             case LOG:
                 if (SETTINGS.get('logging') === true) {
@@ -261,7 +261,7 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener(function (details) {
     });
 });
 
-
+//get hash from tabId
 function getHash(tabId, callback) {
     var obj0 = {};
     obj0[TAB + tabId] = null;
@@ -281,8 +281,38 @@ function getHash(tabId, callback) {
 
 }
 
+//Sends log data to server
+function sendLogDataToServer(result, callback) {
+    console.info("Sending data to server : " + JSON.stringify(result));
 
-//Removes tab from hash and if list of tabs is empty send data to server
+    $.ajax({
+        type: "POST",
+        url: "http://127.0.0.1:8000/LogData/",
+        data: JSON.stringify(result),
+        contentType: "application/json",
+        success: function (r) {
+            console.info("Success: " + JSON.stringify(r));
+
+            logDB.removeEntry(result.hash, function () {
+                callback();
+            }); //after sending to server, remove from database
+
+        },
+        error: function (a, b, c) {
+            console.error("error");
+            console.error(a);
+            console.error(b);
+            console.error(c);
+
+            //Something went wrong but we have to delete it anyway
+            logDB.removeEntry(result.hash, function () {
+                callback();
+            }); //after sending to server, remove from database
+        },
+        dataType: "json"
+    });
+}
+//Removes tab from the list of tabs in the log database
 function removeTabFromHash(tabId, callback) {
 
     getHash(tabId, function (e) {
@@ -296,33 +326,11 @@ function removeTabFromHash(tabId, callback) {
 
                  saveLogData(tabId, TABLE_EVENT,{page_url: tab.url}, {EventType: 'RmTab'});
                  });*/
+                //Removes tab from hash and if list of tabs is empty send data to server
 
                 if (result[TABS_SEARCH].length === 0) {
                     // Send data to server
-                    console.info("Sending data to server : " + JSON.stringify(result));
-
-                    $.ajax({
-                        type: "POST",
-                        url: "http://127.0.0.1:8000/LogData/",
-                        data: JSON.stringify(result),
-                        contentType: "application/json",
-                        success: function(r) {
-                            console.info("Success: " + r);
-
-                            logDB.removeEntry(result.hash, function () {
-                                callback();
-                            }); //after sending to server, remove from database
-
-                        },
-                        error: function(a,b,c) {
-                            console.error("error");
-                            console.log(a.responseText);
-                            console.error(a);
-                            console.error(b);
-                            console.error(c);
-                        },
-                        dataType: "json"
-                    });
+                    sendLogDataToServer(result, callback);
                 }
                 else callback();
             });
@@ -330,6 +338,7 @@ function removeTabFromHash(tabId, callback) {
     });
 }
 
+//Listener on remove tab
 chrome.tabs.onRemoved.addListener( function(tabId) {
     console.log("Removing tabID: " + tabId + "....");
 
@@ -343,6 +352,7 @@ chrome.tabs.onRemoved.addListener( function(tabId) {
     });
 });
 
+//Tell content script to load widget
 function loadWidget(id) {
     //console.log('loadWidget message to ',id, active,on);
     console.log("Sending message...");
@@ -351,7 +361,7 @@ function loadWidget(id) {
     });
 }
 
-
+//Action on action bar icon click
 chrome.browserAction.onClicked.addListener(function() {
     chrome.runtime.openOptionsPage(function(){
         if(chrome.runtime.lastError)

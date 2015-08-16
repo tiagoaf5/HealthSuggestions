@@ -5,7 +5,7 @@ var DB =  new function() {
     var db = this;
 
     db.openDatabase = function() {
-        db.database = openDatabase('mydb', '2.0', 'my first database', 100000000);
+        db.database = openDatabase('healthSuggestions', '1.0', 'HealthSuggestions dictionary', 100000000);
     }
     db.createDatabase = function() {
         db.openDatabase();
