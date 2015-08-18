@@ -59,8 +59,8 @@ var LOG_ACTIONS = {
 };
 
 var LANGUAGES = {
-  pt: {language: 'portuguese', iso6391: 'pt'},
-  en: {language: 'english', iso6391: 'en'}
+    pt: {language: 'portuguese', iso6391: 'pt'},
+    en: {language: 'english', iso6391: 'en'}
 };
 
 var SUGGESTION_TYPE = {
@@ -71,3 +71,5 @@ var SUGGESTION_TYPE = {
 var TAB = "tabid";
 
 var NO_DATABASE_ENTRIES = 192691;
+
+var HEALTH_SUGGESTIONS_BASE_ADDRESS = 'http://irlab.fe.up.pt/p/healthsuggestions/';

@@ -1,7 +1,6 @@
 var DB =  new function() {
     var baseUrl = "../../data/";
-    var baseRemoteUrl = "http://127.0.0.1:8000/GetConceptView/";
-    //var baseRemoteUrl = "http://irlab.fe.up.pt/p/healthsuggestions/GetConceptView/";
+    var baseRemoteUrl = HEALTH_SUGGESTIONS_BASE_ADDRESS + "GetConceptView/";
     var db = this;
 
     db.openDatabase = function() {
@@ -201,13 +200,13 @@ var DB =  new function() {
                 success: function(result){
                     /*console.log("DATA received from server: " + JSON.stringify(result));
 
-                    var terms = [result["CHV_Pref_PT"], result["CHV_Pref_EN"], result["UMLS_Pref_PT"], result["UMLS_Pref_EN"]];
-                    var uniqueTerms = [];
+                     var terms = [result["CHV_Pref_PT"], result["CHV_Pref_EN"], result["UMLS_Pref_PT"], result["UMLS_Pref_EN"]];
+                     var uniqueTerms = [];
 
-                    for (var i = 0; i < terms.length; i++)
-                        if (uniqueTerms.indexOf(terms[i].trim()) == -1) {
-                            uniqueTerms.push(terms[i].trim());
-                        }*/
+                     for (var i = 0; i < terms.length; i++)
+                     if (uniqueTerms.indexOf(terms[i].trim()) == -1) {
+                     uniqueTerms.push(terms[i].trim());
+                     }*/
                     var uniqueTerms = getTermsByLanguage(result, language);
 
                     callback(uniqueTerms);

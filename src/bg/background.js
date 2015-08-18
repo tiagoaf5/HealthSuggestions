@@ -103,8 +103,8 @@ chrome.runtime.onMessage.addListener(
                 });
 
                 /*removeTabFromHash(sender.tab.id, function() {
-                    console.log("Removed TABID " + sender.tab.id + " from list of tabs");
-                });*/
+                 console.log("Removed TABID " + sender.tab.id + " from list of tabs");
+                 });*/
 
                 break;
             case 'loadData':
@@ -287,7 +287,7 @@ function sendLogDataToServer(result, callback) {
 
     $.ajax({
         type: "POST",
-        url: "http://127.0.0.1:8000/LogData/",
+        url: HEALTH_SUGGESTIONS_BASE_ADDRESS + "LogData/",
         data: JSON.stringify(result),
         contentType: "application/json",
         success: function (r) {
