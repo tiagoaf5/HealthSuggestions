@@ -22,7 +22,7 @@ SEARCH_URL[GOOGLE] = G_GOOGLE_SEARCH_URL;
 SEARCH_URL[BING] = G_BING_SEARCH_URL;
 SEARCH_URL[YAHOO] = G_YAHOO_SEARCH_URL;
 
-
+var WINDOW_MINIMIZE_OFFSET = '-192px';
 
 //mainly background
 //DO NOT CHANGE: inject.js loadData depending on it hardcoded

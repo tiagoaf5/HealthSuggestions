@@ -160,7 +160,7 @@ chrome.extension.onMessage.addListener(
                     searchEngineBeingUsed = request['data'][SEARCH_ENGINE];
 
                 if (request.data.minimized) {
-                    $(".widgetClass").css("bottom", "-190px");
+                    getWidgetPanel().css("bottom", WINDOW_MINIMIZE_OFFSET);
                     getWidgetContent().find("#window-action-minimize").removeClass("icon-arrows-compress");
                     getWidgetContent().find("#window-action-minimize").removeClass("icon-arrows-expand");
                     getWidgetContent().find("#window-action-minimize").addClass("icon-arrows-expand");

@@ -138,7 +138,7 @@ function widgetMinimize() {
 
     console.log("widgetMinimize" + isMaximized);
     $("." + widgetClass).animate({
-        bottom: isMaximized ? '-190px' : '0px'
+        bottom: isMaximized ? WINDOW_MINIMIZE_OFFSET : '0px'
     }, 400, function () {
         if(isMaximized) {
             i.removeClass("icon-arrows-compress");
