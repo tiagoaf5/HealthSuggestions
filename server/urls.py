@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^CHVConcept/', views.CHVConceptView.as_view(), name='CHVConcept'),
     url(r'^CHVStemmedIndexPT/', views.CHVStemmedIndexPTView.as_view(), name='CHVStemmedIndexPT'),
+    url(r'^CHVStemmedIndexEN/', views.CHVStemmedIndexENView.as_view(), name='CHVStemmedIndexEN'),
     url(r'^CHVString/', views.CHVStringView.as_view(), name='CHVString'),
     url(r'^GetConceptView/(?P<query>([a-z0-9]+\+)*([a-z0-9])+)$', views.GetConceptView.as_view(),
         name='GetConceptViewData'),

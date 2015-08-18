@@ -361,6 +361,7 @@ def api_root(request, format=None):
     return Response({
         'CHVConcept': reverse('CHVConcept', request=request, format=format),
         'CHVStemmedIndexPT': reverse('CHVStemmedIndexPT', request=request, format=format),
+        'CHVStemmedIndexEN': reverse('CHVStemmedIndexEN', request=request, format=format),
         'CHVString': reverse('CHVString', request=request, format=format),
         # 'GetConceptView': reverse('GetConceptView', request=request, format=format),
     })
