@@ -107,7 +107,7 @@ this.i18n = {
         "pt": "Português"
     },
     "descriptionAbout": {
-        "en": "HealthSuggestions is a Google Chrome extension to assist people searching for health related subjects in the main three Search Engines (Google, Bing and Yahoo). It suggests additional search queries, both lay and medico-scientific, related with the original query. The extension is presented has a panel in the right bottom corner, the suggestions are shown there and actions like searching those suggested queries or switching search engine are all reachable from this panel that follows the user across the web navigation.",
+        "en": "HealthSuggestions is a Google Chrome extension to assist people searching for health related subjects in the main three Search Engines (Google, Bing and Yahoo). It suggests additional search queries, both lay and medico-scientific, related with the original query. The extension is presented as a panel in the right bottom corner, the suggestions are shown there and actions like searching those suggested queries or switching search engine are all reachable from this panel that follows the user across the web navigation.",
 
         "pt": "HealthSuggestions é uma extensão para o Google Chrome para ajudar as pessoas a pesquisarem sobre assuntos relacionados com saúde usando um dos três principais motores de pesquisa (Google, Bing e Yahoo). Sugere termos de pesquisa adicionais quer leigos quer médico-científicos relacionados com a pesquisa original. A extensão apresenta-se como um painel no canto inferior direito, onde são apresentadas as sugestões e ações como pesquisar essas sugestões ou mudar de motor de pesquisa estão acessíveis neste painel que segue o utilizador ao longo da navegação"
     },
