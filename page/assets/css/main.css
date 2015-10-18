@@ -88,14 +88,17 @@ body {
 .navbar-default .navbar-nav > li > a {
   color: #555;
 }
-.navbar-default .navbar-nav > .active > a,
+/*.navbar-default .navbar-nav > .active > a,*/
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
   color: #38b5c9;
-  background-color: #fff;
-  
-  
+  background-color: #fff; 
 }
+
+.navbar-default .navbar-nav > .active > a {
+	background-color: #fff; 
+}
+
 .navbar-default {
 	background-color: #fff;
 	padding: 12px 0;
