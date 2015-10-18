@@ -64,7 +64,7 @@
     <h1>Health Suggestions</h1>
     <p>A Chrome extension to help laypersons search the Web<br> for health information</p>
       
-    <a href="#portfolio" class="smoothScroll btn btn-lg"><i class="fa fa-download"></i>  Download Beta 0.0.1</a> 
+    <a id="downloadEXT" href="Download/HealthSuggestions_v0.0.1.zip" class="smoothScroll btn btn-lg"><i class="fa fa-download"></i>  Download Beta 0.0.1</a> 
 <h5><a href="https://youtu.be/yQZDADoNERw" style="color:#555;">How to install</a></h5>
     </header>
 </div>
@@ -159,6 +159,8 @@ Assistant Professor,<br> DEI, Faculty of Engineering, University of Porto</p>
         console.log("->" + url);
         $( this ).attr("href", getNewUrl(url));
       });*/
+      var downloadURL = $("#downloadEXT").attr("href");
+      $("#downloadEXT").attr("href", getNewUrl(downloadURL)));
 
       $("img").each(function() {
       //$("script, img").each(function() {
