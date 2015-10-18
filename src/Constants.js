@@ -72,4 +72,4 @@ var TAB = "tabid";
 
 var NO_DATABASE_ENTRIES = 192691;
 
-var HEALTH_SUGGESTIONS_BASE_ADDRESS = 'http://irlab.fe.up.pt/p/healthsuggestions/';
+var HEALTH_SUGGESTIONS_BASE_ADDRESS = 'http://irlab.fe.up.pt/p/healthsuggestions/api/';
