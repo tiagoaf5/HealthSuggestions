@@ -125,6 +125,17 @@
 <!-- Bootstrap core JavaScript
     ================================================== --> 
 <!-- Placed at the end of the document so the pages load faster --> 
+
+<script type="text/javascript" src="assets/js/bootstrap.min.js"></script> 
+<script type="text/javascript" src="healthsuggestions/assets/js/bootstrap.min.js"></script> 
+<script type="text/javascript" src="assets/js/retina.js"></script> 
+<script type="text/javascript" src="healthsuggestions/assets/js/retina.js"></script> 
+<script type="text/javascript" src="assets/js/jquery.easing.1.3.js"></script> 
+<script type="text/javascript" src="healthsuggestions/assets/js/jquery.easing.1.3.js"></script> 
+<script type="text/javascript" src="assets/js/smoothscroll.js"></script> 
+<script type="text/javascript" src="healthsuggestions/assets/js/smoothscroll.js"></script> 
+<script type="text/javascript" src="assets/js/jquery-func.js"></script>
+<script type="text/javascript" src="healthsuggestions/assets/js/jquery-func.js"></script>
 <script>
 
   function getNewUrl(previous) {
@@ -137,25 +148,20 @@
   if((window.location.href).indexOf("http://irlab.fe.up.pt/p/healthsuggestions") > -1) {
     //$( document ).ready( function() {
 
-      $("link").each(function() {
+      /*$("link").each(function() {
         var url = $( this ).attr("href");
         console.log("->" + url);
         $( this ).attr("href", getNewUrl(url));
-      });
+      });*/
 
-      $("script, img").each(function() {
+      $("img").each(function() {
+      //$("script, img").each(function() {
         var url = $( this ).attr("src");
         $( this ).attr("src", getNewUrl(url));
       });
     //});
   }
 </script>
-<script type="text/javascript" src="assets/js/bootstrap.min.js"></script> 
-<script type="text/javascript" src="assets/js/retina.js"></script> 
-<script type="text/javascript" src="assets/js/jquery.easing.1.3.js"></script> 
-<script type="text/javascript" src="assets/js/smoothscroll.js"></script> 
-<script type="text/javascript" src="assets/js/jquery-func.js"></script>
-
 
 </body>
 </html>
