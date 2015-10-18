@@ -19,14 +19,14 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from healthSuggestions import views
 
 urlpatterns = [
-    url(r'^$', views.api_root),
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^CHVConcept/', views.CHVConceptView.as_view(), name='CHVConcept'),
-    url(r'^CHVStemmedIndexPT/', views.CHVStemmedIndexPTView.as_view(), name='CHVStemmedIndexPT'),
-    url(r'^CHVStemmedIndexEN/', views.CHVStemmedIndexENView.as_view(), name='CHVStemmedIndexEN'),
-    url(r'^CHVString/', views.CHVStringView.as_view(), name='CHVString'),
-    url(r'^GetConceptView/(?P<query>([a-z0-9]+\+)*([a-z0-9])+)$', views.GetConceptView.as_view(),
-        name='GetConceptViewData'),
+    #url(r'^$', views.api_root),
+    #url(r'^admin/', include(admin.site.urls)),
+    #url(r'^CHVConcept/', views.CHVConceptView.as_view(), name='CHVConcept'),
+    #url(r'^CHVStemmedIndexPT/', views.CHVStemmedIndexPTView.as_view(), name='CHVStemmedIndexPT'),
+    #url(r'^CHVStemmedIndexEN/', views.CHVStemmedIndexENView.as_view(), name='CHVStemmedIndexEN'),
+    #url(r'^CHVString/', views.CHVStringView.as_view(), name='CHVString'),
+    #url(r'^GetConceptView/(?P<query>([a-z0-9]+\+)*([a-z0-9])+)$', views.GetConceptView.as_view(),
+     #   name='GetConceptViewData'),
     url(r'^GetConceptView/(?P<language>[a-zA-z]{3})/(?P<query>([a-z0-9]+\+)*([a-z0-9])+)$',
         views.GetConceptView.as_view(), name='GetConceptViewData'),
     # url(r'^GetConceptView/', views.GetConceptView.as_view(), name='GetConceptView'),
