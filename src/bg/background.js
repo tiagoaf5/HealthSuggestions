@@ -368,3 +368,14 @@ chrome.browserAction.onClicked.addListener(function() {
             alert("Something went wrong! :(");
     })
 });
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
+    if(changeInfo && changeInfo.status == "complete"){
+        console.log("Tab updated: " + tab.url);
+
+        chrome.tabs.sendMessage(tabId, {action: "urlChange"}, function(response) {
+            console.log(response);
+        });
+
+    }
+});

@@ -24,10 +24,10 @@ $(document).ready(function() {
     TimeMe.setCurrentPageName(url);
     TimeMe.initialize();
 
-
     $(window).unload(function() {
         TrackingSystem.logOnCloseWebpageData();
     });
+
 
     //if it's google
     if(/^https?:\/\/www\.google\.\w{1,3}(\/.*)?/.test(url) && url.indexOf("newtab") == -1) {
@@ -47,15 +47,16 @@ $(document).ready(function() {
             }, 400)
         })();
 
-        $(window).bind('hashchange', function() {
-            TrackingSystem.logOnCloseWebpageData(); //It's like changing page
+        /*$(window).bind('hashchange', function() {
 
-            setTimeout(function () {
-                var query = $(queryGoogleId).val();
-                console.log("--->", query);
-                updateSearchQuery(query);
-            }, 400)
-        });
+         TrackingSystem.logOnCloseWebpageData(); //It's like changing page
+
+         setTimeout(function () {
+         var query = $(queryGoogleId).val();
+         console.log("--->", query);
+         updateSearchQuery(query);
+         }, 400)
+         });*/
     }
     //if it's bing
     else if (/^https?:\/\/www.bing\.\w{1,3}(\/.*)?/.test(url)) {
@@ -170,6 +171,18 @@ chrome.extension.onMessage.addListener(
                 break;
             case 'closeWidget':
                 widgetClose(false);
+                break;
+            case 'urlChange':
+                console.log("URL CHANGED!!");
+
+                if(searchEngineBeingUsed === GOOGLE) {
+                    TrackingSystem.logOnCloseWebpageData(); //It's like changing page
+
+                    var query = $(queryGoogleId).val();
+                    console.log("--->", query);
+                    updateSearchQuery(query);
+
+                }
                 break;
             default :
                 break;
