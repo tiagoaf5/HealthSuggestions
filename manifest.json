@@ -1,0 +1,53 @@
+{
+  "name": "Health Suggestions",
+  "version": "0.0.2",
+  "manifest_version": 2,
+  "description": "",
+  "homepage_url": "http://irlab.fe.up.pt/p/healthsuggestions",
+  "icons": {
+    "16": "icons/hearth16.png",
+    "48": "icons/hearth48.png",
+    "128": "icons/hearth128.png"
+  },
+  "default_locale": "en",
+  "background": {
+    "page": "src/bg/background.html",
+    "persistent": false
+  },
+  "options_page": "src/options_custom/index.html",
+  "browser_action": {
+    "default_icon": "icons/hearth19.png"
+  },
+  "permissions": [
+    "tabs",
+    "storage",
+    "webNavigation",
+    "unlimitedStorage",
+    "http://*/*",
+    "https://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "src/Constants.js",
+        "js/jQuery/jquery-2.1.3.js",
+        "js/TimeMe/ifvisible_timeme.js",
+        "src/inject/tracking.js",
+        "src/inject/utilities.js",
+        "src/inject/inject.js"
+      ],
+      "css": [
+
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    "icons/*",
+    "src/inject/*",
+    "js/*"
+  ]
+}

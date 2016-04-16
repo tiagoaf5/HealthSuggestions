@@ -1,0 +1,134 @@
+
+/*
+body#myExtension {
+
+    border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent;margin:0;padding:0;
+}
+*/
+
+#frame {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    font-size: medium;
+    margin: 0px;
+    padding:0;
+    outline:0;
+    font-size:100%;
+    vertical-align:baseline;
+    background:rgb(238,238,238);
+    /*border: solid 2px rgb(52,101,164); removed border*/
+    border: solid 1px #E3DEDB;
+    height: 100%;
+    /*width: 350px;
+    height: 250px;
+    position: fixed;
+    bottom: 2px;
+    right: 50px;
+    z-index: 1010101;*/
+}
+
+.header {
+    //border-bottom: solid 2px #3465A4;
+    background-color: #E3DEDB;
+    /*width: 350px;*/
+    width: 100%;
+    /*height: 50px;*/
+//padding-top: 10px;
+    display: inline-block;
+//margin-bottom: 10px;
+}
+
+.search-engine {
+    padding-left: 0px;
+    margin-left: 10px;
+    display: inline;
+}
+.search-engine li {
+    height: 50px;
+    /*margin: 1px;*/
+    display: inline;
+    padding: .35em .25em .05em;
+}
+
+.search-engine i, #frame .search-engine a{
+    text-decoration: none;
+    color: #424242;
+    text-shadow: 1px 1px #7b7c7b;
+}
+
+.header-content {
+    margin-top: 10px;
+}
+.window-action {
+    float: right;
+    margin-right: 5px;
+    /*border: solid 2px rgb(52,101,164);
+     height: 20px;
+     width: 20px;
+     text-align: center;*/
+    /*padding-top:-5px;*/
+}
+
+.window-action i{
+    text-decoration: none;
+    color: #424242;
+    font-family: sans-serif;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    margin: 5px;
+    /*border: solid 1px rgb(52,101,164);*/
+}
+/*
+.icon-border {
+    border-color: #3465A4;
+}*/
+
+.body {
+    background-color: white;
+    color: rgb(48, 57, 66);
+    height: 198px;
+    width: auto;
+}
+
+.body-content {
+    display: inline-block;
+    padding: 15px;
+//max-width: 320px;
+}
+
+.blue {
+    color: rgb(51,153,255);
+}
+
+#icon-google {
+    color: #3f85f4;
+    color: ghostwhite;
+}
+#icon-bing {
+    color: #ffb900;
+    color: ghostwhite;
+}
+#icon-yahoo {
+    color: #640f6d;
+    color: ghostwhite;
+}
+
+.search-engine i:hover {
+    text-shadow: 2px 2px 5px #b3b3b3;
+}
+
+ul#suggestions {
+    list-style: none;
+    padding: 0px;
+}
+
+ul#suggestions li.suggestion {
+    margin-bottom: 7px;
+}
+
+ul#suggestions li.suggestion a {
+    color: rgb(17, 85, 204);
+}
+
+
