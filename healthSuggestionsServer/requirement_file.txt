@@ -1,0 +1,7 @@
+antiorm==1.2.0
+db==0.1.1
+Django==1.8.3
+django-ipware==1.1.0
+djangorestframework==3.2.2
+psycopg2==2.6.1
+wheel==0.24.0
